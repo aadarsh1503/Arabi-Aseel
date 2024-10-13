@@ -1,0 +1,18 @@
+.service-card {
+    position: relative;
+  }
+  
+  .divider {
+    position: absolute;
+    height: 100px; /* Adjust height based on your design */
+    width: 2px;
+    right: -16px; /* Adjust based on space between cards */
+    background-color: #D1D5DB; /* Light gray color */
+  }
+  
+  @media (max-width: 768px) {
+    .divider {
+      display: none; /* Hide dividers on small screens */
+    }
+  }
+  

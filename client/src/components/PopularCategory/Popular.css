@@ -1,0 +1,28 @@
+@keyframes pulseAndTilt {
+    0% {
+      transform: perspective(500px) rotateY(0deg) scale(1);
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+    25% {
+      transform: perspective(500px) rotateY(10deg) scale(1.05);
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    }
+    50% {
+      transform: perspective(500px) rotateY(-10deg) scale(1.1);
+      text-shadow: 0 0 15px rgba(255, 255, 255, 1);
+    }
+    75% {
+      transform: perspective(500px) rotateY(10deg) scale(1.05);
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    }
+    100% {
+      transform: perspective(500px) rotateY(0deg) scale(1);
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+  }
+  
+  .best-food-text {
+    animation: pulseAndTilt 2s ease-in-out infinite;
+    color: black; /* Adjust to your preferred color */
+  }
+  
