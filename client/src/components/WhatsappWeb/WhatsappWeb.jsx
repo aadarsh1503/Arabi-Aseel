@@ -7,7 +7,7 @@ const ChatWidget = () => {
 
   // WhatsApp numbers
   const salesNumber = "917300648999"; // Sales number (without "+" symbol)
-  const supportNumber = "918057988758"; // Support number (without "+" symbol)
+  const supportNumber = "917300648999"; // Support number (without "+" symbol)
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
