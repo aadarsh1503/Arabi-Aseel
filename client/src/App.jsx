@@ -11,6 +11,7 @@ import RootLayout from './components/RootLayout/RootLayout'
 import SpecialsMenu from './components/SpecialMenu/SpecialMenu'
 import OpeningHours from './components/OpeningHours/OpeningHours'
 import ChefsSection from './components/ChefSection/ChefSection'
+import ChatWidget from './components/WhatsappWeb/WhatsappWeb'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -18,7 +19,9 @@ function App() {
   return (
     <RootLayout >
     <div>
+     
      <Hero />
+     <ChatWidget />
      <PopularCategories />
      <ServiceSection />
      <PromotionSection />

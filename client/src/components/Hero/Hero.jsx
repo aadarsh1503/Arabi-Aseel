@@ -3,6 +3,7 @@ import { motion } from "framer-motion"; // Import motion from framer-motion
 import './Hero.css'; // Importing custom CSS for the rotating circle
 
 
+
 const Hero = () => {
   // Animation variants for fade-in effect
   const fadeIn = {
@@ -11,7 +12,7 @@ const Hero = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black bg-opacity-60 relative">
+    <div className="min-h-screen font-poppins bg-black bg-opacity-60 relative">
       {/* Background Video */}
       <video
         autoPlay
@@ -72,7 +73,7 @@ const Hero = () => {
         </motion.div>
 
         <motion.h1 
-          className="text-4xl sm:text-6xl lg:text-8xl lg:-mt-44 -mt-28 font-bold text-white"
+          className="text-4xl sm:text-6xl lg:text-8xl lg:-mt-44 -mt-28 font-poppins font-bold text-white"
           initial="hidden" 
           animate="visible" 
           variants={fadeIn}

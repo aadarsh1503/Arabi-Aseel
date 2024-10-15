@@ -53,7 +53,7 @@ const PopularCategory = () => {
   ];
 
   return (
-    <div className="flex flex-wrap justify-center">
+    <div className="flex flex-wrap font-poppins justify-center">
       {categories.map((category) => (
         <div
           key={category.id}
@@ -78,7 +78,7 @@ const PopularCategory = () => {
 
 const PopularCategories = () => {
   return (
-    <div className="flex flex-col lg:flex-row justify-between items-start p-12">
+    <div className="flex flex-col lg:flex-row font-poppins justify-between items-start p-12">
       {/* Booking Form on the left */}
       <div className="lg:w-1/3 w-full mb-6 lg:mb-0">
         <BookingForm />

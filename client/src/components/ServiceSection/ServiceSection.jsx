@@ -53,7 +53,7 @@ const ServiceSection = () => {
   }, []); // Run only once on mount
 
   return (
-    <div id="service-section" className="container mx-auto py-16">
+    <div id="service-section" className="container font-poppins mx-auto py-16">
       <div className="flex lg:flex-row flex-col justify-center items-center space-x-0 lg:space-x-20 relative">
         {services.map((service, index) => (
           <motion.div 
