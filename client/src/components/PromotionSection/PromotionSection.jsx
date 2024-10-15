@@ -2,7 +2,7 @@ import React from 'react';
 
 const PromotionSection = () => {
   return (
-    <div className="relative min-h-screen w-full py-16">
+    <div className="relative min-h-screen w-full py-1">
       {/* Yellow Background Image */}
       <div className="relative mx-auto max-w-7xl">
         <img 

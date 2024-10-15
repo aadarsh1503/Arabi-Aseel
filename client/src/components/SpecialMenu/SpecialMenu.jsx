@@ -28,7 +28,7 @@ const SpecialsMenu = () => {
   const [activeTab, setActiveTab] = useState('MAIN-DISHES');
 
   return (
-    <div className="container mx-auto max-w-6xl py-10 px-4">
+    <div className="container min-h-screen mx-auto max-w-6xl py-14 px-4">
       <h2 className="text-center text-4xl font-semibold mb-8 text-red-600">
         Our Specials Menu
       </h2>

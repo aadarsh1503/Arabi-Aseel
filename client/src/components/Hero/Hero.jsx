@@ -2,8 +2,6 @@ import React from "react";
 import { motion } from "framer-motion"; // Import motion from framer-motion
 import './Hero.css'; // Importing custom CSS for the rotating circle
 
-
-
 const Hero = () => {
   // Animation variants for fade-in effect
   const fadeIn = {
@@ -12,18 +10,21 @@ const Hero = () => {
   };
 
   return (
-    <div className="min-h-screen font-poppins bg-black bg-opacity-60 relative">
-      {/* Background Video */}
+    <div className="min-h-screen font-poppins relative bg-black bg-opacity-60">
+      {/* Background Video for large screens */}
       <video
         autoPlay
         loop
         muted
-        className="absolute left-0 w-full h-full object-cover z-[-1]"
+        className="absolute left-0 w-full h-full object-cover z-[-1] hidden md:block"
       >
         <source src="https://videos.pexels.com/video-files/4255506/4255506-uhd_2732_1440_25fps.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
+      {/* Background Image for mobile screens */}
+      <div className="absolute left-0 w-full h-full bg-cover bg-center z-[-1] md:hidden" style={{ backgroundImage: 'url(https://img.freepik.com/free-photo/restaurant-luxury-interior-design-dark-lightning_114579-2492.jpg?w=740&t=st=1728965397~exp=1728965997~hmac=c63e0f0c272ed15af9d7475674ede0bcaf7c253c8ee1f1e45efb556e3fd0e681)' }} />
+      
       {/* Top bar with contact info */}
       <motion.div 
         className="text-white py-2 px-4 flex justify-between items-center relative z-10 hidden md:flex"
