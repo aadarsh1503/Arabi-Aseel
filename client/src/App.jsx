@@ -12,19 +12,20 @@ import SpecialsMenu from './components/SpecialMenu/SpecialMenu'
 import OpeningHours from './components/OpeningHours/OpeningHours'
 import ChefsSection from './components/ChefSection/ChefSection'
 import ChatWidget from './components/WhatsappWeb/WhatsappWeb'
+import Navbar from './components/RootLayout/Navbar/Navbar'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <RootLayout >
+    
     <div>
-     
+     <Navbar />
      <Hero />
      <ChatWidget />
 
     </div>
-    </RootLayout>
+
   )
 }
 
