@@ -22,13 +22,7 @@ function App() {
      
      <Hero />
      <ChatWidget />
-     <PopularCategories />
-     <ServiceSection />
-     <PromotionSection />
-     <SpecialsMenu />
-     <OpeningHours />
-     <ChefsSection />
-     <BlogSection />
+
     </div>
     </RootLayout>
   )
