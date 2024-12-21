@@ -75,7 +75,7 @@ const Hero = () => {
           transition={{ duration: 0.5, delay: 1 }}
         >
           <span className="best-food-text p-4 text-center text-white text-sm sm:text-base lg:text-lg font-serif tracking-widest">
-            BEST FOOD SINCE 1985
+            OPENING SOON
           </span>
         </motion.div>
 
