@@ -19,7 +19,7 @@ const Hero = () => {
         muted
         className="absolute left-0 w-full h-full object-cover z-[-1] hidden md:block"
       >
-        <source src="https://videos.pexels.com/video-files/4255506/4255506-uhd_2732_1440_25fps.mp4" type="video/mp4" />
+        <source src="https://videos.pexels.com/video-files/5780424/5780424-uhd_2560_1440_24fps.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
@@ -80,20 +80,7 @@ const Hero = () => {
         </motion.div>
 
         {/* Navigation Menu - Hidden on Mobile */}
-        <motion.nav 
-          className="absolute bottom-16 flex justify-center space-x-8 text-white text-lg hidden md:flex"
-          initial="hidden" 
-          animate="visible" 
-          variants={fadeIn}
-          transition={{ duration: 0.5, delay: 1.2 }}
-        >
-          <a href="#" className="hover:underline">Home</a>
-          <a href="#" className="hover:underline">Pages</a>
-          <a href="#" className="hover:underline">Menu</a>
-          <a href="#" className="hover:underline">Blog</a>
-          <a href="#" className="hover:underline">Shop</a>
-          <a href="#" className="hover:underline">Contact</a>
-        </motion.nav>
+       
       </div>
     </div>
   );

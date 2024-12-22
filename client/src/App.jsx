@@ -22,7 +22,7 @@ function App() {
     <div>
      <Navbar />
      <Hero />
-     <ChatWidget />
+
 
     </div>
 
