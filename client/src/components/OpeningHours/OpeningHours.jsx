@@ -73,7 +73,7 @@ const OpeningHours = () => {
             </div>
             <div className="ml-4">
               <p className="text-sm text-gray-500">Call Anytime</p>
-              <p className="text-lg font-serif font-semibold">+964733-378901</p>
+              <p className="text-lg font-serif font-semibold">+973 17772211</p>
             </div>
           </div>
         </div>

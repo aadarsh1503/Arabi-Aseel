@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa"; // Importing React Icons
-import { FaHome, FaFileAlt, FaUtensils, FaBlog, FaShoppingCart, FaComments } from "react-icons/fa"; // Additional icons for menu
-import "font-awesome/css/font-awesome.min.css"; // Ensure Font Awesome is imported
+import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+import {
+  FaHome,
+  FaFileAlt,
+  FaUtensils,
+  FaBlog,
+  FaShoppingCart,
+  FaComments,
+} from "react-icons/fa";
+import "font-awesome/css/font-awesome.min.css";
+import i2 from "./i2.png"; // Import logo
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Detect if the screen is mobile size
   const checkMobileScreen = () => {
-    setIsMobile(window.innerWidth <= 768); // Adjust the breakpoint as needed
+    setIsMobile(window.innerWidth <= 768);
   };
 
   useEffect(() => {
@@ -20,80 +27,190 @@ const Navbar = () => {
     };
   }, []);
 
-  // Toggle Menu
   const handleToggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
   };
 
-  if (!isMobile) return null; // Render nothing on larger screens
+  const menuItems = [
+    {
+      icon: <FaHome className="mr-2" />,
+      text: "Home",
+      route: "/",
+    },
+    {
+      icon: <FaFileAlt className="mr-2" />,
+      text: "Pages",
+      dropdown: [
+        { text: "About Us", route: "/aboutUs" },
+        {
+          text: "Our Chef",
+          route: "/our-chef",
+          dropdown: [
+            { text: "Chef Style One", route: "/our-chef" },
+            { text: "Chef Details", route: "/chef-details" },
+          ],
+        },
+        { text: "Reservation", route: "/reservation" },
+        { text: "Contact", route: "/contact" },
+      ],
+    },
+    {
+      icon: <FaUtensils className="mr-2" />,
+      text: "Menu",
+      dropdown: [
+        { text: "Menu Style One", route: "/menu-breakfast" },
+        { text: "Menu Style Two", route: "/menu-lunch" },
+        { text: "Menu Style Three", route: "/menu-dinner" },
+      ],
+    },
+    {
+      icon: <FaBlog className="mr-2" />,
+      text: "Blog",
+      dropdown: [
+        { text: "Blog", route: "/shop-new-arrivals" },
+        { text: "Blog Single", route: "/shop-best-sellers" },
+      ],
+    },
+    {
+      icon: <FaShoppingCart className="mr-2" />,
+      text: "Shop",
+      dropdown: [
+        { text: "Shop", route: "/shop-new-arrivals" },
+        { text: "Shop Single", route: "/shop-best-sellers" },
+        { text: "Cart", route: "/shop-best-sellers" },
+        { text: "Checkout", route: "/shop-best-sellers" },
+      ],
+    },
+    {
+      icon: <FaComments className="mr-2" />,
+      text: "Contact",
+      route: "/contact",
+    },
+  ];
 
   return (
-    <nav className="mobile-navbar bg-white text-black fixed top-0 left-0 w-full z-20 shadow-lg">
-      {/* Mobile Menu Icon */}
-      <div className="flex justify-between items-center p-4 bg-white">
-        <img 
-          src="https://wp.validthemes.net/restan/wp-content/uploads/2024/02/logo-1.png" // Replace with your image path
-          alt="MyApp Logo" 
-          className="h-8" // Adjust height as needed
-        />
-        <div 
-          onClick={handleToggleMenu} 
-          className="cursor-pointer text-2xl mr-4" // Added margin-right for spacing
-          style={{ zIndex: 30 }} // Ensures the icon is above other elements
-        >
-          {isMenuOpen ? (
-            <span>✕</span> // Close icon
+    <div className="relative z-50">
+      {/* Contact Info Bar */}
+      <div className="bg-black max-w-7xl mx-auto bg-opacity-0">
+        <div className="text-white py-2 px-4 flex justify-between items-center text-base md:text-base ">
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-1">
+              <FaPhoneAlt />
+              <span>+973 17772211</span>
+            </div>
+            <div className="flex items-center space-x-1">
+              <FaEnvelope />
+              <span>arabiaseelrest@gmail.com</span>
+            </div>
+          </div>
+          <div className="flex items-center space-x-1">
+            <FaMapMarkerAlt />
+            <span>
+              Building 1320, Road 4149, Block 441, North Sehla, Bahrain
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Navbar */}
+      <nav className="text-white bg-black bg-opacity-0 left-0 w-full shadow-lg top-10 z-30">
+        {/* Logo and Menu Icon */}
+        <div className="flex max-w-7xl mx-auto justify-between items-center ">
+          <img src={i2} alt="MyApp Logo" className="h-24" />
+          {isMobile ? (
+            <div
+              onClick={handleToggleMenu}
+              className="cursor-pointer text-xl"
+              style={{ zIndex: 30 }}
+            >
+              {isMenuOpen ? <span>✕</span> : <span>☰</span>}
+            </div>
           ) : (
-            <span>☰</span> // Open icon
+            <ul className="hidden text-white bg-opacity-100 lg:flex space-x-6 text-base font-semibold">
+              {menuItems.map((item, index) => (
+                <li key={index} className="relative group p-2">
+                  {item.route ? (
+                    <a
+                      href={item.route}
+                      className="hover:text-yellow-500 cursor-pointer flex items-center"
+                    >
+                      {item.icon}
+                      {item.text}
+                    </a>
+                  ) : (
+                    <>
+                      <div className="hover:text-yellow-500 cursor-pointer flex items-center">
+                        {item.icon}
+                        {item.text}
+                      </div>
+                      {item.dropdown && (
+                        <div className="absolute hidden group-hover:block p-4 mt-2 flex-col z-50 bg-white text-black lg:w-[220px] -ml-2 rounded shadow-lg">
+                          {item.dropdown.map((dropdownItem, idx) => (
+                            <li key={idx} className="relative group">
+                              <a
+                                href={dropdownItem.route}
+                                className="hover:text-yellow-500 w-full px-4 py-3 flex justify-between items-center"
+                              >
+                                {dropdownItem.text}
+                                {dropdownItem.dropdown && <span>▶</span>}
+                              </a>
+                              {/* Nested dropdown (with group hover) */}
+                              {dropdownItem.dropdown && (
+                                <div className="absolute hidden group-hover:block p-4 mt-2 flex-col z-50 bg-white text-black lg:w-[256px] left-full top-0 rounded shadow-lg">
+                                  {dropdownItem.dropdown.map((nestedItem, nestedIdx) => (
+                                    <li key={nestedIdx} className="hover:text-yellow-500 px-4 py-3">
+                                      <a href={nestedItem.route}>{nestedItem.text}</a>
+                                    </li>
+                                  ))}
+                                </div>
+                              )}
+                            </li>
+                          ))}
+                        </div>
+                      )}
+                    </>
+                  )}
+                </li>
+              ))}
+            </ul>
           )}
         </div>
-      </div>
 
-      {/* Menu Items including Contact Info */}
-      <div 
-        className={`bg-white transition-transform duration-[2s] transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} py-6 rounded-lg shadow-lg`} 
-        style={{ position: 'absolute', top: '56px', left: 0, width: '100%', zIndex: 10 }} // Positioning menu below the navbar
-      >
-        {/* Menu Links with Icons */}
-        <ul className={`flex flex-col items-center space-y-4 ${isMenuOpen ? 'block' : 'hidden'}`}>
-          <li className="flex items-center hover:text-yellow-500 cursor-pointer text-lg font-semibold">
-            <FaHome className="mr-2" /> Home
-          </li>
-          <li className="flex items-center hover:text-yellow-500 cursor-pointer text-lg font-semibold">
-            <FaFileAlt className="mr-2" /> Pages
-          </li>
-          <li className="flex items-center hover:text-yellow-500 cursor-pointer text-lg font-semibold">
-            <FaUtensils className="mr-2" /> Menu
-          </li>
-          <li className="flex items-center hover:text-yellow-500 cursor-pointer text-lg font-semibold">
-            <FaBlog className="mr-2" /> Blog
-          </li>
-          <li className="flex items-center hover:text-yellow-500 cursor-pointer text-lg font-semibold">
-            <FaShoppingCart className="mr-2" /> Shop
-          </li>
-          <li className="flex items-center hover:text-yellow-500 cursor-pointer text-lg font-semibold">
-            <FaComments className="mr-2" /> Contact
-          </li>
-        </ul>
-
-        {/* Contact Info Section inside Menu */}
-        <div className="border-t border-gray-600 mt-6 pt-4 px-4 space-y-2 text-center">
-          <h3 className="text-lg font-bold">Contact Us</h3>
-          <div className="flex items-center justify-center space-x-2">
-            <FaPhoneAlt />
-            <span>+4733378901</span>
+        {/* Mobile Menu Items */}
+        {isMobile && isMenuOpen && (
+          <div
+            className="bg-white transition-transform duration-[2s] transform py-6 rounded-lg shadow-lg"
+            style={{
+              position: "absolute",
+              top: "56px",
+              left: 0,
+              width: "100%",
+              zIndex: 10,
+            }}
+          >
+            <ul className="flex flex-col items-center space-y-4">
+              {menuItems.map((item, index) => (
+                <li key={index} className="flex flex-col items-start w-full">
+                  <div className="hover:text-yellow-500 cursor-pointer text-lg font-semibold flex items-center space-x-2">
+                    {item.icon}
+                    {item.text}
+                  </div>
+                  {item.dropdown && (
+                    <ul className="ml-4 mt-2">
+                      {item.dropdown.map((dropdownItem, idx) => (
+                        <li key={idx} className="hover:text-yellow-500 px-2 py-1">
+                          <a href={dropdownItem.route}>{dropdownItem.text}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ))}
+            </ul>
           </div>
-          <div className="flex items-center justify-center space-x-2">
-            <FaEnvelope />
-            <span>food@restan.com</span>
-          </div>
-          <div className="flex items-center justify-center space-x-2">
-            <FaMapMarkerAlt />
-            <span>175 10th Street, Berlin</span>
-          </div>
-        </div>
-      </div>
-    </nav>
+        )}
+      </nav>
+    </div>
   );
 };
 

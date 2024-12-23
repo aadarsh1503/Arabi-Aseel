@@ -1,7 +1,15 @@
 import React from "react";
 import { motion } from "framer-motion"; // Import motion from framer-motion
 import './Hero.css'; // Importing custom CSS for the rotating circle
-import i2 from "./i2.png"
+import i2 from "./i2.png";
+import Navbar from "../RootLayout/Navbar/Navbar";
+import ServiceSection from "../ServiceSection/ServiceSection";
+import PromotionSection from "../PromotionSection/PromotionSection";
+import SpecialsMenu from "../SpecialMenu/SpecialMenu";
+import OpeningHours from "../OpeningHours/OpeningHours";
+import ChefsSection from "../ChefSection/ChefSection";
+import BlogSection from "../BlogSection/BlogSection";
+import PopularCategories from "../PopularCategory/PopularCategory";
 
 const Hero = () => {
   // Animation variants for fade-in effect
@@ -11,13 +19,18 @@ const Hero = () => {
   };
 
   return (
-    <div className="min-h-screen font-poppins relative bg-black bg-opacity-60">
+    <div>
+
+    <div className="h-screen -mt-[136px]  font-poppins  bg-black bg-opacity-60">
+
+
+    
       {/* Background Video for large screens */}
       <video
         autoPlay
         loop
         muted
-        className="absolute left-0 w-full h-full object-cover z-[-1] hidden md:block"
+        className="absolute left-0 w-full h-full object-cover bg-opacity-0 z-[-1] hidden md:block"
       >
         <source src="https://videos.pexels.com/video-files/5780424/5780424-uhd_2560_1440_24fps.mp4" type="video/mp4" />
         Your browser does not support the video tag.
@@ -26,37 +39,13 @@ const Hero = () => {
       {/* Background Image for mobile screens */}
       <div className="absolute left-0 w-full h-full bg-cover bg-center z-[-1] md:hidden" style={{ backgroundImage: 'url(https://img.freepik.com/free-photo/restaurant-luxury-interior-design-dark-lightning_114579-2492.jpg?w=740&t=st=1728965397~exp=1728965997~hmac=c63e0f0c272ed15af9d7475674ede0bcaf7c253c8ee1f1e45efb556e3fd0e681)' }} />
       
-      {/* Top bar with contact info */}
-      <motion.div 
-        className="text-white py-2 px-4 flex justify-between items-center relative z-10 hidden md:flex"
-        initial="hidden" 
-        animate="visible" 
-        variants={fadeIn}
-        transition={{ duration: 0.5, delay: 0.2 }} // Control duration and delay
-      >
-        <div className="flex space-x-4">
-          <span className="flex items-center space-x-2">
-            <i className="fa fa-phone"></i>
-            <span>+973 17772211</span>
-          </span>
-          <span className="flex items-center space-x-2">
-            <i className="fa fa-envelope"></i>
-            <span>Email: arabiaseelrest@gmail.com</span>
-          </span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <i className="fa fa-map-marker-alt"></i>
-          <span>Building 1320, Road 4149, Block 441, North Sehla, Bahrain</span>
-        </div>
-      </motion.div>
-
       {/* Main content */}
-      <div className="flex flex-col items-center justify-center min-h-screen relative z-10">
+      <div className="flex flex-col items-center justify-center min-h-screen relative z-10 pt-16"> {/* Add padding to push content below navbar */}
         {/* First Logo - Hidden on Mobile */}
         
         {/* Second Logo - Centered on Mobile */}
         <motion.div 
-          className="absolute lg:top-12 top-32 transform -translate-y-1/2 flex flex-col items-center"
+          className="absolute lg:top-[100px] mb-8 top-32 transform -translate-y-1/2 flex flex-col items-center"
           initial="hidden" 
           animate="visible" 
           variants={fadeIn}
@@ -65,10 +54,8 @@ const Hero = () => {
           <img src={i2} alt="Small Logo" className="h-12 lg:h-72" />
         </motion.div>
 
-    
-
         <motion.div 
-          className="absolute z-10 rounded-full border-4 border-white w-40 h-40 sm:w-32 sm:h-32 lg:w-48 lg:h-48 -mt-28 flex top-2/3 sm:top-1/2 lg:mt-0 items-center justify-center"
+          className="absolute z-10 lg:top-[356px] rounded-full border-4 border-white w-40 h-40 sm:w-32 sm:h-32 lg:w-48 lg:h-48 -mt-28 flex top-2/3 sm:top-1/2 lg:mt-0 items-center justify-center"
           initial="hidden" 
           animate="visible" 
           variants={fadeIn}
@@ -80,8 +67,15 @@ const Hero = () => {
         </motion.div>
 
         {/* Navigation Menu - Hidden on Mobile */}
-       
       </div>
+      </div>
+      <PopularCategories />
+<ServiceSection />
+<PromotionSection/>
+<SpecialsMenu />
+<OpeningHours />
+<ChefsSection />
+<BlogSection />
     </div>
   );
 };
