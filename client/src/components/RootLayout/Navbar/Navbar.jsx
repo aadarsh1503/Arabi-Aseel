@@ -45,7 +45,7 @@ const Navbar = () => {
     {
       icon: <FaUtensils className="mr-2" />,
       text: "Menu",
-          route:'/menu-1'
+          route:'/menu'
     },
    
     {

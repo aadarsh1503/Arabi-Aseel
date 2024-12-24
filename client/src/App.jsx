@@ -24,7 +24,7 @@ function App() {
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/our-chef" element={<OurFirst />} />
         <Route path="/reservation" element={<Reservation />} />
-        <Route path="/menu-1" element={<MenuItem1 />} />
+        <Route path="/menu" element={<MenuItem1 />} />
 
       </Routes>
      <Footer />

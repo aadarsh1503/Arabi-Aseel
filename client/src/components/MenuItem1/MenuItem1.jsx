@@ -15,13 +15,13 @@ const MenuItem1 = () => {
       style={{ backgroundImage: `url(${i1})` }} // Correct way to reference the imported image
     >
       <div className="text-center flex flex-col items-center bg-opacity-50  p-6 rounded">
-        <div className="text-white text-5xl font-semibold">Menu Style One</div>
+        <div className="text-white text-5xl font-semibold">Menu</div>
         <div className="mt-4 text-white text-sm">
           {/* Home is clickable, About Us is plain text */}
           <Link to="/" className="text-white font-bold hover:underline">
             Home
           </Link>
-         <span className='font-normal'> / Menu Style One</span>
+         <span className='font-normal'> / Menu</span>
         </div>
       </div>
       </div>
