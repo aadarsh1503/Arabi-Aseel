@@ -1,0 +1,5 @@
+/* Add this to your global CSS file */
+.clip-pentagon {
+    clip-path: polygon(50% 0%, 100% 35%, 82% 100%, 18% 100%, 0% 35%);
+  }
+  

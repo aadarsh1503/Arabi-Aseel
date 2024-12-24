@@ -39,38 +39,15 @@ const Navbar = () => {
     },
     {
       icon: <FaFileAlt className="mr-2" />,
-      text: "Pages",
-      dropdown: [
-        { text: "About Us", route: "/aboutUs" },
-        {
-          text: "Our Chef",
-          route: "/our-chef",
-          dropdown: [
-            { text: "Chef Style One", route: "/our-chef" },
-            { text: "Chef Details", route: "/chef-details" },
-          ],
-        },
-        { text: "Reservation", route: "/reservation" },
-        { text: "Contact", route: "/contact" },
-      ],
+      text: "About Us",
+     route:'/aboutUs'
     },
     {
       icon: <FaUtensils className="mr-2" />,
       text: "Menu",
-      dropdown: [
-        { text: "Menu Style One", route: "/menu-breakfast" },
-        { text: "Menu Style Two", route: "/menu-lunch" },
-        { text: "Menu Style Three", route: "/menu-dinner" },
-      ],
+          route:'/menu-1'
     },
-    {
-      icon: <FaBlog className="mr-2" />,
-      text: "Blog",
-      dropdown: [
-        { text: "Blog", route: "/shop-new-arrivals" },
-        { text: "Blog Single", route: "/shop-best-sellers" },
-      ],
-    },
+   
     {
       icon: <FaShoppingCart className="mr-2" />,
       text: "Shop",

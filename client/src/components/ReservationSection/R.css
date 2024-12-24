@@ -1,0 +1,8 @@
+/* This targets the calendar icon inside the time input */
+input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(1); /* This inverts the color of the icon */
+  }
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1); /* This inverts the color of the icon */
+  }
+  

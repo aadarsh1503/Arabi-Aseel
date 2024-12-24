@@ -8,6 +8,7 @@ import Footer from './components/RootLayout/Footer/Footer';
 
 import OurFirst from './components/OurChef/OurFirst';
 import Reservation from './components/Reservation/Reservation';
+import MenuItem1 from './components/MenuItem1/MenuItem1';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -23,6 +24,7 @@ function App() {
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/our-chef" element={<OurFirst />} />
         <Route path="/reservation" element={<Reservation />} />
+        <Route path="/menu-1" element={<MenuItem1 />} />
 
       </Routes>
      <Footer />
