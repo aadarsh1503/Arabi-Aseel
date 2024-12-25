@@ -25,4 +25,11 @@
     animation: pulseAndTilt 2s ease-in-out infinite;
     color: black; /* Adjust to your preferred color */
   }
+  .slick-slide {
+    padding: 0 0.5rem; /* Add padding for gaps instead of margin */
+  }
+  
+  .slick-list {
+    margin: 0 -0.5rem; /* Compensate for the slide padding */
+  }
   

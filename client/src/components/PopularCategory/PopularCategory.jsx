@@ -80,24 +80,31 @@ const PopularCategory = () => {
   };
 
   return (
-    <Slider {...settings} className="font-poppins ">
-      {categories.map((category) => (
-        <div
-          key={category.id}
-          className="relative w-64 m-2 px-4 gap-8 overflow-hidden rounded-xl shadow-lg"
-        >
-          <img
-            src={category.image}
-            alt={category.title}
-            className="w-full h-100 object-cover    transition-transform duration-300 ease-in-out transform hover:scale-110"
-          />
-          <div className="absolute bottom-0 left-0 right-0  p-4 w-64 ml-4  bg-black bg-opacity-70 text-center">
-            <p className="text-yellow-500 font-bold">{category.subtitle}</p>
-            <h3 className="text-xl text-white font-semibold">{category.title}</h3>
-          </div>
+    <Slider {...settings} className="font-poppins">
+    {categories.map((category) => (
+      <div
+        key={category.id}
+        className="relative w-20  bg-white gap-8 overflow-hidden rounded-xl shadow-lg"
+      >
+        {/* Image */}
+        <img
+          src={category.image}
+          alt={category.title}
+          className="w-full h-100 bg-white object-cover"
+        />
+  
+        {/* Always-Visible Overlay */}
+        <div className="absolute inset-0 mt-56 bg-gradient-to-b from-transparent to-black opacity-70"></div>
+  
+        {/* Content */}
+        <div className="absolute bottom-0 left-0 right-0 p-4 w-[254px] ml-[16px] shadow-none  text-center rounded-b-xl">
+          <p className="text-yellow-500 text-left font-bold">{category.subtitle}</p>
+          <h3 className="text-xl text-white text-left font-semibold">{category.title}</h3>
         </div>
-      ))}
-    </Slider>
+      </div>
+    ))}
+  </Slider>
+  
   );
 };
 

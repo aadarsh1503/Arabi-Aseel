@@ -81,7 +81,7 @@ const Partners = () => {
     };
 
     return (
-        <section className="py-10 bg-Grey font-poppins lg:w-full w-[200px] mx-auto">
+        <section className="py-10 bg-white font-poppins lg:w-full w-[200px] mx-auto">
 
 <p className="text-center text-black text-xl  font-semibold mb-8 my-4">
 OUR TRUSTED 8K HAPPY PARTNER

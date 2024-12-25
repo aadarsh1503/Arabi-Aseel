@@ -10,6 +10,7 @@ import OpeningHours from "../OpeningHours/OpeningHours";
 import ChefsSection from "../ChefSection/ChefSection";
 import BlogSection from "../BlogSection/BlogSection";
 import PopularCategories from "../PopularCategory/PopularCategory";
+import OnlineOrderSection from "../OnlineOrderSection/OnlineOrderSection";
 
 const Hero = () => {
   // Animation variants for fade-in effect
@@ -73,9 +74,10 @@ const Hero = () => {
 <ServiceSection />
 <PromotionSection/>
 <SpecialsMenu />
+<OnlineOrderSection />
 <OpeningHours />
 <ChefsSection />
-<BlogSection />
+
     </div>
   );
 };
