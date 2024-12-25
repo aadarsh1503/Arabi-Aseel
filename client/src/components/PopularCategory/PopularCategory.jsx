@@ -7,7 +7,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { useState } from "react";
 import "react-datetime/css/react-datetime.css";
 import Datetime from "react-datetime";
-
+import "./popular.css"
 const BookingForm = () => {
   const [date, setDate] = useState(null);
   const [time, setTime] = useState(null);
@@ -88,6 +88,7 @@ const PopularCategory = () => {
     { id: 2, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/04/25.jpg', title: 'Beverage', subtitle: 'Hot Chocolate' },
     { id: 3, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/04/26.jpg', title: 'Salmon Fry', subtitle: 'Sea Food' },
     { id: 4, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/04/28.jpg', title: 'Burger', subtitle: 'Fast Food' },
+
   ];
 
   const settings = {
@@ -117,29 +118,30 @@ const PopularCategory = () => {
 
   return (
     <Slider {...settings} className="font-poppins">
-      {categories.map((category) => (
-        <div
-          key={category.id}
-          className="relative w-20 bg-white gap-8 overflow-hidden rounded-xl shadow-lg"
-        >
-          {/* Image */}
-          <img
-            src={category.image}
-            alt={category.title}
-            className="w-full h-100 bg-white object-cover"
-          />
-    
-          {/* Always-Visible Overlay */}
-          <div className="absolute inset-0 mt-56 bg-gradient-to-b from-transparent to-black opacity-70"></div>
-    
-          {/* Content */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 w-[254px] ml-[16px] shadow-none text-center rounded-b-xl">
-            <p className="text-yellow-500 text-left font-bold">{category.subtitle}</p>
-            <h3 className="text-xl text-white text-left font-semibold">{category.title}</h3>
-          </div>
+    {categories.map((category) => (
+      <div
+        key={category.id}
+        className="relative w-20  bg-white gap-8 overflow-hidden rounded-xl shadow-lg"
+      >
+        {/* Image */}
+        <img
+          src={category.image}
+          alt={category.title}
+          className="w-full h-100 bg-white object-cover"
+        />
+  
+        {/* Always-Visible Overlay */}
+        <div className="absolute inset-0 mt-32 bg-gradient-to-b from-transparent to-black opacity-50"></div>
+  
+        {/* Content */}
+        <div className="absolute bottom-0 left-0 right-0 p-4 w-[254px] ml-[16px] shadow-none  text-center rounded-b-xl">
+          <p className="text-yellow-500 text-left font-bold">{category.subtitle}</p>
+          <h3 className="text-xl text-white text-left font-semibold">{category.title}</h3>
         </div>
-      ))}
-    </Slider>
+      </div>
+    ))}
+  </Slider>
+  
   );
 };
 

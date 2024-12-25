@@ -1,13 +1,3 @@
-  /* For Date Input */
-  input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1); /* Set this to 1 for white icons, 0 for black */
-  }
-  
-  /* For Time Input */
-  input[type="time"]::-webkit-calendar-picker-indicator {
-    filter: invert(0); /* Set this to 1 for white icons, 0 for black */
-  }
-  
 
 @keyframes pulseAndTilt {
     0% {
