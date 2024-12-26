@@ -24,7 +24,7 @@ const AboutUs = () => {
         </div>
       </div>
       </div>
-      <Partners />
+
       <RestaurantSection />
       <ChefsSection />
       <OpeningHours />

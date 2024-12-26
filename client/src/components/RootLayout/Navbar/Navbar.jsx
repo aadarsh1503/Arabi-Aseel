@@ -69,24 +69,7 @@ const Navbar = () => {
     <div className="relative z-50">
       {/* Contact Info Bar */}
       <div className="bg-black max-w-7xl mx-auto bg-opacity-0">
-        <div className="text-white py-2 px-4 flex justify-between items-center text-base md:text-base ">
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-1">
-              <FaPhoneAlt />
-              <span>+973 17772211</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <FaEnvelope />
-              <span>arabiaseelrest@gmail.com</span>
-            </div>
-          </div>
-          <div className="flex items-center space-x-1">
-            <FaMapMarkerAlt />
-            <span>
-              Building 1320, Road 4149, Block 441, North Sehla, Bahrain
-            </span>
-          </div>
-        </div>
+
       </div>
 
       {/* Navbar */}
@@ -103,17 +86,25 @@ const Navbar = () => {
               {isMenuOpen ? <span>✕</span> : <span>☰</span>}
             </div>
           ) : (
-            <ul className="hidden text-white bg-opacity-100 lg:flex space-x-6 text-base font-semibold">
-              {menuItems.map((item, index) => (
-                <li key={index} className="relative group p-2">
-                  {item.route ? (
-                    <a
-                      href={item.route}
-                      className="hover:text-yellow-500 cursor-pointer flex items-center"
-                    >
-                      {item.icon}
-                      {item.text}
-                    </a>
+            <ul
+  className={`hidden lg:flex space-x-6 text-base font-semibold ${
+    window.location.pathname === "/menu" ? "text-black" : "text-white"
+  } bg-opacity-100`}
+>
+  {menuItems.map((item, index) => (
+    <li key={index} className="relative group p-2">
+      {item.route ? (
+        <a
+          href={item.route}
+          className={`cursor-pointer flex items-center ${
+            window.location.pathname === item.route
+              ? "text-yellow-500"
+              : ""
+          } hover:text-yellow-500`}
+        >
+          {item.icon}
+          {item.text}
+        </a>
                   ) : (
                     <>
                       <div className="hover:text-yellow-500 cursor-pointer flex items-center">

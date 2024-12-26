@@ -7,8 +7,8 @@ const OpeningHours = () => {
       {/* Left Column: Video and RESTAN text */}
       <div className="relative flex flex-col justify-center items-center lg:items-start">
         {/* RESTAN Text */}
-        <div className="absolute top-0 font-serif text-5xl lg:py-16 lg:text-9xl font-bold opacity-5 z-20">
-          RESTAN
+        <div className="absolute top-9 font-serif text-5xl lg:py-16 lg:text-7xl font-bold opacity-5 z-20">
+          ARABI ASEEL
         </div>
 
         {/* Video - Visible on large screens only */}
