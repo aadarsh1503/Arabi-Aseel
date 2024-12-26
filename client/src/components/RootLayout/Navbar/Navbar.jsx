@@ -14,10 +14,22 @@ import i2 from "./i2.png"; // Import logo
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [navbarStyle, setNavbarStyle] = useState("bg-opacity-0");
+  useEffect(() => {
+    // Update navbar style based on current URL
+    if (window.location.pathname === "/menu" || window.location.pathname === "/contact" || window.location.pathname === "/aboutUs" ) {
+      setNavbarStyle("bg-opacity-100 bg-black");
+    } else {
+      setNavbarStyle("bg-opacity-0");
+    }
+  }, []);
+  
 
   const checkMobileScreen = () => {
     setIsMobile(window.innerWidth <= 768);
   };
+
+
 
   useEffect(() => {
     checkMobileScreen();
@@ -73,7 +85,7 @@ const Navbar = () => {
       </div>
 
       {/* Navbar */}
-      <nav className="text-white bg-black bg-opacity-0 left-0 w-full shadow-lg top-10 z-30">
+      <nav className={`text-white left-0 w-full shadow-lg top-10 z-30 ${navbarStyle}`}>
         {/* Logo and Menu Icon */}
         <div className="flex max-w-7xl mx-auto justify-between items-center ">
           <img src={i2} alt="MyApp Logo" className="h-24" />
@@ -88,7 +100,7 @@ const Navbar = () => {
           ) : (
             <ul
   className={`hidden lg:flex space-x-6 text-base font-semibold ${
-    window.location.pathname === "/menu" ? "text-black" : "text-white"
+    window.location.pathname === "/menu" ? "text-white" : "text-white"
   } bg-opacity-100`}
 >
   {menuItems.map((item, index) => (

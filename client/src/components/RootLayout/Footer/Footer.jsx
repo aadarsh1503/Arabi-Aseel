@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <>
       {/* First Footer */}
-      <footer className="text-black mt-10 mx-auto max-w-5xl">
+      <footer className="text-black mt-10 ">
         <div className="relative">
           {/* Footer Decoration Image */}
           <img
@@ -21,12 +21,14 @@ const Footer = () => {
               <p className="text-sm mb-6">
                 Continued at zealously necessary is Surrounded sir motionless she end literature. Gay direction neglected.
               </p>
-              <div className="flex space-x-4">
+
+              <div className="flex mb-8 space-x-4">
                 <a href="#"><i className="fab fa-facebook"></i></a>
                 <a href="#"><i className="fab fa-twitter"></i></a>
                 <a href="#"><i className="fab fa-youtube"></i></a>
                 <a href="#"><i className="fab fa-linkedin"></i></a>
               </div>
+              
             </div>
 
             {/* Explore */}
@@ -88,25 +90,7 @@ const Footer = () => {
       </footer>
 
       {/* Second Footer */}
-      <footer className="bg-gray-800 text-white">
-        <div className=" bg-black inset-0 bg-opacity-90 mx-auto flex flex-col md:flex-row justify-between items-center p-4">
-          <div className="flex items-center"> {/* Flex container for images */}
-            <img 
-              src="https://wp.validthemes.net/restan/wp-content/uploads/2024/01/9-2.png" 
-              alt="Footer Decoration 3" 
-              className="h-54 w-44 object-cover mr-2" // Adjust margin as needed
-            />
-            <img 
-              src={i2}
-              alt="Small Decoration"
-              className="h-32 w-32 ml-10" // Adjust the size as needed
-            />
-          </div>
-          <div className="text-right mt-8"> {/* Right-aligned copyright section */}
-            <p className="text-sm">&copy; Copyright 2024 Arabi Aseel. All Rights Reserved</p>
-          </div>
-        </div>
-      </footer>
+
     </>
   );
 };
