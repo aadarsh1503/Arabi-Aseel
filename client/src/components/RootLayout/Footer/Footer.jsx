@@ -1,5 +1,6 @@
 import React from "react";
 import f1 from "./f1.webp"
+import g1 from "./g1.png"
 
 const Footer = () => {
   return (
@@ -8,11 +9,21 @@ const Footer = () => {
       <footer className="text-black mt-10 ">
         <div className="relative">
           {/* Footer Decoration Image */}
-          <img
-            src={f1}
-            alt="Footer Decoration 1"
-            className="absolute inset-0 w-full h-full bg-black bg-opacity-0" // Adjust opacity for visibility
-          />
+
+  {/* Image for large screens */}
+  <img
+    src={f1}
+    alt="Footer Decoration for Large Screens"
+    className="hidden lg:block absolute inset-0 w-full object-center lg:object-fill h-full bg-black bg-opacity-0"
+  />
+
+  {/* Image for mobile screens */}
+  <img
+    src={g1}
+    alt="Footer Decoration for Mobile Screens"
+    className="block lg:hidden absolute inset-0 w-full object-center lg:object-fill h-full bg-black bg-opacity-0"
+  />
+
 
           <div className="container font-serif text-white p-10 md:p-20 mx-auto relative z-10 grid grid-cols-1 md:grid-cols-4 gap-8">
             {/* About Us */}

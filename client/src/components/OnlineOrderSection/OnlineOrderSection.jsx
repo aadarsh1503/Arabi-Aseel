@@ -4,7 +4,7 @@ import { faAppStore, faGooglePlay } from '@fortawesome/free-brands-svg-icons';
 const OnlineOrderSection = () => {
   return (
     
-    <div className="flex flex-col lg:flex-row items-center rounded-xl max-w-6xl  mx-auto justify-center bg-black text-white py-16 px-8 relative">
+    <div className="flex flex-col lg:flex-row mb-10 lg:mb-0 items-center rounded-xl max-w-6xl  mx-auto justify-center bg-black text-white py-16 px-8 relative">
       {/* Left Side Image Section */}
       <div className="relative flex-1  flex justify-center items-center order-2 lg:order-1">
         <div className="relative">
