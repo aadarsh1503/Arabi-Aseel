@@ -3,7 +3,7 @@ import { AiOutlineSend } from 'react-icons/ai';
 
 const ContactForm = () => {
   return (
-    <section className="bg-white py-12 px-4 mt-10 sm:px-6 shadow-2xl lg:px-8">
+    <section className="bg-white py-12 px-4 mt-10 sm:px-6  lg:px-8">
       <div className="max-w-2xl shadow-xl p-4 mx-auto">
         <div className="text-center mb-8">
           <p className="text-sm uppercase text-yellow-600 tracking-wide">Keep in Touch</p>

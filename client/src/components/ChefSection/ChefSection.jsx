@@ -2,7 +2,7 @@ import React from "react";
 
 const ChefsSection = () => {
     return (
-        <div className="flex flex-col min-h-screen font-poppins items-center py-12 bg-gray-50">
+        <div className="flex flex-col min-h-screen font-poppins items-center py-12 ">
             {/* Section Title */}
             <h2 className="text-5xl mt-20 font-serif text-gray-800 mb-8 text-center">Meet Our Special Chefs</h2>
 

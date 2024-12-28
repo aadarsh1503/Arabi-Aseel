@@ -1,5 +1,5 @@
 import React from "react";
-import i2 from "./i2.png"
+import g1 from "./g1.png"
 
 const Footer = () => {
   return (
@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="relative">
           {/* Footer Decoration Image */}
           <img
-            src="https://giadungviet.vn/wp-content/uploads/BACKGROUND-FOOTER-1.jpg"
+            src={g1}
             alt="Footer Decoration 1"
             className="absolute inset-0 w-full h-full object-cover bg-black bg-opacity-90" // Adjust opacity for visibility
           />

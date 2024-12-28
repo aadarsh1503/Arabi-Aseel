@@ -79,7 +79,7 @@ const MenuSection = () => {
     return (
         <div className="bg-white py-10 max-w-6xl mx-auto px-4">
             <div className="mb-8">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">Category: Starter</h2>
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">Starter</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     {menuItems.filter(item => item.category === 'Starter').map(item => (
                         <div
@@ -105,7 +105,7 @@ const MenuSection = () => {
             </div>
 
             <div>
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">Category: Main Course</h2>
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">Main Course</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     {menuItems.filter(item => item.category === 'Main Course').map(item => (
                         <div
