@@ -1,5 +1,5 @@
 import React from "react";
-import g1 from "./g1.png"
+import f1 from "./f1.webp"
 
 const Footer = () => {
   return (
@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="relative">
           {/* Footer Decoration Image */}
           <img
-            src={g1}
+            src={f1}
             alt="Footer Decoration 1"
             className="absolute inset-0 w-full h-full object-cover bg-black bg-opacity-90" // Adjust opacity for visibility
           />

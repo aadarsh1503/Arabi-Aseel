@@ -2,13 +2,13 @@ import React from 'react';
 
 const PromotionSection = () => {
   return (
-    <div className="relative min-h-screen w-full py-1">
+    <div className="relative min-h-screen  w-full py-1">
       {/* Yellow Background Image */}
       <div className="relative mx-auto max-w-7xl">
         <img 
           src="https://wp.validthemes.net/restan/wp-content/uploads/2024/04/4.jpg" // Add your yellow background image here
           alt="Yellow Background"
-          className="absolute inset-0 w-[400vw] lg:h-[40vw] h-[250vw] rounded-3xl object-fill" // Cover the entire section
+          className="absolute inset-0 w-[400vw] lg:h-[40vw] h-[180vw] rounded-3xl object-fill" // Cover the entire section
         />
 
         <div className="container mx-auto relative flex flex-col lg:flex-row items-center justify-between px-8 z-10">
