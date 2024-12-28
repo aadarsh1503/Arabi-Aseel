@@ -11,7 +11,7 @@ const Footer = () => {
           <img
             src={f1}
             alt="Footer Decoration 1"
-            className="absolute inset-0 w-full h-full object-cover bg-black bg-opacity-90" // Adjust opacity for visibility
+            className="absolute inset-0 w-full h-full bg-black bg-opacity-0" // Adjust opacity for visibility
           />
 
           <div className="container font-serif text-white p-10 md:p-20 mx-auto relative z-10 grid grid-cols-1 md:grid-cols-4 gap-8">
