@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useDirection } from '../DirectionContext'; // Assuming this is managing the language direction
 
 const ServiceSection = () => {
+  const { direction } = useDirection(); // Get the current direction (ltr or rtl)
   const [isVisible, setIsVisible] = useState(false);
 
   const services = [
@@ -54,7 +56,7 @@ const ServiceSection = () => {
 
   return (
     <div id="service-section" className="container font-poppins mx-auto py-16">
-      <div className="flex lg:flex-row flex-col justify-center items-center space-x-0 lg:space-x-20 relative">
+      <div className={`flex ${direction === 'rtl' ? 'lg:flex-row-reverse' : 'lg:flex-row'} flex-col justify-center items-center space-x-0 lg:space-x-20 relative`}>
         {services.map((service, index) => (
           <motion.div 
             key={service.id} 

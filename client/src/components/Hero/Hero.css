@@ -36,3 +36,12 @@
   .bg-center {
     background-position: center;
   }
+  /* Hide horizontal scrollbar */
+body, html {
+  overflow-x: hidden; /* This will hide the horizontal scrollbar */
+}
+
+/* Optional: if you want to make sure other sections also don't cause overflow */
+.hero-container {
+  overflow-x: hidden; /* Hide horizontal scrollbar in the Hero section */
+}

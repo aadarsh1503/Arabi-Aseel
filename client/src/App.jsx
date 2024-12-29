@@ -9,12 +9,16 @@ import Footer from './components/RootLayout/Footer/Footer';
 import OurFirst from './components/OurChef/OurFirst';
 import Reservation from './components/Reservation/Reservation';
 import MenuItem1 from './components/MenuItem1/MenuItem1';
+import { DirectionProvider } from './components/DirectionContext';
+import LanguageSwitcher from './components/LanguageSwticher/LanguageSwitcher';
 
 function App() {
   const [count, setCount] = useState(0);
 
   return (
     <BrowserRouter>
+    <DirectionProvider >
+      
       <Navbar /> 
       
       <Routes>
@@ -28,6 +32,7 @@ function App() {
 
       </Routes>
      <Footer />
+     </DirectionProvider>
     </BrowserRouter>
   );
 }
