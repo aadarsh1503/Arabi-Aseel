@@ -51,8 +51,8 @@ body {
 }
 
 .loader-image img {
-    width: 50px;
-    height: 50px;
+    width: 150px;
+    height: 150px;
 }
 
 .language-switcher img {

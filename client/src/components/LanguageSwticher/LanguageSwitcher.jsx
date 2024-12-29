@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+import i2 from "./i2.png"
 import "./LanguageSwitcher.css";
 import { useDirection } from '../DirectionContext';
 
@@ -59,7 +59,7 @@ const LanguageSwitcher = () => {
                 <div className="loader-overlay">
                     <div className="loader-image">
                         <img
-                            src="" // Replace with your image URL
+                            src={i2} // Replace with your image URL
                             alt="Loading"
                         />
                     </div>
