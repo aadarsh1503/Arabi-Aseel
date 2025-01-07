@@ -20,12 +20,12 @@ const ReservationSection = () => {
 
   return (
     <section
-      className="bg-cover font-poppins bg-center mb-56 h-[500px] bg-no-repeat"
+      className="bg-cover font-poppins  bg-center  lg:mb-56 h-full lg:h-[500px] bg-no-repeat"
       style={{ backgroundImage: `url(${i1})` }}
     >
-      <div className="flex flex-col lg:flex-row items-center justify-between max-w-6xl mx-auto py-32 px-8 space-y-10 lg:space-y-0">
+      <div className="flex flex-col  lg:flex-row items-center justify-between max-w-6xl mx-auto py-32 px-8 space-y-10 lg:space-y-0">
         {/* Left Content */}
-        <div className="lg:w-1/2 text-white -mt-56 lg:py-0">
+        <div className="lg:w-1/2 text-white mt-0 lg:-mt-56 lg:py-0">
           <h3 className="text-sm uppercase font-medium tracking-wider mb-3">Reservation</h3>
           <h1 className="text-4xl font-bold mb-6 leading-tight">
             Reservation Your Favorite Private Table
