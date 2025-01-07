@@ -1,14 +1,16 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next'; // Import i18next hook for translation
 
 const OpeningHours = () => {
+  const { t } = useTranslation(); // Use i18next translation hook
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 min-h-screen px-4 max-w-7xl mx-auto lg:py-16 relative gap-8">
-
       {/* Left Column: Video and RESTAN text */}
       <div className="relative flex flex-col justify-center items-center lg:items-start">
         {/* RESTAN Text */}
         <div className="absolute top-9 font-serif text-5xl lg:py-16 lg:text-7xl font-bold opacity-5 z-20">
-          ARABI ASEEL
+        {t('ARABI_ASEEL')}
         </div>
 
         {/* Video - Visible on large screens only */}
@@ -35,25 +37,25 @@ const OpeningHours = () => {
       <div className="flex flex-col justify-between items-center lg:-mt-4 lg:mr-24 lg:items-start lg:w-full">
         {/* Card Section */}
         <div className="relative z-10 lg:w-3/4 w-full bg-white shadow-xl rounded-md p-6 mb-8 lg:mb-0">
-          <h2 className="text-3xl font-semibold mb-4 text-center lg:text-left">Opening Hours</h2>
+          <h2 className="text-3xl font-semibold mb-4 text-center lg:text-left">{t('opening_hours')}</h2> {/* Translated title */}
           <p className="mb-6 text-gray-600 text-center lg:text-left">
-            A relaxing and pleasant atmosphere, good jazz, dinner, and cocktails.
+            {t('relaxing_atmosphere')} {/* Translated description */}
           </p>
 
           {/* Opening Hours */}
           <div className="flex flex-col space-y-4">
             <div className="flex justify-between items-center border-b border-gray-300 pb-2">
-              <p className="font-medium">Sunday To Tuesday:</p>
+              <p className="font-medium">{t('sunday_to_tuesday')}:</p>
               <p className="text-gray-600">10:00 - 09:00</p>
             </div>
 
             <div className="flex justify-between items-center border-b border-gray-300 pb-2">
-              <p className="font-medium">Wednesday To Thursday:</p>
+              <p className="font-medium">{t('wednesday_to_thursday')}:</p>
               <p className="text-gray-600">11:30 - 10:30</p>
             </div>
 
             <div className="flex justify-between items-center border-b border-gray-300 pb-2">
-              <p className="font-medium">Friday & Saturday:</p>
+              <p className="font-medium">{t('friday_saturday')}:</p>
               <p className="text-gray-600">10:30 - 12:00</p>
             </div>
           </div>
@@ -72,7 +74,7 @@ const OpeningHours = () => {
               </svg>
             </div>
             <div className="ml-4">
-              <p className="text-sm text-gray-500">Call Anytime</p>
+              <p className="text-sm text-gray-500">{t('call_anytime')}</p>
               <p className="text-lg font-serif font-semibold">+973 17772211</p>
             </div>
           </div>

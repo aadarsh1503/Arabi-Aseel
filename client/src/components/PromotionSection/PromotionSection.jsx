@@ -1,6 +1,9 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const PromotionSection = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="relative min-h-screen  w-full py-1">
       {/* Yellow Background Image */}
@@ -36,17 +39,17 @@ const PromotionSection = () => {
 
           {/* Right Section with Text */}
           <div className="relative w-full lg:w-1/2 top-20 lg:py-0 py-64 lg:top-44 lg:px-4">
-            <p className="text-lg font-bold uppercase tracking-wider   text-gray-800 lg:mb-2">
-              Today Special Offer
+            <p className="text-lg font-bold uppercase tracking-wider text-gray-800 lg:mb-2">
+              {t('special_offer')}
             </p>
             <h2 className="text-4xl lg:text-6xl font-serif text-gray-900 lg:mb-4">
-              Explore Irresistible <br /> Promotions!
+              {t('promotions')}
             </h2>
             <p className="text-gray-900 mb-6">
-              Contrasted dissimilar get joy you instrument out reasonably. Again keeps at no meant stuff. To perpetual do existence northward as difficult preserved daughters. Continued at up to zealously necessary.
+              {t('description1')}
             </p>
             <button className="text-white lg:py-3 lg:px-6 bg-black bg-opacity-30 p-3 rounded-full hover:bg-gray-700">
-              Order Today
+              {t('order_today')}
             </button>
           </div>
         </div>

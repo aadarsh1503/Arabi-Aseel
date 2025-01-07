@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { useDirection } from '../DirectionContext'; // Assuming this is managing the language direction
 import { useTranslation } from 'react-i18next'; // Import i18next hook for translation
 
-
-
 const ServiceSection = () => {
-  const { direction } = useDirection(); // Get the current direction (ltr or rtl)
-  const { t } = useTranslation(); // Use i18next translation hook
+  const { t, i18n } = useTranslation(); // Use i18next translation hook
   const [isVisible, setIsVisible] = useState(false);
 
   const services = [
@@ -58,30 +54,54 @@ const ServiceSection = () => {
     };
   }, []); // Run only once on mount
 
+  // Check if the current language is 'en' or other language
+  const isEnglish = i18n.language === 'en';
+
   return (
     <div id="service-section" className="container font-poppins mx-auto py-16">
-      {/* Optional: Place LanguageToggle here */}
-
-
-      <div className={`flex ${direction === 'rtl' ? 'lg:flex-row-reverse' : 'lg:flex-row'} flex-col justify-center items-center space-x-0 lg:space-x-20 relative`}>
-        {services.map((service, index) => (
-          <motion.div 
-            key={service.id} 
-            className="relative flex flex-col p-8 w-80 service-card mb-6 lg:mb-0"
-            initial={{ opacity: 0, y: 20 }} // Start with opacity 0 and move down 20px
-            animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }} // Animate based on visibility
-            transition={{ duration: 1, delay: index * 0.5 }} // Staggered delay for each card
-          >
-            <img src={service.image} alt={service.title} className="w-32 h-32 mb-4 mx-auto" />
-            <h3 className="text-2xl font-serif mb-2 text-center">{service.title}</h3>
-            <p className="text-gray-500 text-center">{service.description}</p>
-            {/* Divider after all cards except the last one */}
-            {index < services.length - 1 && (
-              <div className="absolute top-1/2 right-[-36px] transform -translate-y-1/2 h-32 w-px bg-gray-600 hidden lg:block"></div>
-            )}
-          </motion.div>
-        ))}
-      </div>
+      {/* Check if language is English */}
+      {isEnglish ? (
+        <div className="flex lg:flex-row flex-col justify-center items-center space-x-0 lg:space-x-20 relative">
+          {services.map((service, index) => (
+            <motion.div 
+              key={service.id} 
+              className="relative flex flex-col p-8 w-80 service-card mb-6 lg:mb-0"
+              initial={{ opacity: 0, y: 20 }} // Start with opacity 0 and move down 20px
+              animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }} // Animate based on visibility
+              transition={{ duration: 1, delay: index * 0.5 }} // Staggered delay for each card
+            >
+              <img src={service.image} alt={service.title} className="w-32 h-32 mb-4 mx-auto" />
+              <h3 className="text-2xl font-serif mb-2 text-center">{service.title}</h3>
+              <p className="text-gray-500 text-center">{service.description}</p>
+              {/* Divider after all cards except the last one */}
+              {index < services.length - 1 && (
+                <div className="absolute top-1/2 right-[-36px] transform -translate-y-1/2 h-32 w-px bg-gray-600 hidden lg:block"></div>
+              )}
+            </motion.div>
+          ))}
+        </div>
+      ) : (
+        <div className="flex lg:flex-row -ml-32 flex-col justify-center items-center space-x-0 lg:space-x-20 relative">
+          {/* Duplicate div for non-English languages */}
+          {services.map((service, index) => (
+            <motion.div 
+              key={service.id} 
+              className="relative ml-20 flex flex-col p-8 w-80 service-card mb-6 lg:mb-0"
+              initial={{ opacity: 0, y: 20 }} // Start with opacity 0 and move down 20px
+              animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }} // Animate based on visibility
+              transition={{ duration: 1, delay: index * 0.5 }} // Staggered delay for each card
+            >
+              <img src={service.image} alt={service.title} className="w-32 h-32 mb-4 mx-auto" />
+              <h3 className="text-2xl font-serif mb-2 text-center">{service.title}</h3>
+              <p className="text-gray-500 text-center">{service.description}</p>
+              {/* Divider after all cards except the last one */}
+              {index < services.length - 1 && (
+                <div className="absolute top-1/2 right-[364px] transform -translate-y-1/2 h-32 w-px bg-gray-600 hidden lg:block"></div>
+              )}
+            </motion.div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

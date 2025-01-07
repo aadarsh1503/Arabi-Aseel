@@ -25,4 +25,18 @@ i18n
     },
   });
 
+// Update the document direction (ltr or rtl) based on the selected language
+const updateDirection = (language) => {
+  const direction = language === 'ar' ? 'rtl' : 'ltr';
+  document.documentElement.setAttribute('dir', direction); // Set direction on page load
+};
+
+// Set initial direction when i18n is initialized
+updateDirection(savedLanguage);
+
+// Listen for language change to update the direction dynamically
+i18n.on('languageChanged', (lng) => {
+  updateDirection(lng);
+});
+
 export default i18n;
