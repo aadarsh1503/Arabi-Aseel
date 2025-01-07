@@ -11,6 +11,8 @@ import Reservation from './components/Reservation/Reservation';
 import MenuItem1 from './components/MenuItem1/MenuItem1';
 import { DirectionProvider } from './components/DirectionContext';
 import LanguageSwitcher from './components/LanguageSwticher/LanguageSwitcher';
+import LanguageToggle from './LanguageToggle';
+import './i18n';
 
 function App() {
   const [count, setCount] = useState(0);

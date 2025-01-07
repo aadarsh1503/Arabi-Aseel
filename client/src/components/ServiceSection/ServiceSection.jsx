@@ -1,28 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useDirection } from '../DirectionContext'; // Assuming this is managing the language direction
+import { useTranslation } from 'react-i18next'; // Import i18next hook for translation
+
+
 
 const ServiceSection = () => {
   const { direction } = useDirection(); // Get the current direction (ltr or rtl)
+  const { t } = useTranslation(); // Use i18next translation hook
   const [isVisible, setIsVisible] = useState(false);
 
   const services = [
     { 
       id: 1, 
-      title: 'Quality Foods', 
-      description: 'Belonging sir curiosity discovery extremity yet forfeited prevailed own off. Travelling by introduced of mr terminated.', 
+      title: t('quality_foods'), // Use translation key
+      description: t('service_description'), // Use translation key
       image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/04/13.png' 
     },
     { 
       id: 2, 
-      title: 'Fast Delivery', 
-      description: 'Belonging sir curiosity discovery extremity yet forfeited prevailed own off. Travelling by introduced of mr terminated.', 
+      title: t('fast_delivery'), // Use translation key
+      description: t('service_description'), // Use translation key
       image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/04/14.png' 
     },
     { 
       id: 3, 
-      title: 'Delicious Recipes', 
-      description: 'Belonging sir curiosity discovery extremity yet forfeited prevailed own off. Travelling by introduced of mr terminated.', 
+      title: t('delicious_recipes'), // Use translation key
+      description: t('service_description'), // Use translation key
       image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/04/15.png' 
     },
   ];
@@ -56,6 +60,9 @@ const ServiceSection = () => {
 
   return (
     <div id="service-section" className="container font-poppins mx-auto py-16">
+      {/* Optional: Place LanguageToggle here */}
+
+
       <div className={`flex ${direction === 'rtl' ? 'lg:flex-row-reverse' : 'lg:flex-row'} flex-col justify-center items-center space-x-0 lg:space-x-20 relative`}>
         {services.map((service, index) => (
           <motion.div 

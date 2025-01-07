@@ -20,18 +20,18 @@ const Hero = () => {
 
   return (
     <div className="hero-container">
-      <div className="h-screen -mt-[136px] font-poppins bg-black bg-opacity-60">
+      <div className="h-screen -mt-[96px] font-poppins bg-black bg-opacity-60">
 
 {/* Background Video for all screens */}
 <video
   autoPlay
   loop
   muted
-  className="absolute left-0 w-full h-[630px] object-cover bg-opacity-0 z-[-1]"
+  className="absolute left-0 top-0 w-full h-full object-cover bg-opacity-0 z-[-1]"
 >
-          <source src="https://videos.pexels.com/video-files/5780424/5780424-uhd_2560_1440_24fps.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+  <source src="https://videos.pexels.com/video-files/5780424/5780424-uhd_2560_1440_24fps.mp4" type="video/mp4" />
+  Your browser does not support the video tag.
+</video>
 
         {/* Main content */}
         <div className="flex flex-col items-center justify-center min-h-screen relative z-10 pt-1">

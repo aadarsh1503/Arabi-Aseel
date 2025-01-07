@@ -11,6 +11,7 @@ import {
 import "font-awesome/css/font-awesome.min.css";
 import i2 from "./i2.png"; // Import logo
 import LanguageSwitcher from "../../LanguageSwticher/LanguageSwitcher";
+import LanguageToggle from "../../../LanguageToggle";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -75,6 +76,7 @@ const Navbar = () => {
 
   return (
     <div className="relative z-50 bg-black bg-opacity-60" >
+      
       {/* Navbar */}
       <nav
         className={`text-white left-0 w-full shadow-lg top-10 z-30 ${navbarStyle}`}
@@ -137,7 +139,7 @@ const Navbar = () => {
       
       {/* Language Switcher */}
       <div className="ml-6">
-        <LanguageSwitcher />
+        <LanguageToggle />
       </div>
     </div>
   )}
