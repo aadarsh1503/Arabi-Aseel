@@ -1,68 +1,63 @@
-import React, { useEffect, useRef } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
+import React, { useEffect } from "react";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css"; 
 import i1 from "./i1.jpg";
+import { useTranslation } from "react-i18next"; // Import i18next hook for translation
 
 const Testimonials = () => {
-  const swiperRef = useRef(null);
+  const { t } = useTranslation(); // Use i18next translation hook
 
   const testimonials = [
     {
       rating: "5/5",
-      title: "Awesome and delicious food",
-      content:
-        "Targeting consultation discover apartments, indulgence off under folly death wrote cause her way spite...",
-      author: "Anthom Bu Spar",
-      position: "Marketing Manager",
+      title: t('awesome_food'), // Translated text
+      content: t('testimonial_content_1'), // Translated content
+      author: t("Anthom_Bu_Spar"),
+      position: t("Marketing_Manager"),
     },
     {
       rating: "4.5/5",
-      title: "Great Ambience",
-      content: "Lorem ipsum dolor sit amet consectetur adipiscing elit...",
-      author: "Jane Doe",
-      position: "Designer",
+      title: t('great_ambience'), // Translated text
+      content: t('testimonial_content_2'), // Translated content
+      author: t("Jane_Doe"),
+      position: t("Designer"),
     },
     // Add two more testimonials
   ];
 
-  useEffect(() => {
-    // Set an interval to automatically change the slide every 5 seconds
-    const interval = setInterval(() => {
-      if (swiperRef.current) {
-        swiperRef.current.swiper.slideNext();
-      }
-    }, 5000);
-
-    // Cleanup the interval on component unmount
-    return () => clearInterval(interval);
-  }, []);
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2000,
+  };
 
   return (
     <div className="bg-Grey font-poppins">
-    <div className="flex flex-col max-w-5xl mx-auto lg:flex-row items-center lg:items-start  p-6 lg:p-12 space-y-6 lg:space-y-0 lg:space-x-12">
-      
-      {/* Left Section */}
-      <div className="w-full mt-20 lg:w-1/2">
-        <img
-          src={i1}
-          alt="Customer enjoying meal"
-          className="rounded-full lg:h-[300px] shadow-lg Clip-pentagon"
-        />
-      </div>
-
-      {/* Right Section */}
-      <div className="w-full lg:w-1/2">
-        <h2 className="text-4xl font-semibold lg:-ml-[500px] mb-20 text-center ">Our Customers Feedback</h2> {/* Heading */}
+      <div className="flex flex-col max-w-5xl mx-auto lg:flex-row items-center lg:items-start p-6 lg:p-12 space-y-6 lg:space-y-0 lg:space-x-12">
         
-        <Swiper
-          spaceBetween={30}
-          slidesPerView={1}
-          loop
-          ref={swiperRef}
-        >
-          {testimonials.map((testimonial, index) => (
-            <SwiperSlide key={index}>
-              <div className="bg-white p-6 rounded-xl shadow-lg">
+        {/* Left Section */}
+        <div className="w-full mt-20 lg:w-1/2">
+          <img
+            src={i1}
+            alt={t('testimonial_image_alt')} // Translated alt text
+            className="rounded-full lg:h-[300px] shadow-lg Clip-pentagon"
+          />
+        </div>
+
+        {/* Right Section */}
+        <div className="w-full lg:w-1/2">
+          <h2 className="text-4xl font-semibold lg:-ml-[500px] mb-20 text-center">
+            {t('our_customers_feedback')} {/* Translated heading */}
+          </h2>
+          
+          <Slider {...settings}>
+            {testimonials.map((testimonial, index) => (
+              <div key={index} className="bg-white p-6 rounded-xl shadow-lg">
                 <div className="flex items-center space-x-2">
                   <span className="text-yellow-500 font-bold">{testimonial.rating}</span>
                   <span>⭐</span>
@@ -73,11 +68,10 @@ const Testimonials = () => {
                 <p className="font-bold">{testimonial.author}</p>
                 <p className="text-sm text-gray-500">{testimonial.position}</p>
               </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+            ))}
+          </Slider>
+        </div>
       </div>
-    </div>
     </div>
   );
 };

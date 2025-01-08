@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import i1 from "./i1.avif";
-import "./R.css"
+import i1 from "./i1.png";
+import { useTranslation } from "react-i18next"; // Import i18next hook for translation
+import "./R.css";
 
 const ReservationSection = () => {
+  const { t } = useTranslation(); // Use i18next translation hook
   const [formData, setFormData] = useState({
     phone: "",
     person: "1 Person",
@@ -20,29 +22,28 @@ const ReservationSection = () => {
 
   return (
     <section
-      className="bg-cover font-poppins  bg-center  lg:mb-56 h-full lg:h-[500px] bg-no-repeat"
+      className="bg-cover font-poppins bg-center lg:mb-56 bg-black bg-opacity-70 h-full lg:h-[500px] bg-no-repeat"
       style={{ backgroundImage: `url(${i1})` }}
     >
-      <div className="flex flex-col  lg:flex-row items-center justify-between max-w-6xl mx-auto py-32 px-8 space-y-10 lg:space-y-0">
+      
+      <div className="flex flex-col lg:flex-row items-center justify-between max-w-6xl mx-auto py-32 px-8 space-y-10 lg:space-y-0">
         {/* Left Content */}
         <div className="lg:w-1/2 text-white mt-0 lg:-mt-56 lg:py-0">
-          <h3 className="text-sm uppercase font-medium tracking-wider mb-3">Reservation</h3>
+          <h3 className="text-sm uppercase font-medium tracking-wider mb-3">{t('reservation')}</h3>
           <h1 className="text-4xl font-bold mb-6 leading-tight">
-            Reservation Your Favorite Private Table
+            {t('reserve_table')}
           </h1>
           <p className="text-lg mb-8">
-            A relaxing and pleasant atmosphere, good jazz, dinner, and cocktails. The Patio Time Bar
-            opens in the center of Florence. The only bar inspired by the 1960s, it will give you an
-            experience that you’ll have a hard time forgetting.
+            {t('description')}
           </p>
           <div className="flex space-x-8">
             <div>
-              <h4 className="text-lg font-semibold">Launch Menu</h4>
-              <p className="text-sm text-gray-300">30+ items</p>
+              <h4 className="text-lg font-semibold">{t('launch_menu')}</h4>
+              <p className="text-sm text-gray-300">{t('30+_items')}</p>
             </div>
             <div>
-              <h4 className="text-lg font-semibold">Dinner Menu</h4>
-              <p className="text-sm text-gray-300">50+ items</p>
+              <h4 className="text-lg font-semibold">{t('dinner_menu')}</h4>
+              <p className="text-sm text-gray-300">{t('50+_items')}</p>
             </div>
           </div>
         </div>
@@ -53,7 +54,7 @@ const ReservationSection = () => {
             <form className="space-y-6">
               <div>
                 <label className="block text-sm text-gray-300 mb-2" htmlFor="phone">
-                  Phone
+                  {t('phone')}
                 </label>
                 <input
                   type="tel"
@@ -67,7 +68,7 @@ const ReservationSection = () => {
               </div>
               <div>
                 <label className="block text-sm text-gray-300 mb-2" htmlFor="person">
-                  Person
+                  {t('person')}
                 </label>
                 <select
                   id="person"
@@ -75,17 +76,18 @@ const ReservationSection = () => {
                   onChange={handleInputChange}
                   className="w-full bg-dblack text-white border border-gray-600 rounded-md py-2 px-3"
                 >
-                  <option>1 Person</option>
-                  <option>2 Persons</option>
-                  <option>3 Persons</option>
-                  <option>4 Persons</option>
-                  <option>5 Persons</option>
+                  <option>{t('1_person')}</option> {/* Use translation key here */}
+                  <option>{t('2_persons')}</option> {/* Use translation key here */}
+                  <option>{t('3_persons')}</option> {/* Use translation key here */}
+                  <option>{t('4_persons')}</option> {/* Use translation key here */}
+                  <option>{t('5_persons')}</option> {/* Use translation key here */}
                 </select>
               </div>
+             
 
               <div>
                 <label className="block text-sm text-gray-300 mb-2" htmlFor="date">
-                  Date
+                  {t('date')}
                 </label>
                 <input
                   type="date"
@@ -93,13 +95,13 @@ const ReservationSection = () => {
                   value={formData.date}
                   onChange={handleInputChange}
                   min={today}
-                  className="block w-full text-white px-3 py-2 mb-4 border border-gray-600  rounded-lg bg-dblack   focus:outline-none transition duration-300 ease-in-out"
+                  className="block w-full text-white px-3 py-2 mb-4 border border-gray-600 rounded-lg bg-dblack focus:outline-none transition duration-300 ease-in-out"
                 />
               </div>
 
               <div>
                 <label className="block text-sm text-gray-300 mb-2" htmlFor="time">
-                  Time
+                  {t('time')}
                 </label>
                 <input
                   type="time"
@@ -115,7 +117,7 @@ const ReservationSection = () => {
                 type="submit"
                 className="w-full bg-yellow-600 text-white font-semibold py-3 rounded-md hover:bg-yellow-700 transition-colors"
               >
-                Book A Table
+                {t('book_table')}
               </button>
             </form>
           </div>

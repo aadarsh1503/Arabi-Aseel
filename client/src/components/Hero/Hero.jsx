@@ -10,8 +10,10 @@ import OpeningHours from "../OpeningHours/OpeningHours";
 import ChefsSection from "../ChefSection/ChefSection";
 import PopularCategories from "../PopularCategory/PopularCategory";
 import OnlineOrderSection from "../OnlineOrderSection/OnlineOrderSection";
+import { useTranslation } from "react-i18next";
 
 const Hero = () => {
+  const { t } = useTranslation(); // Access translation function
   // Animation variants for fade-in effect
   const fadeIn = {
     hidden: { opacity: 0, y: 20 }, // Start hidden and slightly below
@@ -56,7 +58,7 @@ const Hero = () => {
             transition={{ duration: 0.5, delay: 1 }}
           >
             <span className="best-food-text p-4 text-center text-white text-sm sm:text-base lg:text-lg font-serif tracking-widest">
-              OPENING SOON
+            {t("opening_soon")}
             </span>
           </motion.div>
 

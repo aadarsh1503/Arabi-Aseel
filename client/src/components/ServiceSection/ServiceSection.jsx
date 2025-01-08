@@ -86,17 +86,17 @@ const ServiceSection = () => {
           {services.map((service, index) => (
             <motion.div 
               key={service.id} 
-              className="relative ml-20 flex flex-col p-8 w-80 service-card mb-6 lg:mb-0"
+              className="relative  lg:ml-20 flex flex-col p-8 w-80 service-card mb-6 lg:mb-0"
               initial={{ opacity: 0, y: 20 }} // Start with opacity 0 and move down 20px
               animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }} // Animate based on visibility
               transition={{ duration: 1, delay: index * 0.5 }} // Staggered delay for each card
             >
-              <img src={service.image} alt={service.title} className="w-32 h-32 mb-4 mx-auto" />
-              <h3 className="text-2xl font-serif mb-2 text-center">{service.title}</h3>
-              <p className="text-gray-500 text-center">{service.description}</p>
+              <img src={service.image} alt={service.title} className="w-32 lg:ml-16  ml-32 h-32 mb-4 mx-auto" />
+              <h3 className="text-2xl font-serif lg:ml-0  ml-32  mb-2 text-center">{service.title}</h3>
+              <p className="text-gray-500 lg:ml-0  ml-32  text-center">{service.description}</p>
               {/* Divider after all cards except the last one */}
               {index < services.length - 1 && (
-                <div className="absolute top-1/2 right-[364px] transform -translate-y-1/2 h-32 w-px bg-gray-600 hidden lg:block"></div>
+                <div className="absolute  top-1/2 right-0 lg:right-[364px] transform -translate-y-1/2 h-32 w-px bg-gray-600 hidden lg:block"></div>
               )}
             </motion.div>
           ))}
