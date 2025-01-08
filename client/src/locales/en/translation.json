@@ -142,7 +142,8 @@
   "email": "Email*",
   "your_message": "Your Message *",
   "get_in_touch": "Get In Touch",
-    "opening_soon": "OPENING SOON"
+    "opening_soon": "OPENING SOON",
+    "reviews":"reviews"
   
   
   }
