@@ -6,8 +6,8 @@ const ContactForm = () => {
   const { t } = useTranslation(); // Hook for accessing translations
 
   return (
-    <section className="bg-white py-12 px-4 mt-10 sm:px-6 lg:px-8">
-      <div className="max-w-2xl shadow-xl p-4 mx-auto">
+    <section className="bg-white  py-12 px-4 mt-10 sm:px-6 lg:px-8">
+      <div className="max-w-2xl shadow-[0_1px_6px_0_rgba(0,0,0,0.3)]  p-4 mx-auto">
         <div className="text-center mb-8">
           <p className="text-sm uppercase text-yellow-600 tracking-wide">
             {t('keep_in_touch')} {/* Translation key for "Keep in Touch" */}

@@ -1,0 +1,10 @@
+/* Custom checkbox tick */
+#checkbox:checked::before {
+    content: '✔'; /* This creates a checkmark */
+    position: absolute;
+    left: 1px;
+    top: -4px;
+    font-size: 12px; /* Adjust the size of the tick mark */
+    color: white; /* The color of the checkmark */
+  }
+  

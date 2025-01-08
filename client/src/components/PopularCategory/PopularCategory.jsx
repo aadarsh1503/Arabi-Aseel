@@ -41,6 +41,7 @@ const PopularCategories = () => {
     autoplay: true,
     autoplaySpeed: 3000,
     pauseOnHover: false,
+    arrows: false,  // Hide prev and next arrows
     responsive: [
       {
         breakpoint: 1024,
@@ -60,9 +61,9 @@ const PopularCategories = () => {
   return (
     <div className="flex flex-col lg:flex-row font-poppins justify-between items-start p-12">
       <div className="lg:w-1/3 w-full mb-6 lg:mb-0">
-        <div className="shadow-lg rounded-lg py-4 lg:p-6 w-full max-w-sm mx-auto">
-          <div className="flex justify-center mb-4">
-            <div className="bg-white border-4 border-black rounded-full p-4 shadow-md">
+        <div className="shadow-[0_1px_6px_0_rgba(0,0,0,0.3)] rounded-lg py-4 lg:p-6 w-full max-w-sm mx-auto">
+          <div className="flex  justify-center mb-4">
+            <div className="bg-white  border-4 border-black rounded-full p-4 shadow-md">
               <FontAwesomeIcon icon={faUtensils} className="text-4xl text-brown-600" />
             </div>
           </div>

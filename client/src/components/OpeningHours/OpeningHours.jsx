@@ -34,9 +34,9 @@ const OpeningHours = () => {
       </div>
 
       {/* Right Column: Card and Image */}
-      <div className="flex flex-col justify-between items-center lg:-mt-4 lg:mr-24 lg:items-start lg:w-full">
+      <div className="flex flex-col justify-between items-center  lg:-mt-4 lg:mr-24 lg:items-start lg:w-full">
         {/* Card Section */}
-        <div className="relative z-10 lg:w-3/4 w-full bg-white shadow-xl rounded-md p-6 mb-8 lg:mb-0">
+        <div className="relative z-10 shadow-[0_1px_6px_0_rgba(0,0,0,0.3)] lg:w-3/4 w-full bg-white shadow-xl rounded-md p-6 mb-8 lg:mb-0">
           <h2 className="text-3xl font-semibold mb-4 text-center lg:text-left">{t('opening_hours')}</h2> {/* Translated title */}
           <p className="mb-6 text-gray-600 text-center lg:text-left">
             {t('relaxing_atmosphere')} {/* Translated description */}
@@ -73,7 +73,7 @@ const OpeningHours = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h4l3 9l4-16l3 7h4" />
               </svg>
             </div>
-            <div className="ml-4">
+            <div className="ml-4 mr-4">
               <p className="text-sm text-gray-500">{t('call_anytime')}</p>
               <p className="text-lg font-serif font-semibold">+973 17772211</p>
             </div>

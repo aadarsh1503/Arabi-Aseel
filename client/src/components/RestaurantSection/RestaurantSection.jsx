@@ -24,8 +24,8 @@ const RestaurantSection = () => {
           </div>
 
           {/* Left Side Content */}
-          <div className="p-8 mt-16 ml-0 lg:ml-[303px] max-w-sm mx-auto lg:w-1/2">
-            <div className="lg:h-[472px] lg:mr-[-96px] bg-white shadow-xl lg:w-[700px] z-0 lg:mt-0 p-16 relative">
+          <div className="p-8 mt-16 ml-0  lg:ml-[303px] max-w-sm mx-auto lg:w-1/2">
+            <div className="lg:h-[472px] lg:mr-[-96px] shadow-[0_1px_6px_0_rgba(0,0,0,0.3)] bg-white  lg:w-[700px] z-0 lg:mt-0 p-16 relative">
               <img
                 src={i1}
                 alt="Small Image"
@@ -57,7 +57,7 @@ const RestaurantSection = () => {
 
           {/* Right Side Content */}
           <div className="p-8 mt-16 max-w-sm mx-auto lg:w-1/2">
-            <div className="lg:h-[472px] -ml-10 lg:-ml-64 bg-white shadow-xl lg:w-[700px] z-0 lg:mt-0 p-16 relative">
+            <div className="lg:h-[472px] shadow-[0_1px_6px_0_rgba(0,0,0,0.3)] -ml-10 lg:-ml-64 bg-white lg:w-[700px] z-0 lg:mt-0 p-16 relative">
               <img
                 src={i1}
                 alt="Small Image"
