@@ -76,15 +76,15 @@ const SpecialsMenu = () => {
                 <span className="text-lg font-semibold text-yellow-500 text-right">{item.price}</span>
               </div>
               <div className="flex items-center justify-start mb-2">
-                <FaStar className="text-yellow-400 mr-1" />
-                <span className="text-red-600 text-sm">{item.rating}.00</span>
-                <span className="text-gray-500 ml-2 text-xs">({t('reviews')})</span>
+                <FaStar className="text-yellow-400 mr-1 ml-1 " />
+                <span className="text-red-600 text-sm ">{item.rating}.00</span>
+                <span className="text-gray-500 mr-2 ml-2 text-xs">({t('reviews')})</span>
               </div>
               <p className="text-sm text-gray-700 text-left mb-3">
                 {t('item_description')} {/* Translation key */}
               </p>
               <button className="flex items-center justify-start mt-4 py-1 px-3 bg-gradient-to-r from-red-400 to-yellow-500 text-white hover:from-red-500 hover:to-yellow-600 rounded-full transition duration-300 ease-in-out text-sm">
-                <FaShoppingCart className="mr-2" /> {t('add_to_cart')} {/* Translation key */}
+                <FaShoppingCart className="mr-2 ml-2" /> {t('add_to_cart')} {/* Translation key */}
               </button>
             </div>
           </div>
