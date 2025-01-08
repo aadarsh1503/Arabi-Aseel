@@ -15,6 +15,19 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isRTL, setIsRTL] = useState(i18n.language === "ar");
 
+  const [navbarStyle, setNavbarStyle] = useState("bg-opacity-0");
+  useEffect(() => {
+    if (
+      window.location.pathname === "/menu" ||
+      window.location.pathname === "/contact" ||
+      window.location.pathname === "/aboutUs"
+    ) {
+      setNavbarStyle("bg-opacity-100 bg-black");
+    } else {
+      setNavbarStyle("bg-opacity-0");
+    }
+  }, []); 
+
   useEffect(() => {
     setIsRTL(i18n.language === "ar");
   }, [i18n.language]);
@@ -37,18 +50,18 @@ const Navbar = () => {
         isRTL ? "text-right" : "text-left"
       }`}
     >
-      <nav
-        className={`text-white left-0 w-full shadow-lg z-30`}
-        dir={isRTL ? "rtl" : "ltr"}
-      >
-        <div className="flex max-w-7xl mx-auto justify-between items-center">
-          <img src={i2} alt="Logo" className="h-24" />
-          <div
-  onClick={handleToggleMenu}
-  className="lg:hidden cursor-pointer text-xl z-30 absolute right-4" 
+<nav
+  className={`text-white left-0 w-full shadow-lg top-10 z-30 ${navbarStyle}`}
+  dir={isRTL ? "rtl" : "ltr"}
 >
-  {isMenuOpen ? <span></span> : <span>☰</span>}
-</div>
+  <div className="flex max-w-7xl mx-auto justify-between items-center">
+    <img src={i2} alt="Logo" className="h-24" />
+    <div
+      onClick={handleToggleMenu}
+      className={`lg:hidden cursor-pointer text-xl z-30 absolute ${isRTL ? "left-4" : "right-4"}`} // Conditional positioning
+    >
+      {isMenuOpen ? <span></span> : <span>☰</span>}
+    </div>
 
           <div className="hidden lg:flex items-center space-x-6 text-base font-semibold">
             <ul className="flex space-x-6 bg-opacity-100">

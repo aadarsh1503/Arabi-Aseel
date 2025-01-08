@@ -24,7 +24,7 @@ const RestaurantSection = () => {
           </div>
 
           {/* Left Side Content */}
-          <div className="p-8 mt-16 ml-[303px] max-w-sm mx-auto lg:w-1/2">
+          <div className="p-8 mt-16 ml-0 lg:ml-[303px] max-w-sm mx-auto lg:w-1/2">
             <div className="lg:h-[472px] lg:mr-[-96px] bg-white shadow-xl lg:w-[700px] z-0 lg:mt-0 p-16 relative">
               <img
                 src={i1}
@@ -57,13 +57,13 @@ const RestaurantSection = () => {
 
           {/* Right Side Content */}
           <div className="p-8 mt-16 max-w-sm mx-auto lg:w-1/2">
-            <div className="lg:h-[472px] -ml-64 bg-white shadow-xl lg:w-[700px] z-0 lg:mt-0 p-16 relative">
+            <div className="lg:h-[472px] -ml-10 lg:-ml-64 bg-white shadow-xl lg:w-[700px] z-0 lg:mt-0 p-16 relative">
               <img
                 src={i1}
                 alt="Small Image"
                 className="absolute top-[-50px] right-0 w-64 h-32 object-cover border-4 border-white"
               />
-              <h5 className="text-lg text-gray-700 z-50 p-1 font-semibold uppercase mb-2">
+              <h5 className="text-lg text-gray-700 z-50 p-1 lg:mt-0 mt-6 font-semibold uppercase mb-2">
                 {t('about_us')}
               </h5>
               <h2 className="text-5xl font-poppins text-gray-900 mb-4">

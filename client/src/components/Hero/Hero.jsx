@@ -47,7 +47,7 @@ const Hero = () => {
             variants={fadeIn}
             transition={{ duration: 0.5, delay: 0.6 }}
           >
-            <img src={i2} alt="Small Logo" className="h-12 lg:h-72" />
+            <img src={i2} alt="Small Logo" className="h-56 lg:h-72" />
           </motion.div>
 
           <motion.div
