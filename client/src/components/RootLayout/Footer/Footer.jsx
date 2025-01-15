@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next"; // Import useTranslation hook from i18next
-import i1 from "./i1.png";
+import i3 from "./i3.png";
 import g1 from "./g1.png";
 import "./f.css"
 const Footer = () => {
@@ -9,13 +9,13 @@ const Footer = () => {
   return (
     <>
       {/* First Footer */}
-      <footer className="text-black ">
+      <footer className="text-black bg-opacity-0 bg-black -mt-20 ">
         <div className="relative">
           {/* Footer Decoration Image */}
 
           {/* Image for large screens */}
           <img
-            src={i1}
+            src={i3}
             alt={t('footer_large_image')}
             className="hidden lg:block absolute inset-0 w-full object-center lg:object-cover h-full bg-black bg-opacity-0"
           />

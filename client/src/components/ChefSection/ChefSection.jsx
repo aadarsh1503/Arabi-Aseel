@@ -7,7 +7,7 @@ const ChefsSection = ({ isRTL }) => {
   return (
     <div
       dir={isRTL ? "rtl" : "ltr"}
-      className="flex flex-col min-h-screen font-poppins items-center py-12"
+      className="flex flex-col min-h-screen font-poppins items-center py-20"
     >
       {/* Section Title */}
       <h2 className="text-5xl mt-20 font-serif text-gray-800 mb-8 text-center">
