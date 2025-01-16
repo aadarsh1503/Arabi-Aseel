@@ -37,8 +37,8 @@ const Footer = () => {
             </div>
 
             {/* Explore */}
-            <div>
-              <h4 className="text-lg mt-0 lg:mt-20 font-bold mb-4">{t('explore')}</h4>
+            <div className="lg:ml-20 ml-0">
+              <h4 className="text-lg mt-0 lg:mt-20  font-bold mb-4">{t('explore')}</h4>
               <ul className="text-sm space-y-2">
                 <li>
                   <a href="/aboutUs">{t('about')}</a>

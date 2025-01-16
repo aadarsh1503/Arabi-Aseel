@@ -19,13 +19,13 @@ const ServiceSection = () => {
       id: 2, 
       title: t('fast_delivery'), // Use translation key
       description: t('service_description'), // Use translation key
-      image: i2
+      image: i3
     },
     { 
       id: 3, 
       title: t('delicious_recipes'), // Use translation key
       description: t('service_description'), // Use translation key
-      image: i3
+      image: i2
     },
   ];
 

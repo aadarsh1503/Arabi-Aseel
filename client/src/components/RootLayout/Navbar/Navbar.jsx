@@ -11,7 +11,7 @@ import {
 import i2 from "./i2.png";
 import ar from "./ar.png";
 import LanguageToggle from "../../../LanguageToggle";
-import { AiOutlineMail, AiOutlinePhone } from "react-icons/ai";
+import { AiOutlineEnvironment, AiOutlineMail, AiOutlinePhone } from "react-icons/ai";
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
@@ -63,16 +63,27 @@ const Navbar = () => {
     <div className={`relative z-50 bg-black bg-opacity-60 ${isRTL ? "text-right" : "text-left"}`}>
     {/* Top Bar */}
     <div className={`bg-black bg-opacity-0 text-white text-sm py-2 ${navbarStyle1}`}>
-      <div className="max-w-7xl mx-auto flex space-x-4 items-center px-4">
-        <div className="flex items-center space-x-2">
-          <AiOutlinePhone className="lg:text-lg text-xs  ml-2 " />
-          <span dir={isRTL ? "ltr" : "ltr"}>+973 17772211</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <AiOutlineMail className="lg:text-lg text-  ml-2" />
-          <span>arabiaseelrest@gmail.com</span>
-        </div>
-      </div>
+    <div className="max-w-7xl mx-auto flex justify-between items-center px-4">
+  {/* Contact Information */}
+  <div className="flex space-x-4 items-center">
+    <div className="flex items-center space-x-2">
+      <AiOutlinePhone className="lg:text-lg text-xs ml-2" />
+      <span dir="ltr">+973 17772211</span>
+    </div>
+    <div className="flex items-center space-x-2">
+      <AiOutlineMail className="lg:text-lg text-xs ml-2" />
+      <span>arabiaseelrest@gmail.com</span>
+    </div>
+  </div>
+
+  {/* Address Section */}
+  <div className="flex items-center space-x-2 relative left-4">
+  <AiOutlineEnvironment className="lg:text-lg text-xs ml-2" />
+  <span>{t("address")}</span>
+</div>
+
+</div>
+
     </div>
       {/* Main Navbar */}
       <nav
