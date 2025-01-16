@@ -127,7 +127,7 @@ const MenuSection = () => {
                             <div className="p-8">
                                 <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>
                                 <p className="text-sm text-gray-600">{item.description}</p>
-                                <p className="text-xl font-bold text-gray-900 mt-2">bd {item.price}</p>
+                                <p className="text-sm text-gray-600 mt-2">BD {item.price}</p>
                                 <button className="mt-4 text-sm font-medium text-brown hover:underline flex items-center">
                                     {t('order_now')} <span className="ml-2 mr-2">
   {isRTL ? '←' : '→'}

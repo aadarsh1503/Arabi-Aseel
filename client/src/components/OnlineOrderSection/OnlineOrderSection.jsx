@@ -35,7 +35,7 @@ const OnlineOrderSection = () => {
   {t('app_store')}
 </button>
 
-          <button className="bg-brown text-white hover:bg-white hover:text-black lg:py-1 lg:px-10 px-6 py-1 rounded-full font-semibold flex h-12 items-center justify-center lg:w-[180px]">
+          <button className="bg-brown text-white hover:bg-white hover:text-black lg:py-1   py-1 rounded-full font-semibold flex h-12 items-center justify-center lg:w-[180px]">
             <span className="ml-1 mr-1 mt-1">
               {/* Play Store Icon */}
               <FontAwesomeIcon icon={faGooglePlay} className="w-5 h-5" />

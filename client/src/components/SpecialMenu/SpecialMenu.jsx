@@ -4,24 +4,24 @@ import { useTranslation } from 'react-i18next'; // Import i18next hook for trans
 
 const specials = {
   'MAIN-DISHES': [
-    { id: 1, name: 'Sushi', price: '$56.00', rating: 5, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/05/13-1.jpg' },
-    { id: 2, name: 'Salmon Fry', price: '$81.00', rating: 5, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/05/17-1.jpg' },
-    { id: 3, name: 'Prawns Fry', price: '$31.00', rating: 5, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/05/16.jpg' }
+    { id: 1, name: 'Sushi', price: 'BD 56.00', rating: 5, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/05/13-1.jpg' },
+    { id: 2, name: 'Salmon Fry', price: 'BD 81.00', rating: 5, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/05/17-1.jpg' },
+    { id: 3, name: 'Prawns Fry', price: 'BD 31.00', rating: 5, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/05/16.jpg' }
   ],
   'SEA-FOOD': [
-    { id: 1, name: 'Lobster', price: '$66.00', rating: 5, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/05/17-1.jpg' },
-    { id: 2, name: 'Crab Soup', price: '$45.00', rating: 4, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/05/16.jpg' },
-    { id: 3, name: 'Shrimp Stir Fry', price: '$38.00', rating: 5, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/05/14.jpg' }
+    { id: 1, name: 'Lobster', price: 'BD 66.00', rating: 5, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/05/17-1.jpg' },
+    { id: 2, name: 'Crab Soup', price: 'BD 45.00', rating: 4, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/05/16.jpg' },
+    { id: 3, name: 'Shrimp Stir Fry', price: 'BD 38.00', rating: 5, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/05/14.jpg' }
   ],
   'DESSERTS': [
-    { id: 1, name: 'Chocolate Cake', price: '$15.00', rating: 5, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/05/24-1.jpg' },
-    { id: 2, name: 'Cheesecake', price: '$18.00', rating: 5, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/05/7-1.jpg' },
-    { id: 3, name: 'Brownie Sundae', price: '$12.00', rating: 5, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/05/11-1.jpg' }
+    { id: 1, name: 'Chocolate Cake', price: 'BD 15.00', rating: 5, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/05/24-1.jpg' },
+    { id: 2, name: 'Cheesecake', price: 'BD 18.00', rating: 5, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/05/7-1.jpg' },
+    { id: 3, name: 'Brownie Sundae', price: 'BD 12.00', rating: 5, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/05/11-1.jpg' }
   ],
   'BEVERAGE': [
-    { id: 1, name: 'Coffee', price: '$5.00', rating: 5, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/05/24-1.jpg' },
-    { id: 2, name: 'Smoothie', price: '$8.00', rating: 4, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/05/6-1.jpg' },
-    { id: 3, name: 'Orange Juice', price: '$6.00', rating: 4, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/05/15-1.jpg' }
+    { id: 1, name: 'Coffee', price: 'BD 5.00', rating: 5, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/05/24-1.jpg' },
+    { id: 2, name: 'Smoothie', price: 'BD 8.00', rating: 4, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/05/6-1.jpg' },
+    { id: 3, name: 'Orange Juice', price: 'BD 6.00', rating: 4, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/05/15-1.jpg' }
   ]
 };
 
@@ -73,7 +73,7 @@ const SpecialsMenu = () => {
                 <h3 className="text-base font-bold text-black text-left">
                   {t(item.name.toLowerCase().replace(' ', '_'))} {/* Translation key */}
                 </h3>
-                <span className="text-lg font-semibold text-black text-right">{item.price}</span>
+                <span className="text-sm font-semibold text-black text-right">{item.price}</span>
               </div>
               <div className="flex items-center justify-start mb-2">
                 <FaStar className="text-yellow-400 mr-1 ml-1 " />

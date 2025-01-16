@@ -44,7 +44,7 @@ const ContactForm = () => {
               type="submit"
               className="inline-flex items-center justify-center bg-brown text-white px-6 py-3 rounded-lg hover:bg-yellow-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600"
             >
-              <AiOutlineSend className="mr-2" />
+              <AiOutlineSend className="mr-2 ml-2 mt-1" />
               {t('get_in_touch')} {/* Translation key for "Get in Touch" */}
             </button>
           </div>

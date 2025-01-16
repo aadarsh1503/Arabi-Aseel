@@ -5,7 +5,7 @@ const OpeningHours = () => {
   const { t,i18n } = useTranslation(); // Use i18next translation hook
   const isRTL = i18n.language === 'ar'; // Check if the language is Arabic (RTL)
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 min-h-screen px-4 max-w-7xl mx-auto lg:py-16 relative gap-8">
+    <div className="grid grid-cols-1 lg:grid-cols-2 min-h-screen px-4 max-w-7xl mx-auto mt-6 lg:mt-16 relative gap-8">
       {/* Left Column: Video and RESTAN text */}
       <div className="relative flex flex-col justify-center items-center lg:items-start">
         {/* RESTAN Text */}
