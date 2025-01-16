@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next'; // Import i18next hook for translation
-
+import i1 from "./i1.png"
+import i2 from "./i2.png"
+import i3 from "./i3.png"
 const ServiceSection = () => {
   const { t, i18n } = useTranslation(); // Use i18next translation hook
   const [isVisible, setIsVisible] = useState(false);
@@ -11,19 +13,19 @@ const ServiceSection = () => {
       id: 1, 
       title: t('quality_foods'), // Use translation key
       description: t('service_description'), // Use translation key
-      image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/04/13.png' 
+      image: i1
     },
     { 
       id: 2, 
       title: t('fast_delivery'), // Use translation key
       description: t('service_description'), // Use translation key
-      image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/04/14.png' 
+      image: i2
     },
     { 
       id: 3, 
       title: t('delicious_recipes'), // Use translation key
       description: t('service_description'), // Use translation key
-      image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/04/15.png' 
+      image: i3
     },
   ];
 
@@ -70,12 +72,12 @@ const ServiceSection = () => {
               animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }} // Animate based on visibility
               transition={{ duration: 1, delay: index * 0.5 }} // Staggered delay for each card
             >
-              <img src={service.image} alt={service.title} className="w-32 h-32 mb-4 mx-auto" />
+              <img src={service.image} alt={service.title} className="lg:w-56 w-32 h-32 lg:h-56 mb-4 mx-auto" />
               <h3 className="text-2xl font-serif mb-2 text-center">{service.title}</h3>
               <p className="text-gray-500 text-center">{service.description}</p>
               {/* Divider after all cards except the last one */}
               {index < services.length - 1 && (
-                <div className="absolute top-1/2 right-[-36px] transform -translate-y-1/2 h-32 w-px bg-gray-600 hidden lg:block"></div>
+                <div className="absolute top-3/4 right-[-36px] transform -translate-y-1/2 h-32 w-px bg-gray-600 hidden lg:block"></div>
               )}
             </motion.div>
           ))}
