@@ -36,7 +36,7 @@ const PopularCategories = () => {
     dots: true,
     infinite: true,
     speed: 1200,
-    slidesToShow: 3,
+    slidesToShow: 4,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 2000,
@@ -61,7 +61,7 @@ const PopularCategories = () => {
   return (
     <div className="flex flex-col lg:flex-row font-poppins justify-between items-start p-12">
      
-      <div className="lg:w-2/3 ml-0 lg:ml-56 mr-0 lg:mr-56 w-full">
+      <div className="lg:w-100 ml-0  mr-0  w-full">
         <h2 className="text-3xl font-bold text-center mb-6">{t('popular_categories')}</h2>
         <Slider {...settings} className="font-poppins">
           {categories.map((category) => (

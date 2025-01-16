@@ -17,7 +17,7 @@ const MenuSection = () => {
             id: 1,
             name: t('pizza_slice'),
             description: t('cheese_ham_pineapple'),
-            price: '$12.99',
+            price: '12.99',
             image: i2,
             category: 'Starter',
         },
@@ -25,7 +25,7 @@ const MenuSection = () => {
             id: 2,
             name: t('cheese_burger'),
             description: t('cheese_ham_pineapple'),
-            price: '$9.99',
+            price: '9.99',
             image: i3,
             category: 'Starter',
         },
@@ -33,7 +33,7 @@ const MenuSection = () => {
             id: 3,
             name: t('chicken_paradise'),
             description: t('cheese_ham_pineapple'),
-            price: '$15.99',
+            price: '15.99',
             image: i4,
             category: 'Starter',
         },
@@ -41,7 +41,7 @@ const MenuSection = () => {
             id: 4,
             name: t('shawarma'),
             description: t('cheese_ham_pineapple'),
-            price: '$8.99',
+            price: '8.99',
             image: i5,
             category: 'Starter',
         },
@@ -49,7 +49,7 @@ const MenuSection = () => {
             id: 5,
             name: t('salmon_steak'),
             description: t('cheese_ham_pineapple'),
-            price: '$12.99',
+            price: '12.99',
             image: i6,
             category: 'Main Course',
         },
@@ -57,7 +57,7 @@ const MenuSection = () => {
             id: 6,
             name: t("fries_mcdonalds"),
             description: t('cheese_ham_pineapple'),
-            price: '$9.99',
+            price: '9.99',
             image: i7,
             category: 'Main Course',
         },
@@ -65,7 +65,7 @@ const MenuSection = () => {
             id: 7,
             name: t('chocolate_chip'),
             description: t('cheese_ham_pineapple'),
-            price: '$15.99',
+            price: '15.99',
             image: i8,
             category: 'Main Course',
         },
@@ -73,7 +73,7 @@ const MenuSection = () => {
             id: 8,
             name: t('meatballs_pasta'),
             description: t('cheese_ham_pineapple'),
-            price: '$8.99',
+            price: '8.99',
             image: i9,
             category: 'Main Course',
         },
@@ -97,7 +97,7 @@ const MenuSection = () => {
                             <div className="p-8">
                                 <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>
                                 <p className="text-sm text-gray-600">{item.description}</p>
-                                <p className="text-xl font-bold text-gray-900 mt-2">{item.price}</p>
+                                <p className="text-sm  text-gray-600 mt-2">BD {item.price}</p>
                                 <button className="mt-4 text-sm font-medium text-brown hover:underline flex items-center">
                                 {t('order_now')} 
 <span className="ml-2 mr-2">
@@ -127,7 +127,7 @@ const MenuSection = () => {
                             <div className="p-8">
                                 <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>
                                 <p className="text-sm text-gray-600">{item.description}</p>
-                                <p className="text-xl font-bold text-gray-900 mt-2">{item.price}</p>
+                                <p className="text-xl font-bold text-gray-900 mt-2">bd {item.price}</p>
                                 <button className="mt-4 text-sm font-medium text-brown hover:underline flex items-center">
                                     {t('order_now')} <span className="ml-2 mr-2">
   {isRTL ? '←' : '→'}

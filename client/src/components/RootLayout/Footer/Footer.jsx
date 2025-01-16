@@ -5,7 +5,7 @@ import g1 from "./g1.png";
 import "./f.css"
 const Footer = () => {
   const { t,i18n  } = useTranslation(); // Initialize translation hook
-
+  const isRTL = i18n.language === 'ar'; // Check if the language is Arabic (RTL)
   return (
     <>
       {/* First Footer */}
@@ -68,7 +68,7 @@ const Footer = () => {
                 </li>
                 <li className="flex items-center">
                   <i className="fas fa-phone-alt text-[#9b815d] mr-2"></i>
-                  +973 17772211
+                  <span dir={isRTL ? "ltr" : "ltr"}>+973 17772211</span>
                 </li>
                 <li className="flex items-center">
                   <i className="fas fa-envelope text-[#9b815d] mr-2"></i>

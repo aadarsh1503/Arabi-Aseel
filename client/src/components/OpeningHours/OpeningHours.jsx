@@ -2,8 +2,8 @@ import React from 'react';
 import { useTranslation } from 'react-i18next'; // Import i18next hook for translation
 
 const OpeningHours = () => {
-  const { t } = useTranslation(); // Use i18next translation hook
-
+  const { t,i18n } = useTranslation(); // Use i18next translation hook
+  const isRTL = i18n.language === 'ar'; // Check if the language is Arabic (RTL)
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 min-h-screen px-4 max-w-7xl mx-auto lg:py-16 relative gap-8">
       {/* Left Column: Video and RESTAN text */}
@@ -75,7 +75,7 @@ const OpeningHours = () => {
             </div>
             <div className="ml-4 mr-4">
               <p className="text-sm text-gray-500">{t('call_anytime')}</p>
-              <p className="text-lg font-serif font-semibold">+973 17772211</p>
+              <p className="text-lg font-serif font-semibold"> <span dir={isRTL ? "ltr" : "ltr"}>+973 17772211</span></p>
             </div>
           </div>
         </div>

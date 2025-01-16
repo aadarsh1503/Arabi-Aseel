@@ -40,7 +40,7 @@ const ChefsSection = ({ isRTL }) => {
             <h3 className="font-bold font-serif text-xl">
               {t("alexander_petllo")} {/* Translated name */}
             </h3>
-            <p className="text-lg">{t("assistant_chef")}</p> {/* Translated role */}
+        
           </div>
         </div>
 
@@ -68,7 +68,7 @@ const ChefsSection = ({ isRTL }) => {
             <h3 className="font-bold font-serif text-xl">
               {t("mendia_juxef")}
             </h3>
-            <p className="text-lg">{t("burger_king")}</p>
+           
           </div>
         </div>
 
@@ -94,7 +94,7 @@ const ChefsSection = ({ isRTL }) => {
             }}
           >
             <h3 className="font-bold font-serif text-xl">{t("petro_william")}</h3>
-            <p className="text-lg">{t("main_chef")}</p>
+            
           </div>
         </div>
       </div>

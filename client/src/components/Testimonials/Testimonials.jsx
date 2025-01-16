@@ -46,7 +46,7 @@ const Testimonials = () => {
           <img
             src={i1}
             alt={t('testimonial_image_alt')} // Translated alt text
-            className="rounded-full lg:h-[300px] shadow-lg Clip-pentagon"
+            className="rounded-full lg:h-[300px] Clip-pentagon"
           />
         </div>
 
@@ -55,7 +55,7 @@ const Testimonials = () => {
   <h2
     className={`text-4xl font-semibold relative mb-20 text-center ${isRTL ? 'lg:left-[200px]' : 'lg:-ml-[500px]'}`}
   >
-    {t('our_customers_feedback')} {/* Translated heading */}
+    {t('our_customers_feedback')} 
   </h2>
 
           
