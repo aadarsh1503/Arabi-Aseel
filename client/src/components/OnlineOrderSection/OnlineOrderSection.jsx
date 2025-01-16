@@ -3,21 +3,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAppStore, faGooglePlay } from '@fortawesome/free-brands-svg-icons';
 import { useTranslation } from 'react-i18next'; // Import i18next hook for translation
 import i1 from "./i1.png"
+import i2 from "./i2.png"
 const OnlineOrderSection = () => {
-  const { t } = useTranslation(); // Initialize translation hook
+  const { t ,i18n} = useTranslation(); // Initialize translation hook
+  const isRTL = i18n.dir() === 'rtl';
 
   return (
     <div className="flex flex-col lg:flex-row mb-10 lg:mb-0 items-center rounded-xl max-w-6xl mx-auto justify-center bg-black text-white py-16 px-8 relative">
       {/* Left Side Image Section */}
       <div className="relative flex-1 flex justify-center items-center order-2 lg:order-1">
-        <div className="relative lg:mt-0 mt-4">
-          {/* Main Phone Image */}
-          <img
-            src={i1}
-            alt="Main Phone"
-            className="w-64 lg:w-[500px] drop-shadow-xl"
-          />
-        </div>
+      <div className="relative lg:mt-0 mt-4">
+      {/* Main Phone Image */}
+      <img
+        src={isRTL ? i2 : i1}
+        alt="Main Phone"
+        className="w-64 lg:w-[500px] drop-shadow-xl"
+      />
+    </div>
       </div>
 
       {/* Right Side Text and Buttons Section */}
