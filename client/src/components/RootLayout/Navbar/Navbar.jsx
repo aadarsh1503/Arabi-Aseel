@@ -84,7 +84,7 @@ const Navbar = () => {
     <img
       src={ar}
       alt="RTL Logo"
-      className="h-32 -mt-5 w-32"
+      className="h-32 mt-0 lg:-mt-5 w-32"
     />
   ) : (
     <img
