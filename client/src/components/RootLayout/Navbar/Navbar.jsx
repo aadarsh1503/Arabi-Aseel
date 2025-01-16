@@ -51,7 +51,7 @@ const Navbar = () => {
     { icon: <FaHome className="mr-2 ml-2" />, text: t("home"), route: "/" },
     { icon: <FaFileAlt className="mr-2 ml-2" />, text: t("about_us"), route: "/aboutUs" },
     { icon: <FaUtensils className="mr-2 ml-2" />, text: t("menu"), route: "/menu" },
-    { icon: <FaShoppingCart className="mr-2 ml-2" />, text: t("shop"), route: "" },
+   
     { icon: <FaComments className="mr-2 ml-2" />, text: t("contact"), route: "/contact" },
   ];
 
