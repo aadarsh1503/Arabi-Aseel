@@ -14,7 +14,7 @@ const MenuItem1 = () => {
      
 <MenuSection />
 <Testimonials />
-<ReservationSection />
+
 
     </div>
   );

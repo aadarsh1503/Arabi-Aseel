@@ -10,8 +10,8 @@ import i8 from "./i8.jpg";
 import i9 from "./i9.jpg";
 
 const MenuSection = () => {
-    const { t } = useTranslation(); // Use i18next hook for translation
-    
+    const { t,i18n } = useTranslation(); // Use i18next hook for translation
+    const isRTL = i18n.language === 'ar'; // Check if the language is Arabic (RTL)
     const menuItems = [
         {
             id: 1,
@@ -99,7 +99,11 @@ const MenuSection = () => {
                                 <p className="text-sm text-gray-600">{item.description}</p>
                                 <p className="text-xl font-bold text-gray-900 mt-2">{item.price}</p>
                                 <button className="mt-4 text-sm font-medium text-brown hover:underline flex items-center">
-                                    {t('order_now')} <span className="ml-2">→</span>
+                                {t('order_now')} 
+<span className="ml-2 mr-2">
+  {isRTL ? '←' : '→'}
+</span>
+
                                 </button>
                             </div>
                         </div>
@@ -125,7 +129,9 @@ const MenuSection = () => {
                                 <p className="text-sm text-gray-600">{item.description}</p>
                                 <p className="text-xl font-bold text-gray-900 mt-2">{item.price}</p>
                                 <button className="mt-4 text-sm font-medium text-brown hover:underline flex items-center">
-                                    {t('order_now')} <span className="ml-2">→</span>
+                                    {t('order_now')} <span className="ml-2 mr-2">
+  {isRTL ? '←' : '→'}
+</span>
                                 </button>
                             </div>
                         </div>

@@ -12,14 +12,14 @@ const InfoSection = () => {
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Hotline Block */}
         <div className="border rounded-lg p-6 text-center">
-          <img
-            src={i1}
-            alt={t('hotline_icon_alt')}
-            className="mx-auto w-16 h-16 mb-4"
-          />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('hotline')}</h3>
-          <p className="text-gray-600">{t('hotline_number')}</p>
-        </div>
+  <img
+    src={i1}
+    alt={t('hotline_icon_alt')}
+    className="mx-auto w-16 h-16 mb-4"
+  />
+  <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('hotline')}</h3>
+  <p className="text-gray-600" dir="ltr">+973 17772211</p> {/* Ensure LTR direction for phone number */}
+</div>
 
         {/* Location Block */}
         <div className="border rounded-lg p-6 text-center">

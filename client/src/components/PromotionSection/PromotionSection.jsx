@@ -48,7 +48,7 @@ const PromotionSection = () => {
             <p className="text-gray-900 mb-6">
               {t('description1')}
             </p>
-            <button className="text-white lg:py-3 lg:px-6 bg-black bg-opacity-30 p-3 rounded-full hover:bg-gray-700">
+            <button className="text-white lg:py-3 lg:px-6 bg-black bg-opacity-30 p-3 rounded-full hover:bg-brown">
               {t('order_today')}
             </button>
           </div>

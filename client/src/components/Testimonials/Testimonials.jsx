@@ -2,11 +2,12 @@ import React, { useEffect } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css"; 
-import i1 from "./i1.jpg";
+import i1 from "./i1.png";
 import { useTranslation } from "react-i18next"; // Import i18next hook for translation
 
 const Testimonials = () => {
-  const { t } = useTranslation(); // Use i18next translation hook
+  const { t,i18n } = useTranslation(); // Use i18next translation hook
+  const isRTL = i18n.language === 'ar'; // Check if the language is Arabic (RTL)
 
   const testimonials = [
     {
@@ -37,7 +38,7 @@ const Testimonials = () => {
   };
 
   return (
-    <div className="bg-Grey font-poppins">
+    <div className="bg-Grey mb-20 font-poppins">
       <div className="flex flex-col max-w-5xl mx-auto lg:flex-row items-center lg:items-start p-6 lg:p-12 space-y-6 lg:space-y-0 lg:space-x-12">
         
         {/* Left Section */}
@@ -51,9 +52,12 @@ const Testimonials = () => {
 
         {/* Right Section */}
         <div className="w-full lg:w-1/2">
-          <h2 className="text-4xl font-semibold lg:-ml-[500px] mb-20 text-center">
-            {t('our_customers_feedback')} {/* Translated heading */}
-          </h2>
+  <h2
+    className={`text-4xl font-semibold relative mb-20 text-center ${isRTL ? 'lg:left-[200px]' : 'lg:-ml-[500px]'}`}
+  >
+    {t('our_customers_feedback')} {/* Translated heading */}
+  </h2>
+
           
           <Slider {...settings}>
             {testimonials.map((testimonial, index) => (

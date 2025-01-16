@@ -2,7 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAppStore, faGooglePlay } from '@fortawesome/free-brands-svg-icons';
 import { useTranslation } from 'react-i18next'; // Import i18next hook for translation
-
+import i1 from "./i1.png"
 const OnlineOrderSection = () => {
   const { t } = useTranslation(); // Initialize translation hook
 
@@ -13,7 +13,7 @@ const OnlineOrderSection = () => {
         <div className="relative lg:mt-0 mt-4">
           {/* Main Phone Image */}
           <img
-            src="https://wp.validthemes.net/restan/wp-content/uploads/2024/04/16.png"
+            src={i1}
             alt="Main Phone"
             className="w-64 lg:w-[500px] drop-shadow-xl"
           />
