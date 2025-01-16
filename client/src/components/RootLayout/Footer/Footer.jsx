@@ -60,22 +60,46 @@ const Footer = () => {
 
             {/* Contact Info */}
             <div>
-              <h4 className="text-lg mt-0 lg:mt-20 font-bold mb-4">{t('contact_info')}</h4>
-              <ul className="text-sm space-y-2">
-                <li className="flex items-center">
-                  <i className="fas fa-map-marker-alt text-[#9b815d] mr-2"></i>
-                  {t('address')}
-                </li>
-                <li className="flex items-center">
-                  <i className="fas fa-phone-alt text-[#9b815d] mr-2"></i>
-                  <span dir={isRTL ? "ltr" : "ltr"}>+973 17772211</span>
-                </li>
-                <li className="flex items-center">
-                  <i className="fas fa-envelope text-[#9b815d] mr-2"></i>
-                  arabiaseelrest@gmail.com
-                </li>
-              </ul>
-            </div>
+  <h4 className="text-lg mt-0 lg:mt-20 font-bold mb-4">{t('contact_info')}</h4>
+  <ul className="text-sm space-y-2">
+    {/* Address */}
+    <li className="flex items-center">
+      <i className="fas fa-map-marker-alt text-[#9b815d] mr-2"></i>
+      <a
+        href="https://www.google.com/maps?q=26.201798,50.533029"
+        className=" hover:underline"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {t('address')}
+      </a>
+    </li>
+
+    {/* Phone */}
+    <li className="flex items-center">
+      <i className="fas fa-phone-alt text-[#9b815d] mr-2"></i>
+      <a
+        href="tel:+97317772211"
+        className=" hover:underline"
+        dir={isRTL ? 'ltr' : 'ltr'}
+      >
+        +973 17772211
+      </a>
+    </li>
+
+    {/* Email */}
+    <li className="flex items-center">
+      <i className="fas fa-envelope text-[#9b815d] mr-2"></i>
+      <a
+        href="mailto:arabiaseelrest@gmail.com"
+        className=" hover:underline"
+      >
+        arabiaseelrest@gmail.com
+      </a>
+    </li>
+  </ul>
+</div>
+
 
             {/* Newsletter */}
             <div>

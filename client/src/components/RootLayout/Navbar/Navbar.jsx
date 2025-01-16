@@ -66,21 +66,43 @@ const Navbar = () => {
     <div className="max-w-7xl mx-auto flex justify-between items-center px-4">
   {/* Contact Information */}
   <div className="flex space-x-4 items-center">
-    <div className="flex items-center space-x-2">
-      <AiOutlinePhone className="lg:text-lg text-xs ml-2" />
-      <span dir="ltr">+973 17772211</span>
-    </div>
-    <div className="flex items-center space-x-2">
-      <AiOutlineMail className="lg:text-lg text-xs ml-2" />
-      <span>arabiaseelrest@gmail.com</span>
-    </div>
+  {/* Phone Section */}
+  <div className="flex items-center space-x-2">
+    <AiOutlinePhone className="lg:text-lg text-xs ml-2" />
+    <a
+      href="tel:+97317772211"
+      className=" hover:underline"
+      dir="ltr"
+    >
+      +973 17772211
+    </a>
   </div>
 
-  {/* Address Section */}
-  <div className="flex items-center space-x-2 relative left-4">
-  <AiOutlineEnvironment className="lg:text-lg text-xs ml-2" />
-  <span>{t("address")}</span>
+  {/* Email Section */}
+  <div className="flex items-center space-x-2">
+    <AiOutlineMail className="lg:text-lg text-xs ml-2" />
+    <a
+      href="mailto:arabiaseelrest@gmail.com"
+      className=" hover:underline"
+    >
+      arabiaseelrest@gmail.com
+    </a>
+  </div>
 </div>
+
+{/* Address Section */}
+<div className="flex items-center space-x-2 relative left-4">
+  <AiOutlineEnvironment className="lg:text-lg text-xs ml-2" />
+  <a
+     href="https://www.google.com/maps?q=26.201798,50.533029"
+    className=" hover:underline"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    {t("address")}
+  </a>
+</div>
+
 
 </div>
 
