@@ -93,7 +93,7 @@ const ServiceSection = () => {
               animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }} // Animate based on visibility
               transition={{ duration: 1, delay: index * 0.5 }} // Staggered delay for each card
             >
-              <img src={service.image} alt={service.title} className="w-32 lg:ml-16  ml-32 h-32 mb-4 mx-auto" />
+              <img src={service.image} alt={service.title} className="lg:w-56 w-32 lg:ml-16  ml-32 lg:h-56 h-32 mb-4 mx-auto" />
               <h3 className="text-2xl font-serif lg:ml-0  ml-32  mb-2 text-center">{service.title}</h3>
               <p className="text-gray-500 lg:ml-0  ml-32  text-center">{service.description}</p>
               {/* Divider after all cards except the last one */}
