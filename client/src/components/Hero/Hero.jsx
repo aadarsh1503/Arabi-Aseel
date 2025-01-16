@@ -57,7 +57,7 @@ const Hero = () => {
               <img
                 src={ar} // RTL logo
                 alt="RTL Logo"
-                className="h-56 -mt-16 lg:h-[400px]"
+                className="h-72 mt-0 lg:-mt-16 lg:h-[400px]"
               />
             ) : (
               <img
