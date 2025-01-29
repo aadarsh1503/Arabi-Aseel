@@ -91,7 +91,7 @@ const Navbar = () => {
 </div>
 
 {/* Address Section */}
-<div className="flex items-center space-x-2 relative left-4">
+<div className="lg:flex items-center hidden  space-x-2 relative left-4">
   <AiOutlineEnvironment className="lg:text-lg text-xs ml-2" />
   <a
      href="https://www.google.com/maps?q=26.201798,50.533029"
