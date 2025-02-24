@@ -25,7 +25,7 @@ const Hero = () => {
   return (
     <div className="hero-container">
     <div
-      className={`lg:h-screen h-[505px] ${isRTL ? 'mt-[-142px]' : 'mt-[-115px]'} font-poppins bg-black bg-opacity-60`}
+      className={`lg:h-screen h-full ${isRTL ? 'mt-[-142px]' : 'mt-[-115px]'} font-poppins bg-black bg-opacity-60`}
     >
       {/* Background Video for all screens */}
       <video
