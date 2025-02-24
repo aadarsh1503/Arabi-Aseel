@@ -160,7 +160,7 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       <div
-        className={`fixed top-0 left-0 h-full bg-black bg-opacity-90 z-40 transform ${
+        className={`fixed top-0 left-0 h-[500px] bg-black bg-opacity-90 z-40 transform ${
           isMenuOpen ? "translate-x-0" : "-translate-x-full"
         } transition-transform duration-300 ease-in-out w-3/4`}
       >
@@ -176,7 +176,7 @@ const Navbar = () => {
         </div>
 
         {/* Menu items */}
-        <div className="flex flex-col items-start justify-center h-full space-y-6 text-white p-6">
+        <div className="flex flex-col items-start  h-full space-y-6 text-white p-6">
           {menuItems.map((item, index) => (
             <a
               key={index}
