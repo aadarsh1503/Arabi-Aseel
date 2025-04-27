@@ -94,7 +94,7 @@ const Navbar = () => {
 <div className="lg:flex items-center hidden  space-x-2 relative left-4">
   <AiOutlineEnvironment className="lg:text-lg text-xs ml-2" />
   <a
-     href="https://www.google.com/maps?q=26.201798,50.533029"
+     href="https://www.google.com/maps/place/Arabiaseel+Kitchen/@26.2015165,50.5328398,17z/data=!4m15!1m8!3m7!1s0x3e49afc54b8b1169:0xcb06c2186a95290a!2sArabiaseel+Kitchen!8m2!3d26.201529!4d50.5328325!10e5!16s%2Fg%2F11mcq4rk30!3m5!1s0x3e49afc54b8b1169:0xcb06c2186a95290a!8m2!3d26.201529!4d50.5328325!16s%2Fg%2F11mcq4rk30?entry=ttu&g_ep=EgoyMDI1MDQwOS4wIKXMDSoASAFQAw%3D%3D"
     className=" hover:underline"
     target="_blank"
     rel="noopener noreferrer"
