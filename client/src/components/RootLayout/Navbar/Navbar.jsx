@@ -82,10 +82,10 @@ const Navbar = () => {
   <div className="flex items-center space-x-2">
     <AiOutlineMail className="lg:text-lg text-xs ml-2" />
     <a
-      href="mailto:arabiaseelrest@gmail.com"
+      href="mailto:info@arabiaseel.com"
       className=" hover:underline"
     >
-      arabiaseelrest@gmail.com
+      info@arabiaseel.com
     </a>
   </div>
 </div>
@@ -115,9 +115,9 @@ const Navbar = () => {
         <div className="flex max-w-7xl mx-auto justify-between items-center">
         {isRTL ? (
     <img
-      src={ar}
+      src={a2}
       alt="RTL Logo"
-      className="h-32 mt-0 lg:-mt-4 w-32"
+      className="h-12 w-12 mt-4"
     />
   ) : (
     <img

@@ -93,10 +93,10 @@ const Footer = () => {
     <li className="flex items-center">
       <i className="fas fa-envelope text-[#9b815d] mr-2"></i>
       <a
-        href="mailto:arabiaseelrest@gmail.com"
+        href="mailto:info@arabiaseel.com"
         className=" hover:underline"
       >
-        arabiaseelrest@gmail.com
+        info@arabiaseel.com
       </a>
     </li>
   </ul>
