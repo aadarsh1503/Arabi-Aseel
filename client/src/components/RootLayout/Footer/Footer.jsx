@@ -37,9 +37,12 @@ const Footer = () => {
             </div>
 
             {/* Explore */}
-            <div className="lg:ml-20 ml-0">
+            <div className="lg:ml-20 lg:mr-20 mr-0 ml-0">
               <h4 className="text-lg mt-0 lg:mt-20  font-bold mb-4">{t('explore')}</h4>
               <ul className="text-sm space-y-2">
+              <li>
+                  <a href="/">{t('home')}</a>
+                </li>
                 <li>
                   <a href="/aboutUs">{t('about')}</a>
                 </li>
@@ -47,14 +50,14 @@ const Footer = () => {
                   <a href="/contact">{t('contact')}</a>
                 </li>
                 <li>
-                  <a href="#">{t('career')}</a>
+                  <a href="/menu">{t('menu')}</a>
                 </li>
-                <li>
+                {/* <li>
                   <a href="#">{t('company_profile')}</a>
                 </li>
                 <li>
                   <a href="#">{t('help_center')}</a>
-                </li>
+                </li> */}
               </ul>
             </div>
 
@@ -77,15 +80,14 @@ const Footer = () => {
 
     {/* Phone */}
     <li className="flex items-center">
-      <i className="fas fa-phone-alt text-[#9b815d] mr-2"></i>
-      <a
-        href="tel:+97317772211"
-        className=" hover:underline"
-        dir={isRTL ? 'ltr' : 'ltr'}
-      >
-        +973 17772211
-      </a>
-    </li>
+  <i className="fas fa-phone-alt text-[#9b815d] mr-2"></i>
+  <div className="flex space-x-1 text-sm" dir={isRTL ? 'ltr' : 'ltr'}>
+    <a href="tel:+97317772211" className="hover:underline">+973 17772211</a>
+    <span>/</span>
+    <a href="tel:+97333117441" className="hover:underline">+973 33117441</a>
+  </div>
+</li>
+
 
     {/* Email */}
     <li className="flex items-center">
@@ -122,7 +124,7 @@ const Footer = () => {
 </div>
 
 
-<button className="bg-[#9b815d] text-white py-2 px-4 rounded hover:bg-[#7e6849] transition">
+<button className="bg-[#724f38] text-white py-2 px-4 rounded hover:bg-[#7e6849] transition">
                   {/* Conditional Arrow Icon */}
                   {i18n.language === "ar" ? "←" : "→"}
                 </button>

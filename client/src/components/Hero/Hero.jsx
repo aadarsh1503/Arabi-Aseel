@@ -3,6 +3,8 @@ import { motion } from "framer-motion"; // Import motion from framer-motion
 import './Hero.css'; // Importing custom CSS for the rotating circle
 import i2 from "./i2.png";
 import ar from "./ar.png";
+import a2 from "./a2.png";
+
 import Navbar from "../RootLayout/Navbar/Navbar";
 import ServiceSection from "../ServiceSection/ServiceSection";
 import PromotionSection from "../PromotionSection/PromotionSection";
@@ -55,9 +57,9 @@ const Hero = () => {
         >
            {isRTL ? (
               <img
-                src={ar} // RTL logo
+                src={a2} // RTL logo
                 alt="RTL Logo"
-                className="h-72 mt-0 lg:-mt-16 lg:h-[400px]"
+                className="h-72 mt-0 lg:mt-12 lg:h-[200px]"
               />
             ) : (
               <img
@@ -76,7 +78,7 @@ const Hero = () => {
             transition={{ duration: 0.5, delay: 1 }}
           >
             <span className="best-food-text p-4 text-center text-white text-sm sm:text-base lg:text-lg font-serif tracking-widest">
-            {t("opening_soon")}
+            {t("Where Tradition Meets Taste.")}
             </span>
           </motion.div>
 

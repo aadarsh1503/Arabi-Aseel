@@ -38,7 +38,7 @@ const RestaurantSection = () => {
                 {t('invite')}
               </h2>
               <p className="text-gray-600 mb-6">{t('description')}</p>
-              <a href="/aboutUs">
+              <a href="/menu">
                 <button className="bg-brown text-white px-6 py-2 text-lg rounded-lg hover:bg-yellow-600 transition">
                   {t('discover_more')}
                 </button>
@@ -70,7 +70,7 @@ const RestaurantSection = () => {
                 {t('invite')}
               </h2>
               <p className="text-gray-600 mb-6">{t('description')}</p>
-              <a href="/aboutUs">
+              <a href="/menu">
                 <button className="bg-brown text-white px-6 py-2 text-lg rounded-lg  transition">
                   {t('discover_more')}
                 </button>

@@ -14,15 +14,16 @@ const Testimonials = () => {
       rating: "5/5",
       title: t('awesome_food'), // Translated text
       content: t('testimonial_content_1'), // Translated content
-      author: t("Anthom_Bu_Spar"),
-      position: t("Marketing_Manager"),
+      author: t("Samir_Al_Mohammed"),
+      position: t("Culinary_Expert"),
     },
+
     {
       rating: "4.5/5",
       title: t('great_ambience'), // Translated text
       content: t('testimonial_content_2'), // Translated content
-      author: t("Jane_Doe"),
-      position: t("Designer"),
+      author: t("Fatima_Al_Sayed"),
+      position: t("Lifestyle_Blogger"),
     },
     // Add two more testimonials
   ];

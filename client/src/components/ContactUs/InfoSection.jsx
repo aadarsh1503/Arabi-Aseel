@@ -18,7 +18,11 @@ const InfoSection = () => {
     className="mx-auto w-16 h-16 mb-4"
   />
   <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('hotline')}</h3>
-  <p className="text-gray-600" dir="ltr">+973 17772211</p> {/* Ensure LTR direction for phone number */}
+  <div className="flex flex-col text-gray-600" dir="ltr">
+  <p>+973 17772211</p>
+  <p>+973 33117441</p>
+</div>
+
 </div>
 
         {/* Location Block */}

@@ -16,6 +16,7 @@ export default {
 brown:'#886c44',
 Grey:'#f0ece4',
 dblack:'#201c1c',
+dark:"#724f38",
       },
       fontFamily: {
         poppins: ["poppins", "sans-serif"], // Adding Poppins to the theme

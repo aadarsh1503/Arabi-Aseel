@@ -10,6 +10,7 @@ import {
 
 import i2 from "./i2.png";
 import ar from "./ar.png";
+import a2 from "./a2.png";
 import LanguageToggle from "../../../LanguageToggle";
 import { AiOutlineEnvironment, AiOutlineMail, AiOutlinePhone } from "react-icons/ai";
 
@@ -37,7 +38,7 @@ const Navbar = () => {
       window.location.pathname === "/contact" ||
       window.location.pathname === "/aboutUs"
     ) {
-      setNavbarStyle1("bg-opacity-100 bg-brown");
+      setNavbarStyle1("bg-opacity-100 bg-[#724f38]");
     } else {
       setNavbarStyle1("bg-opacity-0");
     }
@@ -62,21 +63,20 @@ const Navbar = () => {
   return (
     <div className={`relative z-50 bg-black bg-opacity-60 ${isRTL ? "text-right" : "text-left"}`}>
     {/* Top Bar */}
-    <div className={`bg-black bg-opacity-0 text-white text-sm py-2 ${navbarStyle1}`}>
+    <div className={` bg-opacity-0 text-white text-sm py-2 ${navbarStyle1}`}>
     <div className="max-w-7xl mx-auto flex justify-between items-center px-4">
   {/* Contact Information */}
   <div className="flex space-x-4 items-center">
   {/* Phone Section */}
   <div className="flex items-center space-x-2">
-    <AiOutlinePhone className="lg:text-lg text-xs ml-2" />
-    <a
-      href="tel:+97317772211"
-      className=" hover:underline"
-      dir="ltr"
-    >
-      +973 17772211
-    </a>
+  <AiOutlinePhone className="text-base lg:text-lg ml-2 text-white" />
+  <div className="text-sm lg:text-sm  text-white" dir="ltr">
+    <a href="tel:+97317772211" className="hover:underline leading-tight">+973 17772211</a>
+    <span className="mx-1">/</span>
+    <a href="tel:+97333117441" className="hover:underline leading-tight">+973 33117441</a>
   </div>
+</div>
+
 
   {/* Email Section */}
   <div className="flex items-center space-x-2">
@@ -117,7 +117,7 @@ const Navbar = () => {
     <img
       src={ar}
       alt="RTL Logo"
-      className="h-32 mt-0 lg:-mt-5 w-32"
+      className="h-32 mt-0 lg:-mt-4 w-32"
     />
   ) : (
     <img

@@ -29,10 +29,10 @@
   "fast_food": "Fast Food",
   "special_offer": "Today Special Offer",
   "promotions": "Explore Irresistible Promotions!",
-  "description1": "Contrasted dissimilar get joy you instrument out reasonably. Again keeps at no meant stuff. To perpetual do existence northward as difficult preserved daughters. Continued at up to zealously necessary.",
+  "description1": "Indulge in a delicious experience with every order. Whether you're craving a quick meal or a gourmet feast, we’re here to make your food journey enjoyable and hassle-free. Let’s get started on your next delicious adventure!",
   "order_today": "Order Today",
   "ready_to_order": "Are you Ready to Start your online Order?",
-  "order_description": "Bndulgence diminution so discovered mr apartments. Are off under folly death wrote cause her way spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing. She sang know now.",
+  "order_description": "Get ready to dive into a world of tasty delights! Whether you're ordering a quick bite or a full meal, we’re here to make your experience seamless and enjoyable. It’s time to treat yourself to something delicious – start your order now!",
   "app_store": "App Store",
   "play_store": "Play Store",
  
@@ -70,7 +70,7 @@
   "footer_large_image": "Footer Decoration for Large Screens",
   "footer_mobile_image": "Footer Decoration for Mobile Screens",
  
-  "about_us_description": "Continued at zealously necessary is Surrounded sir motionless she end literature. Gay direction neglected.",
+  "about_us_description": "At Arabi Aseel Kitchen, we bring you the rich taste of authentic Arabic cuisine. Made with fresh ingredients and traditional Arabic recipes, every dish celebrates the true essence of our culinary heritage.",
   "explore": "Explore",
   "about": "About",
   
@@ -100,16 +100,19 @@
   "chocolate_chip": "Chocolate Chip",
   "meatballs_pasta": "Meatballs Pasta",
   "cheese_ham_pineapple":"Cheese, Ham & Pineapple",
-  "awesome_food": "Awesome and delicious food",
-  "great_ambience": "Great Ambience",
-  "testimonial_content_1": "Targeting consultation discover apartments, indulgence off under folly death wrote cause her way spite...",
-  "testimonial_content_2": "Lorem ipsum dolor sit amet consectetur adipiscing elit...",
-  "testimonial_image_alt": "Customer enjoying meal",
-  "our_customers_feedback": "Our Customers Feedback",
-  "Anthom_Bu_Spar": "Anthom Bu Spar",
-  "Marketing_Manager": "Marketing Manager",
-  "Jane_Doe": "Jane Doe",
-  "Designer": "Designer",
+  
+    "awesome_food": "Authentic and flavorful Arabic cuisine",
+    "great_ambience": "A cozy and vibrant dining experience",
+    "testimonial_content_1": "Indulging in the rich flavors of traditional Arabic dishes at Arabi Aseel Kitchen is an experience like no other. Every bite is full of warmth and tradition.",
+    "testimonial_content_2": "The best Arabic food I’ve ever tasted, paired with a welcoming atmosphere. A true taste of Bahrain!",
+    "testimonial_image_alt": "Customer enjoying traditional Arabic food",
+    "our_customers_feedback": "What Our Customers Are Saying",
+    "Samir_Al_Mohammed": "Samir Al Mohammed",
+    "Culinary_Expert": "Culinary Expert",
+    "Fatima_Al_Sayed": "Fatima Al Sayed",
+    "Lifestyle_Blogger": "Lifestyle Blogger",
+  
+  
   
     "reservation": "Reservation",
     "reserve_table": "Reserve Your Favorite Private Table",
@@ -143,7 +146,8 @@
   "your_message": "Your Message *",
   "get_in_touch": "Get In Touch",
     "opening_soon": "OPENING SOON",
-    "reviews":"reviews"
+    "reviews":"reviews",
+     "Where Tradition Meets Taste.":"Where Tradition Meets Taste."
   
   
   }
