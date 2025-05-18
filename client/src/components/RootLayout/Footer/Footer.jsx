@@ -113,7 +113,7 @@ const Footer = () => {
                   className="bg-gray-700 text-white p-2 rounded mb-2"
                   placeholder={t('your_email')}
                 />
-                <div className="flex items-center mb-4">
+                {/* <div className="flex items-center mb-4">
             
   <input
     type="checkbox"
@@ -121,7 +121,7 @@ const Footer = () => {
    className="mr-2 appearance-none h-4 w-4 border-2 border-gray-300 rounded-sm checked:bg-yellow-500 checked:border-yellow-500 focus:ring-0 relative"
   />
   <p className="text-sm mr-2">{t('privacy_text')}</p>
-</div>
+</div> */}
 
 
 <button className="bg-[#724f38] text-white py-2 px-4 rounded hover:bg-[#7e6849] transition">
