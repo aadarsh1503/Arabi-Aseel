@@ -12,19 +12,19 @@ const ServiceSection = () => {
     { 
       id: 1, 
       title: t('quality_foods'), // Use translation key
-      description: t('service_description'), // Use translation key
+      description: t('service_description1'), // Use translation key
       image: i1
     },
     { 
       id: 2, 
       title: t('fast_delivery'), // Use translation key
-      description: t('service_description'), // Use translation key
+      description: t('service_description2'), // Use translation key
       image: i3
     },
     { 
       id: 3, 
       title: t('delicious_recipes'), // Use translation key
-      description: t('service_description'), // Use translation key
+      description: t('service_description3'), // Use translation key
       image: i2
     },
   ];

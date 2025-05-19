@@ -40,7 +40,7 @@ const PromotionSection = () => {
           {/* Right Section with Text */}
           <div className="relative w-full lg:w-1/2 top-20 lg:py-0 py-64 lg:top-44 lg:px-4">
             <p className="text-lg font-bold uppercase tracking-wider text-gray-800 lg:mb-2">
-              {t('special_offer')}
+              {/* {t('special_offer')} */}
             </p>
             <h2 className="text-4xl lg:text-6xl font-serif text-gray-900 lg:mb-4">
               {t('promotions')}
@@ -48,9 +48,11 @@ const PromotionSection = () => {
             <p className="text-gray-900 mb-6">
               {t('description1')}
             </p>
+            <a href='/menu'>
             <button className="text-white lg:py-3 lg:px-6 bg-black bg-opacity-30 p-3 rounded-full hover:bg-brown">
               {t('order_today')}
             </button>
+            </a>
           </div>
         </div>
       </div>

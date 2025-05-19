@@ -109,7 +109,7 @@ const Navbar = () => {
     </div>
       {/* Main Navbar */}
       <nav
-        className={`text-white left-0 w-full shadow-lg top-0 z-30 ${navbarStyle}`}
+        className={`text-white left-0 w-full shadow-lg p-2 top-0 z-30 ${navbarStyle}`}
         dir={isRTL ? "rtl" : "ltr"}
       >
         <div className="flex max-w-7xl mx-auto justify-between items-center">
@@ -117,7 +117,7 @@ const Navbar = () => {
     <img
       src={a2}
       alt="RTL Logo"
-      className="h-12 w-12 mt-4"
+      className="h-20 p-3 w-20"
     />
   ) : (
     <img
