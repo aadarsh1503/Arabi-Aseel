@@ -12,11 +12,11 @@ const ContactForm = () => {
   });
   const [showThankYou, setShowThankYou] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     
-    // For phone field, only allow numbers
     if (name === 'phone') {
       const numbersOnly = value.replace(/[^0-9]/g, '');
       setFormData(prev => ({ ...prev, [name]: numbersOnly }));
@@ -28,16 +28,31 @@ const ContactForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError('');
     
     try {
+      // Format the complete message including all fields
+      const formattedMessage = `
+        New Contact Form Submission:
+        
+        Name: ${formData.name}
+        Phone: ${formData.phone}
+        Email: ${formData.email}
+        Message: ${formData.message}
+      `;
+
       const response = await fetch('https://arabiaseel.com/send_to_a_mail.php', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Type': 'application/json', // Changed to JSON
         },
-        body: new URLSearchParams({
-          ...formData,
-          to: 'info@arabiaseel.com'
+        body: JSON.stringify({ // Changed to JSON.stringify
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: formattedMessage,
+          to: 'info@arabiaseel.com',
+          subject: `New Contact from ${formData.email})`
         })
       });
 
@@ -50,59 +65,43 @@ const ContactForm = () => {
           message: ''
         });
         
-        // Hide thank you message after 5 seconds
-        setTimeout(() => {
-          setShowThankYou(false);
-        }, 5000);
+        setTimeout(() => setShowThankYou(false), 5000);
+      } else {
+        throw new Error('Failed to send message');
       }
     } catch (error) {
       console.error('Error submitting form:', error);
+      setError(t('form_submission_error'));
     } finally {
       setIsSubmitting(false);
     }
-
-    // Simulate API request delay
-// setTimeout(() => {
-//   setShowThankYou(true);
-//   setFormData({
-//     name: '',
-//     phone: '',
-//     email: '',
-//     message: ''
-//   });
-
-//   setTimeout(() => {
-//     setShowThankYou(false);
-//   }, 5000);
-
-//   setIsSubmitting(false);
-// }, 1000); // simulate 1s delay
-
   };
 
   return (
     <section className="bg-white py-12 px-4 mt-10 sm:px-6 lg:px-8 relative">
-     {showThankYou && (
-  <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-    <div className="relative bg-white p-8 rounded-xl shadow-lg text-center max-w-md mx-4">
+      {showThankYou && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="relative bg-white p-8 rounded-xl shadow-lg text-center max-w-md mx-4">
+            <button
+              onClick={() => setShowThankYou(false)}
+              className="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-xl focus:outline-none"
+              aria-label="Close"
+            >
+              &times;
+            </button>
+            <h3 className="text-2xl font-bold text-yellow-600 mb-4">Thank You!</h3>
+            <p className="text-gray-700">Your message has been sent successfully.</p>
+            <p className="text-gray-700">We'll get back to you soon.</p>
+          </div>
+        </div>
+      )}
       
-      {/* ❌ Close Button */}
-      <button
-        onClick={() => setShowThankYou(false)}
-        className="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-xl focus:outline-none"
-        aria-label="Close"
-      >
-        &times;
-      </button>
+      {error && (
+        <div className="mb-4 p-4 bg-red-100 text-red-700 rounded-lg text-center">
+          {error}
+        </div>
+      )}
 
-      <h3 className="text-2xl font-bold text-yellow-600 mb-4">Thank You!</h3>
-      <p className="text-gray-700">Your message has been sent successfully.</p>
-      <p className="text-gray-700">We'll get back to you soon.</p>
-    </div>
-  </div>
-)}
-
-      
       <div className="max-w-2xl shadow-custom rounded-xl p-4 mx-auto">
         <div className="text-center mb-8">
           <p className="text-sm uppercase text-yellow-600 tracking-wide">
