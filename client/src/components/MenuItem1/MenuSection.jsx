@@ -26,22 +26,22 @@ import g23 from "./g23.jpg"
 import g24 from "./g24.webp"
 import g25 from "./g25.webp"
 import g26 from "./g26.jpg"
-import g27 from "./g26.jpg"
-import g28 from "./g27.jpg"
-import g29 from "./g28.jpg"
-import g30 from "./g29.jpg"
-import g31 from "./g30.jpg"
+import g27 from "./g27.jpg"
+import g28 from "./g28.jpg"
+import g29 from "./g29.jpg"
+import g30 from "./g30.jpg"
+import g31 from "./g31.jpg"
 import g32 from "./g32.jpg"
 import g33 from "./g33.jpg"
 import g34 from "./g34.webp"
 import g35 from "./g35.jpg"
 import g36 from "./g36.webp"
-import g37 from "./g37.webp"
+import g37 from "./g37.jpg"
 import g38 from "./g38.webp"
 import g39 from "./g39.jpg"
 import g40 from "./g40.webp"
 import g41 from "./g41.webp"
-import g42 from "./g42.webp"
+import g42 from "./g42.jpg"
 import g43 from "./g43.jpg"
 import g44 from "./g44.png"
 import g45 from "./g45.avif"
@@ -497,7 +497,7 @@ const MenuSection = () => {
         if (priceObj.portion) {
             return (
                 <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg inline-block">
-                    BD {priceObj.portion}
+                    {t('Per_Portion')} - BD {priceObj.portion}
                 </div>
             );
         }

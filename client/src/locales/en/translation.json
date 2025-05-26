@@ -271,7 +271,10 @@
     "GREEN_SALAD": "GREEN SALAD",
   "SPECIAL_FATTOUSH_SALAD": "SPECIAL FATTOUSH SALAD",
     "LENTIL_SOUP": "LENTIL SOUP",
-    "madhbi_rice_only":"Madhabi Rice Only"
+    "madhbi_rice_only":"Madhabi Rice Only",
+    "cola_drink": "Cola Drink",
+    "citrus_drink":"Citrus Drink",
+    "Per_Portion":"Per Portion"
 
   
   }
