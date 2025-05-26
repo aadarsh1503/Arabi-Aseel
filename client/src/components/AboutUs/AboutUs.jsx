@@ -6,6 +6,7 @@ import RestaurantSection from '../RestaurantSection/RestaurantSection';
 import ChefsSection from '../ChefSection/ChefSection';
 import OpeningHours from '../OpeningHours/OpeningHours';
 import LanguageToggle from '../../LanguageToggle';
+////
 
 const AboutUs = () => {
   return (
