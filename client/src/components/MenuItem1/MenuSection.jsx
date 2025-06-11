@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import g1 from "./g1.jpg"
+import g101 from "./g101.jpg"
+import g102 from "./g102.webp"
+import g103 from "./g103.jpeg"
+import g104 from "./g104.avif"
+import g105 from "./g105.jpeg"
+import g106 from "./g106.webp"
+import g107 from "./g107.jpeg"
+import i1 from "./i1.webp"
+import i2 from "./i2.jpeg"
+import i3 from "./i3.jpg"
 import g2 from "./g2.jpg"
 import g3 from "./g3.jpg"
 import g4 from "./g4.jpeg"
@@ -98,13 +108,13 @@ const MenuSection = () => {
                 "price": { "Q": "1.300", "H": "2.600", "F": "5.200" },
                 "image": g4
               },
-              {
-                "id": 105,
-                "name": t('RICE_MADHABI_CHICKEN_GRILL'),
-                "description":t('madhabi_grilled_chicken'),
-                "price": { "Q": "1.300", "H": "2.600", "F": "5.200" },
-                "image": g5
-              },
+              // {
+              //   "id": 105,
+              //   "name": t('RICE_MADHABI_CHICKEN_GRILL'),
+              //   "description":t('madhabi_grilled_chicken'),
+              //   "price": { "Q": "1.300", "H": "2.600", "F": "5.200" },
+              //   "image": g5
+              // },
               {
                 "id": 106,
                 "name": t('MACHBOOS_RICE_CHICKEN'),
@@ -123,114 +133,226 @@ const MenuSection = () => {
           },
           {
             "id": 2,
-            "title": t('rice_only'),
+            "title": t('MUTTON_BEEF'),
             "items": [
               {
                 "id": 201,
-                "name": t('OUZI_RICE'),
-                "description": t('ouzi_rice_only'),
-                "price": { "portion": "0.700" },
-                "image": g8
-              },
-              {
-                "id": 202,
-                "name": t('BIRYANI_RICE'),
-                "description": t('biryani_rice_only'),
-                "price": { "portion": "0.700" },
-                "image": g9
-              },
-              {
-                "id": 203,
-                "name": t('MADFOON_RICE'),
-                "description": t('madfoon_rice_only'),
-                "price": { "portion": "0.700" },
-                "image": g10
-              },
-              {
-                "id": 204,
-                "name": t('MANDI_RICE'),
-                "description": t('mandi_rice_only'),
-                "price": { "portion": "0.700" },
-                "image": g11
-              },
-              {
-                "id": 205,
-                "name": t('MADHABI_RICE'),
-                "description": t('madhbi_rice_only'),
-                "price": { "portion": "0.700" },
-                "image": g12
-              },
-              {
-                "id": 206,
-                "name": t('MACHBOOS_RICE'),
-                "description": t('machboos_rice_only'),
-                "price": { "portion": "0.700" },
-                "image": g13
-              },
-              {
-                "id": 207,
-                "name": t('BUKHARI_RICE'),
-                "description": t('bukhari_rice_only'),
-                "price": { "portion": "0.700" },
-                "image": g14
-              }
-            ]
-          },
-          {
-            "id": 3,
-            "title": t('mutton_beef'),
-            "items": [
-              {
-                "id": 301,
-                "name": t('OUZI_RICE_MUTTON_LAMB'),
-                "description": t('ouzi_with_mutton'),
+                "name": t('OUZI MUTTON LAMB'),
+                "description": t('ouzi_mutton_lamb_add_only'), // Ouzi Mutton Lamb - add only
                 "price": { "Q": "1.800", "H": "3.600", "F": "7.200" },
                 "image": g15
               },
               {
-                "id": 302,
-                "name": t('BIRYANI_BAHRAINI_RICE_MUTTON'),
-                "description": t('bahraini_biryani_with_mutton'),
+                "id": 202,
+                "name": t('BIRYANI BAHRAINI MUTTON'),
+                "description": t('biryani_bahraini_mutton_add_only'), // Biryani Bahraini Mutton - add only
                 "price": { "Q": "1.800", "H": "3.600", "F": "7.200" },
                 "image": g16
               },
               {
-                "id": 303,
-                "name": t('MACHBOOS_RICE_MUTTON'),
-                "description": t('machboos_with_mutton'),
+                "id": 203,
+                "name": t('MACHBOOS MUTTON'),
+                "description": t('machboos_mutton_add_only'), // Machboos Mutton - add only
                 "price": { "Q": "1.800", "H": "3.600", "F": "7.200" },
                 "image": g17
               },
               {
-                "id": 304,
-                "name": t('MADFOON_HASAVI_RICE_MUTTON'),
-                "description": t('hasawi_madfoon_with_mutton'),
+                "id": 204,
+                "name": t('MADFOON MUTTON'),
+                "description": t('madfoon_mutton_add_only'), // Madfoon Mutton - add only
                 "price": { "Q": "1.800", "H": "3.600", "F": "7.200" },
                 "image": g18
               },
               {
-                "id": 305,
-                "name": t('MANDI_RICE_MUTTON'),
-                "description": t('mandi_with_mutton'),
+                "id": 205,
+                "name": t('MANDI MUTTON'),
+                "description": t('mandi_mutton_add_only'), // Mandi Mutton - add only
                 "price": { "Q": "1.800", "H": "3.600", "F": "7.200" },
                 "image": g21
               },
               {
-                "id": 306,
-                "name": t('WHITE_RICE_MUTTON'),
-                "description": t('white_rice_with_mutton'),
-                "price": { "Q": "1.800", "H": "3.600", "F": "7.200" },
-                "image": g19
-              },
-              {
-                "id": 307,
-                "name": t('BUKHARI_RICE_MUTTON_BEEF'),
-                "description": t('bukhari_with_meat'),
+                "id": 206,
+                "name": t('BUKHARI MUTTON'),
+                "description": t('bukhari_mutton_add_only'), // Bukhari Mutton - add only
                 "price": { "Q": "1.800", "H": "3.600", "F": "7.200" },
                 "image": g20
               }
+              // {
+              //   "id": 207,
+              //   "name": t('BUKHARI_RICE'),
+              //   "description": t('bukhari_rice_only_add_only'), // Bukhari Rice Only - add only
+              //   "price": { "portion": "0.700" },
+              //   "image": g14
+              // }
             ]
           },
+          
+          // {
+          //   "id": 2,
+          //   "title": t('rice_only'),
+          //   "items": [
+          //     {
+          //       "id": 201,
+          //       "name": t('OUZI_RICE'),
+          //       "description": t('ouzi_rice_only'),
+          //       "price": { "portion": "0.700" },
+          //       "image": g8
+          //     },
+          //     {
+          //       "id": 202,
+          //       "name": t('BIRYANI_RICE'),
+          //       "description": t('biryani_rice_only'),
+          //       "price": { "portion": "0.700" },
+          //       "image": g9
+          //     },
+          //     {
+          //       "id": 203,
+          //       "name": t('MADFOON_RICE'),
+          //       "description": t('madfoon_rice_only'),
+          //       "price": { "portion": "0.700" },
+          //       "image": g10
+          //     },
+          //     {
+          //       "id": 204,
+          //       "name": t('MANDI_RICE'),
+          //       "description": t('mandi_rice_only'),
+          //       "price": { "portion": "0.700" },
+          //       "image": g11
+          //     },
+          //     {
+          //       "id": 205,
+          //       "name": t('MADHABI_RICE'),
+          //       "description": t('madhbi_rice_only'),
+          //       "price": { "portion": "0.700" },
+          //       "image": g12
+          //     },
+          //     {
+          //       "id": 206,
+          //       "name": t('MACHBOOS_RICE'),
+          //       "description": t('machboos_rice_only'),
+          //       "price": { "portion": "0.700" },
+          //       "image": g13
+          //     },
+          //     {
+          //       "id": 207,
+          //       "name": t('BUKHARI_RICE'),
+          //       "description": t('bukhari_rice_only'),
+          //       "price": { "portion": "0.700" },
+          //       "image": g14
+          //     }
+          //   ]
+          // },
+          // {
+          //   "id": 3,
+          //   "title": t('mutton_beef'),
+          //   "items": [
+          //     {
+          //       "id": 301,
+          //       "name": t('OUZI_RICE_MUTTON_LAMB'),
+          //       "description": t('ouzi_with_mutton'),
+          //       "price": { "Q": "1.800", "H": "3.600", "F": "7.200" },
+          //       "image": g15
+          //     },
+          //     {
+          //       "id": 302,
+          //       "name": t('BIRYANI_BAHRAINI_RICE_MUTTON'),
+          //       "description": t('bahraini_biryani_with_mutton'),
+          //       "price": { "Q": "1.800", "H": "3.600", "F": "7.200" },
+          //       "image": g16
+          //     },
+          //     {
+          //       "id": 303,
+          //       "name": t('MACHBOOS_RICE_MUTTON'),
+          //       "description": t('machboos_with_mutton'),
+          //       "price": { "Q": "1.800", "H": "3.600", "F": "7.200" },
+          //       "image": g17
+          //     },
+          //     {
+          //       "id": 304,
+          //       "name": t('MADFOON_HASAVI_RICE_MUTTON'),
+          //       "description": t('hasawi_madfoon_with_mutton'),
+          //       "price": { "Q": "1.800", "H": "3.600", "F": "7.200" },
+          //       "image": g18
+          //     },
+          //     {
+          //       "id": 305,
+          //       "name": t('MANDI_RICE_MUTTON'),
+          //       "description": t('mandi_with_mutton'),
+          //       "price": { "Q": "1.800", "H": "3.600", "F": "7.200" },
+          //       "image": g21
+          //     },
+          //     {
+          //       "id": 306,
+          //       "name": t('WHITE_RICE_MUTTON'),
+          //       "description": t('white_rice_with_mutton'),
+          //       "price": { "Q": "1.800", "H": "3.600", "F": "7.200" },
+          //       "image": g19
+          //     },
+          //     {
+          //       "id": 307,
+          //       "name": t('BUKHARI_RICE_MUTTON_BEEF'),
+          //       "description": t('bukhari_with_meat'),
+          //       "price": { "Q": "1.800", "H": "3.600", "F": "7.200" },
+          //       "image": g20
+          //     }
+          //   ]
+          // },
+          {
+            "id": 3,
+            "title": t('HOT APPETIZERS'),
+            "items": [
+              {
+                "id": 301,
+                "name": t('CHEESE SAMOSAS'),
+                "description": t('CHEESE_SAMOSAS_only'),
+                "price": { "portion": "1.200" },
+                "image": g101
+              },
+              {
+                "id": 302,
+                "name": t('VEGETABLE SAMOSAS'),
+                "description": t('VEGETABLE_SAMOSAS_only'),
+                "price": { "portion": "1.000" },
+                "image": g102
+              },
+              {
+                "id": 303,
+                "name": t('CHICKEN SAMOSAS'),
+                "description": t('CHICKEN_SAMOSAS_only'),
+                "price": { "portion": "1.200" },
+                "image": g103
+              },
+              {
+                "id": 304,
+                "name": t('CHEESE_SPRING_ROLLS'),
+                "description": t('CHEESE_SPRING_ROLLS_only'),
+                "price": { "portion": "1.200" },
+                "image": g104
+              },
+              {
+                "id": 305,
+                "name": t('VEGETABLE SPRING ROLLS'),
+                "description": t('VEGETABLE_SPRING_ROLLS_only'),
+                "price": { "portion": "1.000" },
+                "image": g105
+              },
+              {
+                "id": 306,
+                "name": t('CHICKEN SPRING ROLLS'),
+                "description": t('CHICKEN_SPRING_ROLLS_only'),
+                "price": { "portion": "1.200" },
+                "image": g106
+              },
+              {
+                "id": 307,
+                "name": t('BEEF KIBBEH'),
+                "description": t('BEEF_KIBBEH_only'),
+                "price": { "portion": "1.500" },
+                "image": g107
+              }
+            ]
+          },
+          
           {
             "id": 4,
             "title": t('seafood'),
@@ -240,26 +362,26 @@ const MenuSection = () => {
                 "name": t('FISH_SHARI_FRY_WHITE_RICE'),
                 "description": t('fried_shari_fish'),
                 "price": { "Q": "2.000", "H": "4.000", "F": "6.000" },
-                "image": g22
+                "image": i3
               },
               {
                 "id": 402,
                 "name": t('FISH_SAFI_FRY_WHITE_RICE'),
                 "description": t('fried_safi_fish'),
                 "price": { "Q": "2.000", "H": "4.000", "F": "6.000" },
-                "image": g23
+                "image": i2
               },
               {
                 "id": 403,
-                "name": t('RUBYAN_MACHBOOS_RICE'),
-                "description": t('prawn_machboos'),
+                "name": t('FISH CHANAAD'),
+                "description": t('fish_Chanaad_only'),
                 "price": { "Q": "3.000", "H": "5.000", "F": "8.500" },
-                "image": g24
+                "image": i1
               },
               {
                 "id": 404,
-                "name": t('FISH_SHAFI_MACHBOOS_RICE'),
-                "description": t('shafi_fish_machboos'),
+                "name": t('SHRIMP WITH RICE'),
+                "description": t('shrimp_with_rice_only'),
                 "price": { "Q": "3.000", "H": "5.000", "F": "8.500" },
                 "image": g25
               },
@@ -388,14 +510,14 @@ const MenuSection = () => {
               },
               {
                 "id": 704,
-                "name": t('WATER_400ML_SMALL'),
+                "name": t('WATER_330ML_SMALL'),
                 "description": t('small_water'),
                 "price": { "portion": "0.200" },
                 "image": g44
               },
               {
                 "id": 705,
-                "name": t('WATER_800ML_BIG'),
+                "name": t('WATER_600ML_BIG'),
                 "description": t('big_water'),
                 "price": { "portion": "0.300" },
                 "image": g45
@@ -477,19 +599,19 @@ const MenuSection = () => {
               }
             ]
           },
-          {
-            "id": 10,
-            "title": t('soup'),
-            "items": [
-              {
-                "id": 1001,
-                "name": t('LENTIL_SOUP'),
-                "description": t('lentil_soup_description'),
-                "price": { "S": "1.000", "M": "2.000", "L": "3.000" },
-                "image": g52
-              }
-            ]
-          }
+          // {
+          //   "id": 10,
+          //   "title": t('soup'),
+          //   "items": [
+          //     {
+          //       "id": 1001,
+          //       "name": t('LENTIL_SOUP'),
+          //       "description": t('lentil_soup_description'),
+          //       "price": { "S": "1.000", "M": "2.000", "L": "3.000" },
+          //       "image": g52
+          //     }
+          //   ]
+          // }
         
     ];
 
