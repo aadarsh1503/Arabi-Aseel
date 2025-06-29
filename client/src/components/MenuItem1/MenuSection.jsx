@@ -17,7 +17,7 @@ const MenuSection = () => {
     useEffect(() => {
         const fetchMenuData = async () => {
             try {
-                const res = await axios.get('https://arabi-aseel-1.onrender.com/api/admin/menu');
+                // const res = await axios.get('https://arabi-aseel-1.onrender.com/api/admin/menu');
                 const rawData = res.data;
         
                 // 1. Filter out any items that are NOT available

@@ -10,20 +10,40 @@ const Testimonials = () => {
   const isRTL = i18n.language === 'ar'; // Check if the language is Arabic (RTL)
 
   const testimonials = [
+    // {
+    //   rating: "5/5",
+    //   title: t('awesome_food'), // Translated text
+    //   content: t('testimonial_content_1'), // Translated content
+
+    // },
+
+    // {
+    //   rating: "4.5/5",
+    //   title: t('great_ambience'), // Translated text
+    //   content: t('testimonial_content_2'), // Translated content
+
+    // },
     {
       rating: "5/5",
-      title: t('awesome_food'), // Translated text
-      content: t('testimonial_content_1'), // Translated content
-      author: t("Samir_Al_Mohammed"),
-      position: t("Culinary_Expert"),
-    },
+      title: t('awesome_food3'), // Translated text
+  
 
+    }, {
+      rating: "5/5",
+      title: t('awesome_food4'), // Translated text
+    
+
+    }, {
+      rating: "5/5",
+      title: t('awesome_food5'), // Translated text
+    
+
+    },
     {
-      rating: "4.5/5",
-      title: t('great_ambience'), // Translated text
-      content: t('testimonial_content_2'), // Translated content
-      author: t("Fatima_Al_Sayed"),
-      position: t("Lifestyle_Blogger"),
+      rating: "5/5",
+      title: t('awesome_food6'), // Translated text
+     
+
     },
     // Add two more testimonials
   ];
@@ -69,9 +89,9 @@ const Testimonials = () => {
                 </div>
                 <h3 className="text-lg font-semibold">{testimonial.title}</h3>
                 <p className="text-gray-600 mt-4">{testimonial.content}</p>
-                <hr className="my-4" />
-                <p className="font-bold">{testimonial.author}</p>
-                <p className="text-sm text-gray-500">{testimonial.position}</p>
+                {/* <hr className="my-4" /> */}
+                {/* <p className="font-bold">{testimonial.author}</p>
+                <p className="text-sm text-gray-500">{testimonial.position}</p> */}
               </div>
             ))}
           </Slider>
