@@ -48,7 +48,7 @@ const Signup = () => {
     onSubmit: async (values) => {
       setLoading(true);
       try {
-        await axios.post('http://localhost:5000/api/auth/signup', {
+        await axios.post('https://arabi-aseel-1.onrender.com/api/auth/signup', {
           name: values.name,
           email: values.email,
           password: values.password

@@ -54,7 +54,7 @@ const AdminPanel = ({ onLogout }) => {
   
     try {
       // This uses the new, efficient PATCH route
-      await axios.patch(`http://localhost:5000/api/admin/menu/${itemId}/status`, {
+      await axios.patch(`https://arabi-aseel-1.onrender.com/api/admin/menu/${itemId}/status`, {
         status: newStatus,
       });
       notify.success('Status updated!');
@@ -140,7 +140,7 @@ const AdminPanel = ({ onLogout }) => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('http://localhost:5000/api/admin/menu');
+      const res = await axios.get('https://arabi-aseel-1.onrender.com/api/admin/menu');
       const data = res.data;
       
       setItems(data);
@@ -226,7 +226,7 @@ const AdminPanel = ({ onLogout }) => {
     
     const timer = setTimeout(async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/admin/menu/search?query=${searchQuery}`);
+        const res = await axios.get(`https://arabi-aseel-1.onrender.com/api/admin/menu/search?query=${searchQuery}`);
         setSuggestions(res.data);
       } catch (err) {
         console.error('Search error:', err);
@@ -305,14 +305,14 @@ const AdminPanel = ({ onLogout }) => {
 
       if (editingId) {
         await axios.put(
-          `http://localhost:5000/api/admin/menu/${editingId}`,
+          `https://arabi-aseel-1.onrender.com/api/admin/menu/${editingId}`,
           formData,
           { headers: { 'Content-Type': 'multipart/form-data' } }
         );
         notify.success('Item updated successfully ✏️');
       } else {
         await axios.post(
-          'http://localhost:5000/api/admin/menu',
+          'https://arabi-aseel-1.onrender.com/api/admin/menu',
           formData,
           { headers: { 'Content-Type': 'multipart/form-data' } }
         );
@@ -335,7 +335,7 @@ const AdminPanel = ({ onLogout }) => {
       notify.info('Deleting item... 🚮');
       
       try {
-        await axios.delete(`http://localhost:5000/api/admin/menu/${id}`);
+        await axios.delete(`https://arabi-aseel-1.onrender.com/api/admin/menu/${id}`);
         await fetchData();
         if (editingId === id) resetForm();
         notify.success('Item deleted successfully 🗑️');

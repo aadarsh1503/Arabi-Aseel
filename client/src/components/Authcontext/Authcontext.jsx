@@ -17,13 +17,13 @@ export const AuthProvider = ({ children }) => {
       try {
         if (token) {
           // Verify token with backend
-          const response = await axios.get('http://localhost:5000/api/auth/verify', {
+          const response = await axios.get('https://arabi-aseel-1.onrender.com/api/auth/verify', {
             headers: { Authorization: `Bearer ${token}` }
           });
           
           if (response.data.valid) {
             // Optionally fetch user data if not stored in token
-            const userResponse = await axios.get('http://localhost:5000/api/auth/me', {
+            const userResponse = await axios.get('https://arabi-aseel-1.onrender.com/api/auth/me', {
               headers: { Authorization: `Bearer ${token}` }
             });
             setUser(userResponse.data);

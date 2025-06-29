@@ -16,9 +16,6 @@ db.getConnection()
   .then(() => console.log('✅ Connected to MySQL Database'))
   .catch(err => {
     console.error('❌ MySQL Connection Error:', err.message);
-    console.error('📄 Error Code:', err.code);
-    console.error('📦 SQL State:', err.sqlState);
-    console.error('🧠 Full Error Object:', err);
     process.exit(1);
   });
 
