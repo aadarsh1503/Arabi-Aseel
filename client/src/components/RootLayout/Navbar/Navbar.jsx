@@ -24,6 +24,9 @@ const Navbar = () => {
     if (
       window.location.pathname === "/menu" ||
       window.location.pathname === "/contact" ||
+      window.location.pathname === "/admin" ||
+      window.location.pathname === "/login" ||
+      window.location.pathname === "/signup" ||
       window.location.pathname === "/aboutUs"
     ) {
       setNavbarStyle("bg-opacity-100 bg-black");
@@ -36,6 +39,9 @@ const Navbar = () => {
     if (
       window.location.pathname === "/menu" ||
       window.location.pathname === "/contact" ||
+      window.location.pathname === "/admin" ||
+      window.location.pathname === "/login" ||
+      window.location.pathname === "/signup" ||
       window.location.pathname === "/aboutUs"
     ) {
       setNavbarStyle1("bg-opacity-100 bg-[#724f38]");

@@ -306,7 +306,14 @@
     "BIRYANI BAHRAINI MUTTON": "BIRYANI BAHRAINI MUTTON",
     "OUZI MUTTON LAMB": "OUZI MUTTON LAMB",
     "MUTTON_BEEF":"Mutton Beef",
-      "thank_you_subscribed": "Thank you for subscribing!"
+      "thank_you_subscribed": "Thank you for subscribing!",
+      "select_quantity":"Select Quantity",
+      "quantity": "Quantity",
+      "quarter": "Quarter",
+"half": "Half",
+"full": "Full",
+"total": "Total"
+
 
   
   }

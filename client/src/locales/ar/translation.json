@@ -307,7 +307,13 @@
   "bukhari_rice_only_add_only": "بخاری چاول صرف",
    "CHICKEN_SAMOSAS_only": "چکن سموسے صرف",
   "CHICKEN SAMOSAS": "چکن سموسے",
-    "thank_you_subscribed": "سبسکرائب کرنے کا شکریہ!"
+    "thank_you_subscribed": "سبسکرائب کرنے کا شکریہ!",
+    "select_quantity": "مقدار منتخب کریں",
+    "quantity": "الكمية",
+    "quarter": "چوتھائی",
+"half": "آدھا",
+"full": "پورا",
+"total": "کل"
         
         
 
