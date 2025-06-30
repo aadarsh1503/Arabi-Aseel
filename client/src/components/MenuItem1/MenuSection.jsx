@@ -17,41 +17,38 @@ const MenuSection = () => {
     useEffect(() => {
         const fetchMenuData = async () => {
             try {
-                // const res = await axios.get('https://arabi-aseel-1.onrender.com/api/admin/menu');
+                const res = await axios.get('https://arabi-aseel-1.onrender.com/api/admin/menu');
                 const rawData = res.data;
         
                 // 1. Filter out any items that are NOT available
                 const availableItems = rawData.filter(item => item.status === 'available');
-        
-                // 2. Build the categories map using ONLY the available items
+
                 const categoriesMap = {};
-                
-                availableItems.forEach(item => { // <-- CORRECT: Loop over filtered items
-                    // If the category for this item doesn't exist in our map yet, create it.
+                    
+                availableItems.forEach(item => {
                     if (!categoriesMap[item.category_id]) {
                         categoriesMap[item.category_id] = {
                             id: item.category_id,
                             title: isRTL && item.category_name_ar ? item.category_name_ar : item.category_name,
                             enTitle: item.category_name,
                             arTitle: item.category_name_ar || item.category_name,
-                            items: [] // Initialize with an empty items array
+                            items: []
                         };
                     }
                     
-                    // 3. Push the current available item into its corresponding category
                     categoriesMap[item.category_id].items.push({
-                        // The id in your component was 'item.id', but from the API it seems to be 'item.menu_id'
-                        // Please double-check which is correct for your setup. I'll use menu_id.
-                        id: item.menu_id, 
+                        id: item.menu_id,
                         name: item.translations.find(t => t.language === 'en')?.name || '',
                         arName: item.translations.find(t => t.language === 'ar')?.name || '',
                         description: item.translations.find(t => t.language === 'en')?.description || '',
                         arDescription: item.translations.find(t => t.language === 'ar')?.description || '',
                         price: {
-                            ...(item.price_q && { Q: item.price_q }),
-                            ...(item.price_h && { H: item.price_h }),
-                            ...(item.price_f && { F: item.price_f })
+                            Q: item.price_q,
+                            H: item.price_h,
+                            F: item.price_f
                         },
+                        price_type: item.price_type,
+                        price_per_portion: item.price_per_portion,
                         image: item.image_url
                     });
                 });
@@ -77,20 +74,37 @@ const MenuSection = () => {
     }, [i18n.language]);
 
     
-    const renderPrice = (priceObj) => {
-        if (!priceObj || Object.keys(priceObj).length === 0) {
-            return null;
-        }
-        
-        return (
-            <div className="flex gap-1 flex-wrap mt-3">
-                {Object.entries(priceObj).map(([size, price]) => (
-                    <div key={size} className="bg-white/90 backdrop-blur-sm text-amber-800 px-2.5 py-1 rounded-full text-xs font-bold shadow-sm border border-amber-100">
-                        {size}: BHD {price}
+    const renderPrice = (item) => {
+        if (item.price_type === 'per_portion' && item.price_per_portion) {
+            return (
+                <div className="flex gap-1 flex-wrap mt-3">
+                    <div className="bg-white/90 backdrop-blur-sm text-amber-800 px-2.5 py-1 rounded-full text-xs font-bold shadow-sm border border-amber-100">
+                    {t('per_portion')} : BHD {item.price_per_portion}
                     </div>
-                ))}
-            </div>
-        );
+                </div>
+            );
+        } else if (item.price) {
+            return (
+                <div className="flex gap-1 flex-wrap mt-3">
+                    {item.price.Q && (
+                        <div className="bg-white/90 backdrop-blur-sm text-amber-800 px-2.5 py-1 rounded-full text-xs font-bold shadow-sm border border-amber-100">
+                            Q: BHD {item.price.Q}
+                        </div>
+                    )}
+                    {item.price.H && (
+                        <div className="bg-white/90 backdrop-blur-sm text-amber-800 px-2.5 py-1 rounded-full text-xs font-bold shadow-sm border border-amber-100">
+                            H: BHD {item.price.H}
+                        </div>
+                    )}
+                    {item.price.F && (
+                        <div className="bg-white/90 backdrop-blur-sm text-amber-800 px-2.5 py-1 rounded-full text-xs font-bold shadow-sm border border-amber-100">
+                            F: BHD {item.price.F}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+        return null;
     };
 
     const handleOrderNow = (item) => {
@@ -288,7 +302,7 @@ const MenuSection = () => {
                                                 )}
                                                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                                             </div>
-    
+                                            
                                             <div className="p-6">
                                                 <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-amber-600 transition-colors">
                                                     {isRTL ? item.arName : item.name}
@@ -296,7 +310,7 @@ const MenuSection = () => {
                                                 <p className="text-gray-600 text-sm mb-4 break-words line-clamp-3">
                                                     {isRTL ? item.arDescription : item.description}
                                                 </p>
-                                                {renderPrice(item.price)}
+                                                {renderPrice(item)}
                                                 <button
                                                     onClick={() => handleOrderNow(item)}
                                                     className="mt-4 w-full bg-[#724F38] bg-gradient-to-r hover:from-amber-600 hover:to-amber-700 text-white py-2.5 rounded-lg font-bold transition-all duration-300 hover:shadow-md flex justify-center items-center"
@@ -391,35 +405,46 @@ const MenuSection = () => {
                             
                             {/* Size selection */}
                             <div className="mb-6">
-                                <label className="block text-sm font-medium text-gray-700 mb-3">
-                                    {t('select_quantity')}
-                                </label>
-                                <div className="grid grid-cols-3 gap-3">
-                                    {Object.entries(selectedItem.price || {}).map(([size, price]) => (
-                                        <button
-                                            key={size}
-                                            onClick={() => {
-                                                setQuantity(size);
-                                                setItemCount(1);
-                                            }}
-                                            className={`py-3 px-2 rounded-lg border-2 text-sm font-medium transition-all duration-200 ${
-                                                quantity === size
-                                                    ? 'bg-amber-50 border-amber-400 text-amber-700 shadow-md'
-                                                    : 'bg-white border-gray-200 text-gray-700 hover:border-amber-300'
-                                            }`}
-                                        >
-                                            <span className="block font-medium">
-                                                {size === 'F' ? t('full') : 
-                                                 size === 'H' ? t('half') : 
-                                                 size === 'Q' ? t('quarter') : size}
-                                            </span>
-                                            <span className="block text-xs mt-1 text-amber-600 font-semibold">
-                                                BHD {price}
-                                            </span>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
+            <label className="block text-sm font-medium text-gray-700 mb-3">
+                {t('select_quantity')}
+            </label>
+            {selectedItem.price_type === 'per_portion' ? (
+                <div className="grid grid-cols-1 gap-3">
+                    <div className="py-3 px-4 bg-amber-50 border-2 border-amber-400 text-amber-700 shadow-md rounded-lg">
+                        <span className="block font-medium">{t('per_portion')}</span>
+                        <span className="block text-xs mt-1 text-amber-600 font-semibold">
+                            BHD {selectedItem.price_per_portion}
+                        </span>
+                    </div>
+                </div>
+            ) : (
+                <div className="grid grid-cols-3 gap-3">
+                    {Object.entries(selectedItem.price || {}).filter(([_, price]) => price).map(([size, price]) => (
+                        <button
+                            key={size}
+                            onClick={() => {
+                                setQuantity(size);
+                                setItemCount(1);
+                            }}
+                            className={`py-3 px-2 rounded-lg border-2 text-sm font-medium transition-all duration-200 ${
+                                quantity === size
+                                    ? 'bg-amber-50 border-amber-400 text-amber-700 shadow-md'
+                                    : 'bg-white border-gray-200 text-gray-700 hover:border-amber-300'
+                            }`}
+                        >
+                            <span className="block font-medium">
+                                {size === 'F' ? t('full') : 
+                                 size === 'H' ? t('half') : 
+                                 size === 'Q' ? t('quarter') : size}
+                            </span>
+                            <span className="block text-xs mt-1 text-amber-600 font-semibold">
+                                BHD {price}
+                            </span>
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
                             
                             {/* Quantity selector */}
                             <div className="mb-6">
@@ -451,23 +476,36 @@ const MenuSection = () => {
                             
                             {/* Price summary */}
                             <div className="bg-amber-50 p-4 rounded-xl border border-amber-100">
-                                <div className="flex justify-between items-center mb-2">
-                                    <span className="text-sm font-medium text-gray-700">
-                                        {itemCount} × {quantity === 'F' ? t('full') : 
-                                                      quantity === 'H' ? t('half') : 
-                                                      quantity === 'Q' ? t('quarter') : quantity}
-                                    </span>
-                                    <span className="text-sm font-semibold text-gray-900">
-                                        BHD {(selectedItem.price[quantity] * itemCount).toFixed(3)}
-                                    </span>
-                                </div>
-                                <div className="flex justify-between items-center pt-3 border-t border-amber-200">
-                                    <span className="text-lg font-semibold text-gray-900">{t('total')}</span>
-                                    <span className="text-xl font-bold text-amber-700">
-                                        BHD {(selectedItem.price[quantity] * itemCount).toFixed(3)}
-                                    </span>
-                                </div>
-                            </div>
+            <div className="flex justify-between items-center mb-2">
+                <span className="text-sm font-medium text-gray-700">
+                    {selectedItem.price_type === 'per_portion' ? (
+                        `${itemCount} × ${t('per_portion')}`
+                    ) : (
+                        `${itemCount} × ${quantity === 'F' ? t('full') : 
+                                         quantity === 'H' ? t('half') : 
+                                         quantity === 'Q' ? t('quarter') : quantity}`
+                    )}
+                </span>
+                <span className="text-sm font-semibold text-gray-900">
+                    BHD {(
+                        selectedItem.price_type === 'per_portion' 
+                            ? selectedItem.price_per_portion * itemCount
+                            : selectedItem.price[quantity] * itemCount
+                    ).toFixed(3)}
+                </span>
+            </div>
+            <div className="flex justify-between items-center pt-3 border-t border-amber-200">
+                <span className="text-lg font-semibold text-gray-900">{t('total')}</span>
+                <span className="text-xl font-bold text-amber-700">
+                    BHD {(
+                        selectedItem.price_type === 'per_portion' 
+                            ? selectedItem.price_per_portion * itemCount
+                            : selectedItem.price[quantity] * itemCount
+                    ).toFixed(3)}
+                </span>
+            </div>
+        </div>
+        
                         </div>
                     </div>
                 </div>

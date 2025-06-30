@@ -79,6 +79,8 @@ const AdminPanel = ({ onLogout }) => {
     key_name: '',
     image_url: '',
     price: { Q: '', H: '', F: '' },
+    price_type: 'portion', // Add this
+    price_per_portion: '', // Add this
     translations: [
       { language: 'en', name: '', description: '' },
       { language: 'ar', name: '', description: '' }
@@ -290,9 +292,23 @@ const AdminPanel = ({ onLogout }) => {
     try {
       const formData = new FormData();
       formData.append('category_name', form.category_name);
-      formData.append('category_name_ar', form.category_name_ar || ''); // Add this line
+      formData.append('category_name_ar', form.category_name_ar || '');
       formData.append('key_name', form.key_name);
-      formData.append('price', JSON.stringify(form.price));
+      formData.append('price_type', form.price_type);
+      
+      // Fix: Properly handle both price types
+      if (form.price_type === 'per_portion') {
+        formData.append('price', JSON.stringify({ 
+          per_portion: form.price.per_portion || form.price_per_portion 
+        }));
+      } else {
+        formData.append('price', JSON.stringify({ 
+          Q: form.price.Q, 
+          H: form.price.H, 
+          F: form.price.F 
+        }));
+      }
+      
       formData.append('translations', JSON.stringify(form.translations));
       
       if (imageFile) {
@@ -351,10 +367,17 @@ const AdminPanel = ({ onLogout }) => {
   const handleEdit = (item) => {
     setForm({
       category_name: item.category_name,
-      category_name_ar: item.category_name_ar || '', // Add this line
+      category_name_ar: item.category_name_ar || '',
       key_name: item.key_name,
       image_url: item.image_url,
-      price: { Q: item.price_q, H: item.price_h, F: item.price_f },
+      price_type: item.price_type || 'portion',
+      price: { 
+        Q: item.price_q, 
+        H: item.price_h, 
+        F: item.price_f,
+        per_portion: item.price_per_portion 
+      },
+      price_per_portion: item.price_per_portion || '', // Add this line
       translations: item.translations.map(t => ({
         language: t.language,
         name: t.name,
@@ -620,27 +643,31 @@ const AdminPanel = ({ onLogout }) => {
                 
                 {/* Rest of the content remains the same */}
                 {/* Prices */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {item.price_q && (
-                    <span className={`px-2.5 py-1 text-sm rounded-full 
-                      ${darkMode ? 'bg-[#724F38] text-white' : 'bg-[#724F38] text-white'}`}>
-                      Q: BHD {item.price_q}
-                    </span>
-                  )}
-                  {item.price_h && (
-                    <span className={`px-2.5 py-1 text-sm rounded-full 
-                      ${darkMode ? 'bg-[#724F38] text-white' : 'bg-[#724F38] text-white'}`}>
-                      H: BHD {item.price_h}
-                    </span>
-                  )}
-                  {item.price_f && (
-                    <span className={`px-2.5 py-1 text-sm rounded-full 
-                      ${darkMode ? 'bg-[#724F38] text-white' : 'bg-[#724F38] text-white'}`}>
-                      F: BHD {item.price_f}
-                    </span>
-                  )}
-                </div>
-                
+                {item.price_type === 'per_portion' ? (
+ <span className="inline-block w-fit px-2.5 mb-4 py-1 text-sm rounded-full bg-[#724F38] text-white">
+ Per Portion: BHD {item.price_per_portion}
+</span>
+
+) : (
+  <div className="flex flex-wrap mb-4 gap-2"> {/* FLEX ROW ADDED */}
+    {item.price_q && (
+      <span className="px-2.5 py-1 text-sm rounded-full bg-[#724F38] text-white">
+        Q: BHD {item.price_q}
+      </span>
+    )}
+    {item.price_h && (
+      <span className="px-2.5 py-1 text-sm rounded-full bg-[#724F38] text-white">
+        H: BHD {item.price_h}
+      </span>
+    )}
+    {item.price_f && (
+      <span className="px-2.5 py-1 text-sm rounded-full bg-[#724F38] text-white">
+        F: BHD {item.price_f}
+      </span>
+    )}
+  </div>
+)}
+
                 {/* Details */}
                 <div className="mb-4 break-words">
                   <span className={`font-medium ${darkMode ? 'text-gray-200 text-sm' : 'text-gray-700 text-sm'}`}>
@@ -817,39 +844,76 @@ const AdminPanel = ({ onLogout }) => {
                       </div>
                     )}
                   </div>
-                  
-                  <div className="grid grid-cols-3 gap-4">
-                    <div>
-                      <label className="block mb-1 font-medium">Q Price</label>
-                      <input
-                        name="price.Q"
-                        placeholder="Price"
-                        value={form.price.Q}
-                        onChange={handleChange}
-                        className={`w-full p-2 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} focus:outline-none focus:ring-2 focus:ring-purple-500`}
-                      />
-                    </div>
-                    <div>
-                      <label className="block mb-1 font-medium">H Price</label>
-                      <input
-                        name="price.H"
-                        placeholder="Price"
-                        value={form.price.H}
-                        onChange={handleChange}
-                        className={`w-full p-2 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} focus:outline-none focus:ring-2 focus:ring-purple-500`}
-                      />
-                    </div>
-                    <div>
-                      <label className="block mb-1 font-medium">F Price</label>
-                      <input
-                        name="price.F"
-                        placeholder="Price"
-                        value={form.price.F}
-                        onChange={handleChange}
-                        className={`w-full p-2 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} focus:outline-none focus:ring-2 focus:ring-purple-500`}
-                      />
-                    </div>
-                  </div>
+                  <div className="mb-4">
+  <label className="block mb-2 font-medium">Pricing Type</label>
+  <div className="flex space-x-4">
+    <label className="flex items-center">
+      <input
+        type="radio"
+        name="price_type"
+        value="portion"
+        checked={form.price_type === 'portion'}
+        onChange={() => setForm({...form, price_type: 'portion'})}
+        className="mr-2"
+      />
+      Quarter/Half/Full
+    </label>
+    <label className="flex items-center">
+      <input
+        type="radio"
+        name="price_type"
+        value="per_portion"
+        checked={form.price_type === 'per_portion'}
+        onChange={() => setForm({...form, price_type: 'per_portion'})}
+        className="mr-2"
+      />
+      Per Portion
+    </label>
+  </div>
+</div>
+{form.price_type === 'portion' ? (
+  <div className="grid grid-cols-3 gap-4">
+    <div>
+      <label className="block mb-1 font-medium">Quarter Price</label>
+      <input
+        name="price.Q"
+        value={form.price.Q}
+        onChange={handleChange}
+        className={`w-full p-2 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'}`}
+      />
+    </div>
+    <div>
+      <label className="block mb-1 font-medium">Half Price</label>
+      <input
+        name="price.H"
+        placeholder="Price"
+        value={form.price.H}
+        onChange={handleChange}
+        className={`w-full p-2 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} focus:outline-none focus:ring-2 focus:ring-purple-500`}
+      />
+    </div>
+    <div>
+      <label className="block mb-1 font-medium">Full Price</label>
+      <input
+        name="price.F"
+        placeholder="Price"
+        value={form.price.F}
+        onChange={handleChange}
+        className={`w-full p-2 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} focus:outline-none focus:ring-2 focus:ring-purple-500`}
+      />
+    </div>
+  </div>
+) : (
+  <div>
+    <label className="block mb-1 font-medium">Per Portion Price</label>
+    <input
+      name="price.per_portion"
+      value={form.price.per_portion || form.price_per_portion}
+      onChange={handleChange}
+      className={`w-full p-2 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'}`}
+    />
+  </div>
+)}
                   
                   {form.translations.map((t, i) => (
                     <div key={i} className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
