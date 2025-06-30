@@ -30,10 +30,12 @@ const parseFormDataFields = (body) => {
   try {
     return {
       ...body,
-      price: body.price ? JSON.parse(body.price) : { Q: '', H: '', F: '' },
-      translations: body.translations ? JSON.parse(body.translations) : []
+      price: body.price ? JSON.parse(body.price) : { Q: '', H: '', F: '', per_portion: '' },
+      translations: body.translations ? JSON.parse(body.translations) : [],
+      price_type: body.price_type || 'portion'
     };
   } catch (err) {
+    console.error('Error parsing form data:', err);
     throw new Error('Invalid JSON data in form fields');
   }
 };
@@ -46,7 +48,7 @@ router.post('/menu', upload.single('image'), async (req, res) => {
     console.log('req.file:', req.file);
 
     const formData = parseFormDataFields(req.body);
-    const { category_name, category_name_ar, price, translations } = formData;
+    const { category_name, category_name_ar, price, translations, price_type } = formData;
 
     console.log('Parsed formData:', formData);
 
@@ -69,7 +71,7 @@ router.post('/menu', upload.single('image'), async (req, res) => {
       console.log('Image uploaded to:', image_url);
     }
 
-    // Category handling - Updated to include Arabic name
+    // Category handling
     console.log('Checking if category exists for key_name:', category_name);
 
     const [categoryRows] = await db.execute(
@@ -88,8 +90,6 @@ router.post('/menu', upload.single('image'), async (req, res) => {
           'UPDATE categories SET ar_name = ? WHERE id = ?',
           [category_name_ar, category_id]
         );
-      } else {
-        console.warn('Arabic category name not provided, skipping update');
       }
     } else {
       console.log('Inserting new category:', category_name, category_name_ar);
@@ -103,15 +103,23 @@ router.post('/menu', upload.single('image'), async (req, res) => {
 
     // Insert menu item
     const [menuResult] = await db.execute(
-      'INSERT INTO menu_items (category_id, image_url, price_q, price_h, price_f) VALUES (?, ?, ?, ?, ?)',
-      [category_id, image_url, price.Q || '', price.H || '', price.F || '']
+      'INSERT INTO menu_items (category_id, image_url, price_q, price_h, price_f, price_type, price_per_portion) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [
+        category_id, 
+        image_url, 
+        price_type === 'portion' ? (price.Q || null) : null,
+        price_type === 'portion' ? (price.H || null) : null,
+        price_type === 'portion' ? (price.F || null) : null,
+        price_type,
+        price_type === 'per_portion' ? (price.per_portion || null) : null
+      ]
     );
 
     const menu_id = menuResult.insertId;
     console.log('New menu item inserted with ID:', menu_id);
 
+    // Insert translations
     for (const t of translations) {
-      console.log('Inserting translation:', t);
       await db.execute(
         'INSERT INTO menu_item_translations (menu_item_id, language_code, name, description) VALUES (?, ?, ?, ?)',
         [menu_id, t.language, t.name, t.description]
@@ -134,8 +142,19 @@ router.post('/menu', upload.single('image'), async (req, res) => {
 router.get('/menu', async (req, res) => {
   try {
     const [menuItems] = await db.execute(`
-      SELECT m.id AS menu_id, m.image_url, m.price_q, m.price_h, m.price_f,
-             c.id AS category_id, c.key_name AS category_name, m.status, c.ar_name AS category_name_ar
+      SELECT 
+        m.id AS menu_id, 
+        m.image_url, 
+        m.price_q, 
+        m.price_h, 
+        m.price_f,
+        m.price_type,
+        m.price_per_portion,
+        m.status,
+        m.created_at,
+        c.id AS category_id, 
+        c.key_name AS category_name, 
+        c.ar_name AS category_name_ar
       FROM menu_items m
       JOIN categories c ON m.category_id = c.id
       ORDER BY c.key_name, m.id
@@ -157,9 +176,12 @@ router.get('/menu', async (req, res) => {
 
     res.json(menuWithTranslations);
   } catch (err) {
+    console.error('Error in /menu GET:', err);
     res.status(500).json({ error: 'Internal server error', details: err.message });
   }
 });
+
+// PATCH: Update menu item status
 router.patch('/menu/:id/status', async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
@@ -205,6 +227,7 @@ router.delete('/menu/:id', async (req, res) => {
     await db.execute('DELETE FROM menu_item_translations WHERE menu_item_id = ?', [id]);
     await db.execute('DELETE FROM menu_items WHERE id = ?', [id]);
 
+    // Delete category if no items left
     const [categoryUsage] = await db.execute(
       'SELECT COUNT(*) AS count FROM menu_items WHERE category_id = ?',
       [categoryId]
@@ -219,6 +242,7 @@ router.delete('/menu/:id', async (req, res) => {
       deleted_image_url: imageUrl 
     });
   } catch (err) {
+    console.error('Error in /menu DELETE:', err);
     res.status(500).json({ error: 'Internal server error', details: err.message });
   }
 });
@@ -228,7 +252,7 @@ router.put('/menu/:id', upload.single('image'), async (req, res) => {
   try {
     const { id } = req.params;
     const formData = parseFormDataFields(req.body);
-    const { category_name, category_name_ar, price, translations, current_image_url } = formData;
+    const { category_name, category_name_ar, price, translations, current_image_url, price_type } = formData;
     const imageFile = req.file;
 
     if (!category_name || !price || !translations) {
@@ -246,6 +270,7 @@ router.put('/menu/:id', upload.single('image'), async (req, res) => {
       image_url = result.url;
     }
 
+    // Handle category
     const [categoryRows] = await db.execute(
       'SELECT id FROM categories WHERE key_name = ?',
       [category_name]
@@ -254,7 +279,7 @@ router.put('/menu/:id', upload.single('image'), async (req, res) => {
     let category_id;
     if (categoryRows.length > 0) {
       category_id = categoryRows[0].id;
-      // Update Arabic name if it exists
+      // Update Arabic name if provided
       if (category_name_ar) {
         await db.execute(
           'UPDATE categories SET ar_name = ? WHERE id = ?',
@@ -269,16 +294,26 @@ router.put('/menu/:id', upload.single('image'), async (req, res) => {
       category_id = insertCategory.insertId;
     }
 
+    // Update menu item
     const [updateResult] = await db.execute(
       `UPDATE menu_items 
-       SET category_id = ?, image_url = ?, price_q = ?, price_h = ?, price_f = ?
+       SET 
+         category_id = ?, 
+         image_url = ?, 
+         price_q = ?, 
+         price_h = ?, 
+         price_f = ?,
+         price_type = ?,
+         price_per_portion = ?
        WHERE id = ?`,
       [
         category_id,
         image_url,
-        price.Q || '',
-        price.H || '',
-        price.F || '',
+        price_type === 'portion' ? (price.Q || null) : null,
+        price_type === 'portion' ? (price.H || null) : null,
+        price_type === 'portion' ? (price.F || null) : null,
+        price_type,
+        price_type === 'per_portion' ? (price.per_portion || null) : null,
         id
       ]
     );
@@ -287,8 +322,8 @@ router.put('/menu/:id', upload.single('image'), async (req, res) => {
       return res.status(404).json({ error: 'Menu item not found' });
     }
 
+    // Update translations
     await db.execute('DELETE FROM menu_item_translations WHERE menu_item_id = ?', [id]);
-
     for (const t of translations) {
       await db.execute(
         'INSERT INTO menu_item_translations (menu_item_id, language_code, name, description) VALUES (?, ?, ?, ?)',
@@ -301,6 +336,7 @@ router.put('/menu/:id', upload.single('image'), async (req, res) => {
       data: { menu_id: id, image_url }
     });
   } catch (err) {
+    console.error('Error in /menu PUT:', err);
     res.status(500).json({ error: 'Internal server error', details: err.message });
   }
 });
