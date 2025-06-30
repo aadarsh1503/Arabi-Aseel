@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { FiSearch, FiPlus, FiEdit2, FiTrash2, FiX, FiFilter, FiMoon, FiSun, FiGrid, FiList } from 'react-icons/fi';
+import { FiSearch, FiPlus, FiEdit2, FiTrash2, FiX, FiAlertTriangle ,FiFilter, FiMoon, FiSun, FiGrid, FiList } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Puff } from 'react-loader-spinner';
@@ -12,6 +12,7 @@ const AdminPanel = ({ onLogout }) => {
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
@@ -454,12 +455,72 @@ const AdminPanel = ({ onLogout }) => {
       {darkMode ? <FiSun size={20} /> : <FiMoon size={20} />}
     </button>
     <button
-      onClick={handleLogout}
-      className={`p-2 rounded-full ${darkMode ? 'bg-red-900 hover:bg-red-800' : 'bg-red-100 hover:bg-red-200'} shadow transition-all hover:scale-110`}
-      title="Logout"
-    >
-      <FiLogOut size={20} className={darkMode ? 'text-red-300' : 'text-red-600'} />
-    </button>
+        onClick={() => setShowLogoutConfirm(true)}
+        className={`p-2 rounded-full ${
+          darkMode ? 'bg-red-900 hover:bg-red-800' : 'bg-red-100 hover:bg-red-200'
+        } shadow transition-all hover:scale-110`}
+        title="Logout"
+      >
+        <FiLogOut size={20} className={darkMode ? 'text-red-300' : 'text-red-600'} />
+      </button>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center   backdrop-blur-sm">
+          <div className={`w-full max-w-md rounded-xl shadow-2xl ${
+            darkMode ? 'bg-gray-800' : 'bg-white'
+          }`}>
+            <div className="p-6">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center">
+                  <FiAlertTriangle className={`text-2xl mr-3 ${
+                    darkMode ? 'text-yellow-400' : 'text-yellow-500'
+                  }`} />
+                  <h3 className={`text-xl font-bold ${
+                    darkMode ? 'text-gray-100' : 'text-gray-800'
+                  }`}>
+                    Confirm Logout
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setShowLogoutConfirm(false)}
+                  className={`p-1 rounded-full ${
+                    darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'
+                  }`}
+                >
+                  <FiX className={darkMode ? 'text-gray-400' : 'text-gray-500'} />
+                </button>
+              </div>
+
+              {/* Body */}
+              <p className={`mb-6 ${
+                darkMode ? 'text-gray-300' : 'text-gray-600'
+              }`}>
+                Are you sure you want to log out? Any unsaved changes may be lost.
+              </p>
+
+              {/* Footer */}
+              <div className="flex justify-end space-x-3">
+                <button
+                  onClick={() => setShowLogoutConfirm(false)}
+                  className={`px-4 py-2 rounded-lg ${
+                    darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300'
+                  } transition-colors`}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 rounded-lg bg-gradient-to-r from-red-600 to-red-500 text-white hover:from-red-700 hover:to-red-600 transition-all shadow-md"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
   </div>
 </div>
 
