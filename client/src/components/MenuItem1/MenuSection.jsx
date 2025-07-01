@@ -252,8 +252,8 @@ const MenuSection = () => {
                                         <p className="text-gray-600 text-sm mb-4 line-clamp-3">
                                             {isRTL ? item.arDescription : item.description}
                                         </p>
-                                        {renderPrice(item.price)}
-                                        <button
+                                        {renderPrice(item)}
+                                        {/* <button
                                             onClick={() => handleOrderNow(item)}
                                             className="mt-4 w-full bg-[#724F38] bg-gradient-to-r hover:from-amber-600 hover:to-amber-700 text-white py-2.5 rounded-lg font-bold transition-all duration-300 hover:shadow-md flex justify-center items-center"
                                         >
@@ -265,7 +265,7 @@ const MenuSection = () => {
                                             >
                                                 →
                                             </span>
-                                        </button>
+                                        </button> */}
                                     </div>
                                 </div>
                             ))}
@@ -284,7 +284,7 @@ const MenuSection = () => {
                                     {category.items?.map((item) => (
                                         <div 
                                             key={item.id} 
-                                            className="group relative bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-amber-300 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                                            className="group relative bg-white rounded-2xl overflow-hidden border border-gray-300 hover:border-amber-300 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
                                         >
                                             <div className="relative h-48 overflow-hidden">
                                                 {item.image ? (
@@ -311,7 +311,7 @@ const MenuSection = () => {
                                                     {isRTL ? item.arDescription : item.description}
                                                 </p>
                                                 {renderPrice(item)}
-                                                <button
+                                                {/* <button
                                                     onClick={() => handleOrderNow(item)}
                                                     className="mt-4 w-full bg-[#724F38] bg-gradient-to-r hover:from-amber-600 hover:to-amber-700 text-white py-2.5 rounded-lg font-bold transition-all duration-300 hover:shadow-md flex justify-center items-center"
                                                 >
@@ -323,7 +323,7 @@ const MenuSection = () => {
                                                     >
                                                         →
                                                     </span>
-                                                </button>
+                                                </button> */}
                                             </div>
                                         </div>
                                     ))}
@@ -526,7 +526,7 @@ const MenuSection = () => {
                     >
                         {t('add_to_cart')}
                     </button>
-                    <button
+                    {/* <button
                         type="button"
                         onClick={() => {
                             console.log('Order placed:', {
@@ -540,7 +540,7 @@ const MenuSection = () => {
                         className="px-6 py-3 bg-[#724F38] rounded-lg text-white hover:bg-[#5a3c2a] transition-colors duration-200 font-medium shadow-md hover:shadow-lg"
                     >
                         {t('order_now')}
-                    </button>
+                    </button> */}
                 </div>
             </div>
         </div>

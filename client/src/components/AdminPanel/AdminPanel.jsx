@@ -1,23 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { FiSearch, FiPlus, FiEdit2, FiTrash2, FiX, FiAlertTriangle ,FiFilter, FiMoon, FiSun, FiGrid, FiList } from 'react-icons/fi';
+import { FiSearch, FiPlus, FiEdit2, FiTrash2, FiX, FiAlertTriangle, FiFilter, FiMoon, FiSun, FiGrid, FiList, FiLogOut, FiDownload } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Puff } from 'react-loader-spinner';
-import { FiLogOut } from 'react-icons/fi';
 import { redirect } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import * as XLSX from 'xlsx';
+
 const AdminPanel = ({ onLogout }) => {
-  
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [availabilityFilter, setAvailabilityFilter] = useState('all');
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
-  const [statusLoading, setStatusLoading] = useState(null); // <-- ADD THIS LINE
+  const [statusLoading, setStatusLoading] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [showModal, setShowModal] = useState(false);
@@ -29,79 +31,37 @@ const AdminPanel = ({ onLogout }) => {
     delete: null,
     submit: false
   });
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === 'ar';
   const navigate = useNavigate();
-  const handleLogout = () => {
-    // Remove token and user info
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
   
-    // Show notification
-    notify.info('Logged out successfully');
-  
-    // Navigate to login page
-    navigate('/login');
-  };
-  const handleStatusToggle = async (itemId, currentStatus) => {
-    const newStatus = currentStatus === 'available' ? 'not available' : 'available';
-    setStatusLoading(itemId); // Set loading for this specific item
-    notify.info('Updating status...');
-  
-    // Optimistic UI Update for a snappier feel
-    setItems(prevItems =>
-      prevItems.map(item =>
-        item.menu_id === itemId ? { ...item, status: newStatus } : item
-      )
-    );
-  
-    try {
-      // This uses the new, efficient PATCH route
-      await axios.patch(`https://arabi-aseel-1.onrender.com/api/admin/menu/${itemId}/status`, {
-        status: newStatus,
-      });
-      notify.success('Status updated!');
-    } catch (error) {
-      console.error('Failed to update status:', error);
-      notify.error('Failed to update status. Reverting.');
-      // Revert UI on error
-      setItems(prevItems =>
-        prevItems.map(item =>
-          item.menu_id === itemId ? { ...item, status: currentStatus } : item
-        )
-      );
-    } finally {
-      setStatusLoading(null); // Clear loading state
-    }
-  };
-  
-  // Form state
+  // Form state with validation
   const [form, setForm] = useState({
     category_name: '',
-    category_name_ar: '', // Add this line
+    category_name_ar: '',
     key_name: '',
     image_url: '',
     price: { Q: '', H: '', F: '' },
-    price_type: 'portion', // Add this
-    price_per_portion: '', // Add this
+    price_type: 'portion',
+    price_per_portion: '',
     translations: [
       { language: 'en', name: '', description: '' },
       { language: 'ar', name: '', description: '' }
     ]
   });
+  const [formErrors, setFormErrors] = useState({});
   const [editingId, setEditingId] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState('');
-  const [showArabicCategory, setShowArabicCategory] = useState({});
-
-  // Toggle function for category names
   const [categoryLanguage, setCategoryLanguage] = useState({});
 
-  // Toggle language for a specific item
-  const toggleLanguage = (menuId) => {
-    setCategoryLanguage(prev => ({
-      ...prev,
-      [menuId]: prev[menuId] === 'ar' ? 'en' : 'ar'
-    }));
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    notify.info('Logged out successfully');
+    navigate('/login');
   };
+
   // Configure toast notifications
   const notify = {
     success: (message) => toast.success(message, {
@@ -133,13 +93,59 @@ const AdminPanel = ({ onLogout }) => {
       draggable: true,
       progress: undefined,
       theme: darkMode ? 'dark' : 'light',
+    }),
+    warning: (message) => toast.warning(message, {
+      position: "top-right",
+      autoClose: 3500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: darkMode ? 'dark' : 'light',
     })
+  };
+
+  // Validate form
+  const validateForm = () => {
+    const errors = {};
+    
+    if (!form.category_name.trim()) {
+      errors.category_name = 'Category name (English) is required';
+    }
+    
+    if (form.price_type === 'portion') {
+      if (!form.price.Q && !form.price.H && !form.price.F) {
+        errors.price = 'At least one price (Q/H/F) is required';
+      } else {
+        if (form.price.Q && isNaN(form.price.Q)) errors.priceQ = 'Quarter price must be a number';
+        if (form.price.H && isNaN(form.price.H)) errors.priceH = 'Half price must be a number';
+        if (form.price.F && isNaN(form.price.F)) errors.priceF = 'Full price must be a number';
+      }
+    } else {
+      if (!form.price_per_portion) {
+        errors.price_per_portion = 'Per portion price is required';
+      } else if (isNaN(form.price_per_portion)) {
+        errors.price_per_portion = 'Per portion price must be a number';
+      }
+    }
+    
+    form.translations.forEach((translation, index) => {
+      if (!translation.name.trim()) {
+        errors[`translation_${index}_name`] = `${translation.language.toUpperCase()} name is required`;
+      }
+    });
+    
+    if (!editingId && !imageFile && !form.image_url) {
+      errors.image = 'Either upload an image or provide an image URL';
+    }
+    
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   // Fetch initial data
   const hasShownToast = useRef(false);
-
-  // Modify your fetchData function
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -174,12 +180,14 @@ const AdminPanel = ({ onLogout }) => {
   useEffect(() => {
     let result = [...items];
     
-    // Category filter
     if (selectedCategory !== 'all') {
       result = result.filter(item => item.category_name === selectedCategory);
     }
     
-    // Search filter
+    if (availabilityFilter !== 'all') {
+      result = result.filter(item => item.status === availabilityFilter);
+    }
+    
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       result = result.filter(item => 
@@ -192,8 +200,6 @@ const AdminPanel = ({ onLogout }) => {
       );
     }
     
-    
-    // Sorting
     switch (sortOption) {
       case 'price-asc':
         result.sort((a, b) => (a.price_q || 0) - (b.price_q || 0));
@@ -218,7 +224,7 @@ const AdminPanel = ({ onLogout }) => {
     }
     
     setFilteredItems(result);
-  }, [items, selectedCategory, searchQuery, sortOption]);
+  }, [items, selectedCategory, availabilityFilter, searchQuery, sortOption]);
 
   // Search suggestions
   useEffect(() => {
@@ -242,16 +248,32 @@ const AdminPanel = ({ onLogout }) => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (!file.type.match('image.*')) {
+        notify.error('Please select an image file');
+        return;
+      }
+      if (file.size > 2 * 1024 * 1024) {
+        notify.error('Image size should be less than 2MB');
+        return;
+      }
       setImageFile(file);
       setPreviewUrl(URL.createObjectURL(file));
+      setFormErrors(prev => ({ ...prev, image: undefined }));
     }
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    
+    // Clear error when user starts typing
+    if (formErrors[name]) {
+      setFormErrors(prev => ({ ...prev, [name]: undefined }));
+    }
+    
     if (name.startsWith('price.')) {
       const key = name.split('.')[1];
       setForm(prev => ({ ...prev, price: { ...prev.price, [key]: value } }));
+      setFormErrors(prev => ({ ...prev, [`price${key}`]: undefined }));
     } else if (name.startsWith('translations.')) {
       const [_, index, field] = name.split('.');
       setForm(prev => {
@@ -259,17 +281,22 @@ const AdminPanel = ({ onLogout }) => {
         updatedTranslations[index][field] = value;
         return { ...prev, translations: updatedTranslations };
       });
+      setFormErrors(prev => ({ ...prev, [`translation_${index}_${field}`]: undefined }));
     } else {
       setForm(prev => ({ ...prev, [name]: value }));
+      setFormErrors(prev => ({ ...prev, [name]: undefined }));
     }
   };
 
   const resetForm = () => {
     setForm({
       category_name: '',
+      category_name_ar: '',
       key_name: '',
       image_url: '',
       price: { Q: '', H: '', F: '' },
+      price_type: 'portion',
+      price_per_portion: '',
       translations: [
         { language: 'en', name: '', description: '' },
         { language: 'ar', name: '', description: '' }
@@ -279,6 +306,7 @@ const AdminPanel = ({ onLogout }) => {
     setImageFile(null);
     setPreviewUrl('');
     setShowModal(false);
+    setFormErrors({});
     setButtonLoading({
       edit: null,
       delete: null,
@@ -288,6 +316,14 @@ const AdminPanel = ({ onLogout }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      Object.values(formErrors).forEach(error => {
+        notify.warning(error);
+      });
+      return;
+    }
+    
     setButtonLoading(prev => ({ ...prev, submit: true }));
     
     try {
@@ -297,10 +333,9 @@ const AdminPanel = ({ onLogout }) => {
       formData.append('key_name', form.key_name);
       formData.append('price_type', form.price_type);
       
-      // Fix: Properly handle both price types
       if (form.price_type === 'per_portion') {
         formData.append('price', JSON.stringify({ 
-          per_portion: form.price.per_portion || form.price_per_portion 
+          per_portion: form.price_per_portion 
         }));
       } else {
         formData.append('price', JSON.stringify({ 
@@ -340,7 +375,7 @@ const AdminPanel = ({ onLogout }) => {
       resetForm();
     } catch (error) {
       console.error('Error saving item:', error);
-      notify.error(`Failed to save item: ${error.message}`);
+      notify.error(`Failed to save item: ${error.response?.data?.message || error.message}`);
     } finally {
       setButtonLoading(prev => ({ ...prev, submit: false }));
     }
@@ -378,7 +413,7 @@ const AdminPanel = ({ onLogout }) => {
         F: item.price_f,
         per_portion: item.price_per_portion 
       },
-      price_per_portion: item.price_per_portion || '', // Add this line
+      price_per_portion: item.price_per_portion || '',
       translations: item.translations.map(t => ({
         language: t.language,
         name: t.name,
@@ -388,6 +423,36 @@ const AdminPanel = ({ onLogout }) => {
     setEditingId(item.menu_id);
     setPreviewUrl(item.image_url || '');
     setShowModal(true);
+    setFormErrors({});
+  };
+
+  const handleStatusToggle = async (itemId, currentStatus) => {
+    const newStatus = currentStatus === 'available' ? 'not available' : 'available';
+    setStatusLoading(itemId);
+    notify.info('Updating status...');
+  
+    setItems(prevItems =>
+      prevItems.map(item =>
+        item.menu_id === itemId ? { ...item, status: newStatus } : item
+      )
+    );
+  
+    try {
+      await axios.patch(`https://arabi-aseel-1.onrender.com/api/admin/menu/${itemId}/status`, {
+        status: newStatus,
+      });
+      notify.success('Status updated!');
+    } catch (error) {
+      console.error('Failed to update status:', error);
+      notify.error('Failed to update status. Reverting.');
+      setItems(prevItems =>
+        prevItems.map(item =>
+          item.menu_id === itemId ? { ...item, status: currentStatus } : item
+        )
+      );
+    } finally {
+      setStatusLoading(null);
+    }
   };
 
   const handleSuggestionClick = (item) => {
@@ -395,9 +460,49 @@ const AdminPanel = ({ onLogout }) => {
     setSuggestions([]);
   };
 
+  // Export to Excel function
+  const exportToExcel = () => {
+    if (filteredItems.length === 0) {
+      notify.warning('No data to export');
+      return;
+    }
+
+    try {
+      // Prepare data for export
+      const data = filteredItems.map(item => ({
+        'Category (EN)': item.category_name,
+        'Category (AR)': item.category_name_ar || '',
+        'Name (EN)': item.translations.find(t => t.language === 'en')?.name || '',
+        'Name (AR)': item.translations.find(t => t.language === 'ar')?.name || '',
+        'Description (EN)': item.translations.find(t => t.language === 'en')?.description || '',
+        'Description (AR)': item.translations.find(t => t.language === 'ar')?.description || '',
+        'Price Type': item.price_type === 'per_portion' ? 'Per Portion' : 'Q/H/F',
+        'Quarter Price': item.price_q || '',
+        'Half Price': item.price_h || '',
+        'Full Price': item.price_f || '',
+        'Per Portion Price': item.price_per_portion || '',
+        'Status': item.status === 'available' ? 'Available' : 'Not Available',
+        'Created At': new Date(item.created_at).toLocaleString(),
+        'Image URL': item.image_url || ''
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Menu Items");
+      
+      // Generate file name with current date
+      const dateStr = new Date().toISOString().slice(0, 10);
+      XLSX.writeFile(workbook, `Arabi_Aseel_Menu_${dateStr}.xlsx`);
+      
+      notify.success('Export started successfully');
+    } catch (error) {
+      console.error('Export failed:', error);
+      notify.error('Failed to export data');
+    }
+  };
+
   return (
-    <div className={`min-h-screen p-6 ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-800'}`}>
-      {/* Toast Notifications Container */}
+    <div dir='ltr' className={`min-h-screen p-6 ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-800'}`}>
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -412,7 +517,6 @@ const AdminPanel = ({ onLogout }) => {
         style={{ zIndex: 9999 }}
       />
       
-      {/* Global Loading Overlay */}
       {actionLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
           <div className={`p-8 rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-2xl flex flex-col items-center`}>
@@ -436,36 +540,39 @@ const AdminPanel = ({ onLogout }) => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
-  <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
-    Menu Admin Panel
-  </h1>
-  <div className="flex items-center space-x-4">
-    <button
-      onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
-      className={`p-2 rounded-full ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-white hover:bg-gray-100'} shadow transition-all hover:scale-110`}
-      title={viewMode === 'grid' ? 'List View' : 'Grid View'}
-    >
-      {viewMode === 'grid' ? <FiList size={20} /> : <FiGrid size={20} />}
-    </button>
-    <button
-      onClick={() => setDarkMode(!darkMode)}
-      className={`p-2 rounded-full ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-white hover:bg-gray-100'} shadow transition-all hover:scale-110`}
-      title={darkMode ? 'Light Mode' : 'Dark Mode'}
-    >
-      {darkMode ? <FiSun size={20} /> : <FiMoon size={20} />}
-    </button>
-    <button
-        onClick={() => setShowLogoutConfirm(true)}
-        className={`p-2 rounded-full ${
-          darkMode ? 'bg-red-900 hover:bg-red-800' : 'bg-red-100 hover:bg-red-200'
-        } shadow transition-all hover:scale-110`}
-        title="Logout"
-      >
-        <FiLogOut size={20} className={darkMode ? 'text-red-300' : 'text-red-600'} />
-      </button>
-
-      {/* Logout Confirmation Modal */}
-      {showLogoutConfirm && (
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+            Menu Admin Panel
+          </h1>
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
+              className={`p-2 rounded-full ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-white hover:bg-gray-100'} shadow transition-all hover:scale-110`}
+              title={viewMode === 'grid' ? 'List View' : 'Grid View'}
+            >
+              {viewMode === 'grid' ? <FiList size={20} /> : <FiGrid size={20} />}
+            </button>
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              className={`p-2 rounded-full ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-white hover:bg-gray-100'} shadow transition-all hover:scale-110`}
+              title={darkMode ? 'Light Mode' : 'Dark Mode'}
+            >
+              {darkMode ? <FiSun size={20} /> : <FiMoon size={20} />}
+            </button>
+            <button
+              onClick={exportToExcel}
+              className={`p-2 rounded-full ${darkMode ? 'bg-green-800 hover:bg-green-700' : 'bg-green-100 hover:bg-green-200'} shadow transition-all hover:scale-110`}
+              title="Export to Excel"
+            >
+              <FiDownload size={20} className={darkMode ? 'text-green-300' : 'text-green-600'} />
+            </button>
+            <button
+              onClick={() => setShowLogoutConfirm(true)}
+              className={`p-2 rounded-full ${darkMode ? 'bg-red-900 hover:bg-red-800' : 'bg-red-100 hover:bg-red-200'} shadow transition-all hover:scale-110`}
+              title="Logout"
+            >
+              <FiLogOut size={20} className={darkMode ? 'text-red-300' : 'text-red-600'} />
+            </button>
+            {showLogoutConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center   backdrop-blur-sm">
           <div className={`w-full max-w-md rounded-xl shadow-2xl ${
             darkMode ? 'bg-gray-800' : 'bg-white'
@@ -521,10 +628,9 @@ const AdminPanel = ({ onLogout }) => {
           </div>
         </div>
       )}
-  </div>
-</div>
+          </div>
+        </div>
 
-        {/* Filters */}
         <div className={`sticky top-0 z-10 py-4 ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-md rounded-lg mb-6 p-4`}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Search */}
@@ -570,21 +676,17 @@ const AdminPanel = ({ onLogout }) => {
               </select>
             </div>
 
-            {/* Sort Options */}
-            {/* <div className="relative">
-              <select
-                value={sortOption}
-                onChange={(e) => setSortOption(e.target.value)}
-                className={`pl-4 pr-10 py-2 w-full rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} border appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500`}
-              >
-                <option value="latest">Latest Added</option>
-                <option value="oldest">Oldest Added</option>
-                <option value="price-asc">Price: Low to High</option>
-                <option value="price-desc">Price: High to Low</option>
-                <option value="name-asc">Name: A to Z</option>
-                <option value="name-desc">Name: Z to A</option>
-              </select>
-            </div> */}
+            <div className="relative">
+  <select
+    value={availabilityFilter}
+    onChange={(e) => setAvailabilityFilter(e.target.value)}
+    className={`pl-4 pr-10 py-2 w-full rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} border appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500`}
+  >
+    <option value="all">All Availability</option>
+    <option value="available">Available Only</option>
+    <option value="not available">Not Available Only</option>
+  </select>
+</div>
           </div>
         </div>
 
@@ -653,18 +755,39 @@ const AdminPanel = ({ onLogout }) => {
 
         {/* Items Grid/List */}
         {filteredItems.length > 0 && (
-        <div className={viewMode === 'grid' 
-          ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6' 
-          : 'space-y-5'}>
-          {filteredItems.map((item) => (
-          <div
-          key={item.menu_id}
-          className={`rounded-xl overflow-hidden border transition-all duration-300
-            ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}
-            ${viewMode === 'list' ? 'flex' : ''} 
-            ${item.status === 'not available' ? 'opacity-60 saturate-50' : ''}
-            shadow-sm hover:shadow-md`}
-        >
+  <div className="space-y-8">
+    {/* Group items by category */}
+    {[...new Set(filteredItems.map(item => item.category_name))]
+      .filter(category => 
+        filteredItems.some(item => item.category_name === category)
+      )
+      .map(category => (
+        <div key={category}>
+          {/* Category Heading */}
+          <h2 className={`text-2xl font-bold mb-4 pb-2 border-b ${
+  darkMode ? 'border-amber-200/30' : 'border-amber-200'
+}`}>
+  {isRTL && category.category_name_ar 
+    ? category.category_name_ar 
+    : category}
+</h2>
+
+          {/* Items Grid */}
+          <div className={viewMode === 'grid' 
+            ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6' 
+            : 'space-y-5'}>
+            
+            {filteredItems
+              .filter(item => item.category_name === category)
+              .map(item => (
+                <div
+                  key={item.menu_id}
+                  className={`rounded-xl overflow-hidden border transition-all duration-300
+                    ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}
+                    ${viewMode === 'list' ? 'flex' : ''} 
+                    ${item.status === 'not available' ? 'opacity-60 saturate-50' : ''}
+                    shadow-sm hover:shadow-md`}
+                >
               {/* Image */}
               {item.image_url && (
                 <div className={`${viewMode === 'list' ? 'w-1/3' : 'w-full'} relative`}>
@@ -681,24 +804,21 @@ const AdminPanel = ({ onLogout }) => {
                 {/* Header with language toggle */}
                 <div className="flex justify-between items-center gap-2 mb-3">
                   
-                  <div className={`px-2.5 py-1 text-sm rounded-full 
-                  
-                    ${darkMode ? 'bg-purple-900/80 text-purple-200' : 'bg-[#724F38] text-white'}`}>
-                      
-                      Category :  {categoryLanguage[item.menu_id] === 'ar' && item.category_name_ar 
-                      ? item.category_name_ar 
-                      : item.category_name}
-                  </div>
-                  
+                <div className={`px-2.5 py-1 text-sm rounded-full 
+  ${darkMode ? 'bg-purple-900/80 text-purple-200' : 'bg-[#724F38] text-white'}`}>
+  Category: {categoryLanguage[item.menu_id] === 'en' 
+    ? item.category_name 
+    : item.category_name_ar || item.category_name}
+</div>
                   {/* Language toggle button */}
                   <button 
                     onClick={() => toggleLanguage(item.menu_id)}
                     className={`flex items-center justify-center w-8 h-8 rounded-full transition-colors
                       ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300'}
                       text-xs font-medium`}
-                    title={`Switch to ${categoryLanguage[item.menu_id] === 'ar' ? 'English' : 'Arabic'}`}
+                    title={`Switch to ${categoryLanguage[item.menu_id] === 'en' ? 'Arabic' : 'English'}`}
                   >
-                    {categoryLanguage[item.menu_id] === 'ar' ? 'EN' : 'AR'}
+                    {categoryLanguage[item.menu_id] === 'en' ? 'AR' : 'EN'}
                   </button>
                 </div>
                 
@@ -810,230 +930,303 @@ const AdminPanel = ({ onLogout }) => {
                   </button>
                 </div>
               </div>
-            </div>
-          ))}
+              </div>
+              ))}
+          </div>
         </div>
-      )}
-        {/* Add/Edit Modal */}
-        {showModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className={`relative rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-              <button
-                onClick={resetForm}
-                className="absolute top-4 right-4 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
-              >
-                <FiX size={24} />
-              </button>
-              
-              <div className="p-6">
-                <h2 className="text-2xl font-bold mb-4">
-                  {editingId ? `Editing Item` : 'Add New Menu Item'}
-                </h2>
-                
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="relative">
-    <label className="block mb-1 font-medium">Category Name (English)</label>
-    <input
-      list="category-options"
-      name="category_name"
-      value={form.category_name}
-      onChange={handleChange}
-      placeholder="English category name"
-      className={`w-full p-2 rounded-lg border ${
-        darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'
-      } focus:outline-none focus:ring-2 focus:ring-purple-500`}
-      required
-    />
-    <datalist id="category-options">
-      {categories.map((category) => (
-        <option key={category} value={category} />
       ))}
-    </datalist>
-  </div>
-  
-  <div>
-    <label className="block mb-1 font-medium">Category Name (Arabic)</label>
-    <input
-      name="category_name_ar"
-      placeholder="Arabic category name"
-      value={form.category_name_ar}
-      onChange={handleChange}
-      className={`w-full p-2 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} focus:outline-none focus:ring-2 focus:ring-purple-500`}
-    />
-  </div>
-                    
-                    {/* <div>
-                      <label className="block mb-1 font-medium">Key Name</label>
-                      <input
-                        name="key_name"
-                        placeholder="Unique identifier"
-                        value={form.key_name}
-                        onChange={handleChange}
-                        className={`w-full p-2 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} focus:outline-none focus:ring-2 focus:ring-purple-500`}
-                        required
-                      />
-                    </div> */}
-                  </div>
-                  
-                  <div>
-                    <label className="block mb-1 font-medium">Item Image</label>
-                    <div className="flex items-center space-x-4">
-                      <label className={`flex-1 p-2 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} cursor-pointer text-center`}>
-                        Choose File
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageChange}
-                          className="hidden"
-                        />
-                      </label>
-                    </div>
-                    
-                    {(previewUrl || form.image_url) && (
-                      <div className="mt-4">
-                        <img
-                          src={previewUrl || form.image_url}
-                          alt="Preview"
-                          className="h-32 object-contain rounded-lg border mx-auto"
-                        />
-                        {imageFile && (
-                          <p className="text-center text-sm mt-1">
-                            Selected: {imageFile.name}
-                          </p>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                  <div className="mb-4">
-  <label className="block mb-2 font-medium">Pricing Type</label>
-  <div className="flex space-x-4">
-    <label className="flex items-center">
-      <input
-        type="radio"
-        name="price_type"
-        value="portion"
-        checked={form.price_type === 'portion'}
-        onChange={() => setForm({...form, price_type: 'portion'})}
-        className="mr-2"
-      />
-      Quarter/Half/Full
-    </label>
-    <label className="flex items-center">
-      <input
-        type="radio"
-        name="price_type"
-        value="per_portion"
-        checked={form.price_type === 'per_portion'}
-        onChange={() => setForm({...form, price_type: 'per_portion'})}
-        className="mr-2"
-      />
-      Per Portion
-    </label>
-  </div>
-</div>
-{form.price_type === 'portion' ? (
-  <div className="grid grid-cols-3 gap-4">
-    <div>
-      <label className="block mb-1 font-medium">Quarter Price</label>
-      <input
-        name="price.Q"
-        value={form.price.Q}
-        onChange={handleChange}
-        className={`w-full p-2 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'}`}
-      />
-    </div>
-    <div>
-      <label className="block mb-1 font-medium">Half Price</label>
-      <input
-        name="price.H"
-        placeholder="Price"
-        value={form.price.H}
-        onChange={handleChange}
-        className={`w-full p-2 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} focus:outline-none focus:ring-2 focus:ring-purple-500`}
-      />
-    </div>
-    <div>
-      <label className="block mb-1 font-medium">Full Price</label>
-      <input
-        name="price.F"
-        placeholder="Price"
-        value={form.price.F}
-        onChange={handleChange}
-        className={`w-full p-2 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} focus:outline-none focus:ring-2 focus:ring-purple-500`}
-      />
-    </div>
-  </div>
-) : (
-  <div>
-    <label className="block mb-1 font-medium">Per Portion Price</label>
-    <input
-      name="price.per_portion"
-      value={form.price.per_portion || form.price_per_portion}
-      onChange={handleChange}
-      className={`w-full p-2 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'}`}
-    />
   </div>
 )}
-                  
-                  {form.translations.map((t, i) => (
-                    <div key={i} className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
-                      <h3 className="font-medium mb-2">{t.language.toUpperCase()} Version</h3>
-                      <div className="space-y-3">
-                        <div>
-                          <label className="block mb-1">Name</label>
-                          <input
-                            name={`translations.${i}.name`}
-                            placeholder={`Name (${t.language})`}
-                            value={t.name}
-                            onChange={handleChange}
-                            className={`w-full p-2 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} focus:outline-none focus:ring-2 focus:ring-purple-500`}
-                            required
-                          />
-                        </div>
-                        <div>
-                          <label className="block mb-1">Description</label>
-                          <textarea
-                            name={`translations.${i}.description`}
-                            placeholder={`Description (${t.language})`}
-                            value={t.description}
-                            onChange={handleChange}
-                            rows={3}
-                            className={`w-full p-2 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} focus:outline-none focus:ring-2 focus:ring-purple-500`}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  
-                  <div className="flex justify-end space-x-3 pt-4">
-                    <button
-                      type="button"
-                      onClick={resetForm}
-                      disabled={buttonLoading.submit}
-                      className={`px-4 py-2 rounded-lg ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300'} ${buttonLoading.submit ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={buttonLoading.submit}
-                      className="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-pink-500 text-white hover:from-purple-700 hover:to-pink-600 flex items-center justify-center min-w-[120px]"
-                    >
-                      {buttonLoading.submit ? (
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      ) : editingId ? (
-                        'Update Item'
-                      ) : (
-                        'Add Item'
-                      )}
-                    </button>
-                  </div>
-                </form>
-              </div>
+
+        {/* Add/Edit Modal */}
+        {showModal && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className={`relative rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+      <button
+        onClick={resetForm}
+        className="absolute top-4 right-4 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+      >
+        <FiX size={24} />
+      </button>
+      
+      <div className="p-6">
+        <h2 className="text-2xl font-bold mb-4">
+          {editingId ? `Editing Item` : 'Add New Menu Item'}
+        </h2>
+        
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="relative">
+              <label className="block mb-1 font-medium">Category Name (English)*</label>
+              <input
+                list="category-options"
+                name="category_name"
+                value={form.category_name}
+                onChange={handleChange}
+                placeholder="English category name"
+                className={`w-full p-2 rounded-lg border ${
+                  darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'
+                } ${formErrors.category_name ? 'border-red-500' : ''} focus:outline-none focus:ring-2 focus:ring-purple-500`}
+                required
+              />
+              {formErrors.category_name && (
+                <p className="text-red-500 text-xs mt-1">{formErrors.category_name}</p>
+              )}
+              <datalist id="category-options">
+                {categories.map((category) => (
+                  <option key={category} value={category} />
+                ))}
+              </datalist>
+            </div>
+            
+            <div>
+              <label className="block mb-1 font-medium">Category Name (Arabic)*</label>
+              <input
+                name="category_name_ar"
+                placeholder="Arabic category name"
+                value={form.category_name_ar}
+                onChange={handleChange}
+                className={`w-full p-2 rounded-lg border ${
+                  darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'
+                } ${formErrors.category_name_ar ? 'border-red-500' : ''} focus:outline-none focus:ring-2 focus:ring-purple-500`}
+                required
+              />
+              {formErrors.category_name_ar && (
+                <p className="text-red-500 text-xs mt-1">{formErrors.category_name_ar}</p>
+              )}
             </div>
           </div>
-        )}
+          
+          <div>
+            <label className="block mb-1 font-medium">Item Image*</label>
+            {!editingId && (
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                {editingId ? 'Change image (optional)' : 'Upload an image or provide URL'}
+              </p>
+            )}
+            <div className="flex items-center space-x-4">
+              <label className={`flex-1 p-2 rounded-lg border ${
+                darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'
+              } cursor-pointer text-center`}>
+                Choose File
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+              </label>
+              {/* <span className="text-gray-500 dark:text-gray-400">or</span>
+              <input
+                type="text"
+                name="image_url"
+                value={form.image_url}
+                onChange={handleChange}
+                placeholder="Image URL"
+                className={`flex-1 p-2 rounded-lg border ${
+                  darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'
+                } ${formErrors.image ? 'border-red-500' : ''}`}
+              /> */}
+            </div>
+            {formErrors.image && (
+              <p className="text-red-500 text-xs mt-1">{formErrors.image}</p>
+            )}
+            
+            {(previewUrl || form.image_url) && (
+              <div className="mt-4">
+                <img
+                  src={previewUrl || form.image_url}
+                  alt="Preview"
+                  className="h-32 object-contain rounded-lg border mx-auto"
+                />
+                {imageFile && (
+                  <p className="text-center text-sm mt-1">
+                    Selected: {imageFile.name}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+          
+          <div className="mb-4">
+            <label className="block mb-2 font-medium">Pricing Type*</label>
+            <div className="flex space-x-4">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="price_type"
+                  value="portion"
+                  checked={form.price_type === 'portion'}
+                  onChange={() => setForm({...form, price_type: 'portion'})}
+                  className="mr-2"
+                  required
+                />
+                Quarter/Half/Full
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="price_type"
+                  value="per_portion"
+                  checked={form.price_type === 'per_portion'}
+                  onChange={() => setForm({...form, price_type: 'per_portion'})}
+                  className="mr-2"
+                  required
+                />
+                Per Portion
+              </label>
+            </div>
+            {formErrors.price_type && (
+              <p className="text-red-500 text-xs mt-1">{formErrors.price_type}</p>
+            )}
+          </div>
+          
+          {form.price_type === 'portion' ? (
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <label className="block mb-1 font-medium">Quarter Price*</label>
+                <input
+                  name="price.Q"
+                  value={form.price.Q}
+                  onChange={handleChange}
+                  className={`w-full p-2 rounded-lg border ${
+                    darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'
+                  } ${formErrors.priceQ ? 'border-red-500' : ''}`}
+                  required
+                />
+                {formErrors.priceQ && (
+                  <p className="text-red-500 text-xs mt-1">{formErrors.priceQ}</p>
+                )}
+              </div>
+              <div>
+                <label className="block mb-1 font-medium">Half Price*</label>
+                <input
+                  name="price.H"
+                  placeholder="Price"
+                  value={form.price.H}
+                  onChange={handleChange}
+                  className={`w-full p-2 rounded-lg border ${
+                    darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'
+                  } ${formErrors.priceH ? 'border-red-500' : ''}`}
+                  required
+                />
+                {formErrors.priceH && (
+                  <p className="text-red-500 text-xs mt-1">{formErrors.priceH}</p>
+                )}
+              </div>
+              <div>
+                <label className="block mb-1 font-medium">Full Price*</label>
+                <input
+                  name="price.F"
+                  placeholder="Price"
+                  value={form.price.F}
+                  onChange={handleChange}
+                  className={`w-full p-2 rounded-lg border ${
+                    darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'
+                  } ${formErrors.priceF ? 'border-red-500' : ''}`}
+                  required
+                />
+                {formErrors.priceF && (
+                  <p className="text-red-500 text-xs mt-1">{formErrors.priceF}</p>
+                )}
+              </div>
+              {(formErrors.price && !form.price.Q && !form.price.H && !form.price.F) && (
+                <p className="text-red-500 text-xs col-span-3">{formErrors.price}</p>
+              )}
+            </div>
+          ) : (
+            <div>
+              <label className="block mb-1 font-medium">Per Portion Price*</label>
+              <input
+                name="price_per_portion"
+                value={form.price_per_portion}
+                onChange={handleChange}
+                className={`w-full p-2 rounded-lg border ${
+                  darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'
+                } ${formErrors.price_per_portion ? 'border-red-500' : ''}`}
+                required
+              />
+              {formErrors.price_per_portion && (
+                <p className="text-red-500 text-xs mt-1">{formErrors.price_per_portion}</p>
+              )}
+            </div>
+          )}
+          
+          {form.translations.map((t, i) => (
+            <div key={i} className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
+              <h3 className="font-medium mb-2">{t.language.toUpperCase()} Version*</h3>
+              <div className="space-y-3">
+                <div>
+                  <label className="block mb-1">Name*</label>
+                  <input
+                    name={`translations.${i}.name`}
+                    placeholder={`Name (${t.language})`}
+                    value={t.name}
+                    onChange={handleChange}
+                    className={`w-full p-2 rounded-lg border ${
+                      darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'
+                    } ${formErrors[`translation_${i}_name`] ? 'border-red-500' : ''}`}
+                    required
+                  />
+                  {formErrors[`translation_${i}_name`] && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {formErrors[`translation_${i}_name`]}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label className="block mb-1">Description*</label>
+                  <textarea
+                    name={`translations.${i}.description`}
+                    placeholder={`Description (${t.language})`}
+                    value={t.description}
+                    onChange={handleChange}
+                    rows={3}
+                    className={`w-full p-2 rounded-lg border ${
+                      darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'
+                    } ${formErrors[`translation_${i}_description`] ? 'border-red-500' : ''}`}
+                    required
+                  />
+                  {formErrors[`translation_${i}_description`] && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {formErrors[`translation_${i}_description`]}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+          
+          <div className="flex justify-end space-x-3 pt-4">
+            <button
+              type="button"
+              onClick={resetForm}
+              disabled={buttonLoading.submit}
+              className={`px-4 py-2 rounded-lg ${
+                darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300'
+              } ${buttonLoading.submit ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={buttonLoading.submit}
+              className="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-pink-500 text-white hover:from-purple-700 hover:to-pink-600 flex items-center justify-center min-w-[120px]"
+            >
+              {buttonLoading.submit ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : editingId ? (
+                'Update Item'
+              ) : (
+                'Add Item'
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+)}
       </div>
     </div>
   );
