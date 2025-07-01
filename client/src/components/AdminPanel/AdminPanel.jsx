@@ -34,7 +34,15 @@ const AdminPanel = ({ onLogout }) => {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === 'ar';
   const navigate = useNavigate();
-  
+
+
+  // Toggle language for a specific item
+  const toggleLanguage = (menuId) => {
+    setCategoryLanguage(prev => ({
+      ...prev,
+      [menuId]: prev[menuId] === 'en' ? 'ar' : 'en'
+    }));
+  };
   // Form state with validation
   const [form, setForm] = useState({
     category_name: '',
