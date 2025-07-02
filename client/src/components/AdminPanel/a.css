@@ -1,0 +1,29 @@
+/* Hide the appropriate version based on direction */
+.ltr-only { display: block; }
+.rtl-only { display: none; }
+
+[dir="rtl"] .ltr-only { display: none; }
+[dir="rtl"] .rtl-only { display: block; }
+
+/* Glow effects */
+.glow-green-pulse {
+  box-shadow: 0 0 12px rgba(74, 222, 128, 0.5);
+  animation: pulse-green 1s infinite;
+}
+
+.glow-green-pulse-rtl {
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
+  animation: pulse-green-rtl 2s infinite;
+}
+
+@keyframes pulse-green {
+  0% { box-shadow: 0 0 8px rgba(74, 222, 128, 0.5); }
+  50% { box-shadow: 0 0 16px rgba(74, 222, 128, 0.8); }
+  100% { box-shadow: 0 0 8px rgba(74, 222, 128, 0.5); }
+}
+
+@keyframes pulse-green-rtl {
+  0% { box-shadow: 0 0 8px rgba(74, 222, 128, 0.5); }
+  50% { box-shadow: 0 0 16px rgba(74, 222, 128, 0.8); }
+  100% { box-shadow: 0 0 8px rgba(74, 222, 128, 0.5); }
+}
