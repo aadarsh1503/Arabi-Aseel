@@ -235,35 +235,36 @@ const ItemModal = ({ showModal, onClose, editingItem, onSubmit, darkMode, catego
     
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Category Option Toggle */}
-            <div className="mb-6">
-              <label className="block mb-3 font-medium text-lg">{t('Category_Type')}*</label>
-              <div className="flex space-x-4">
-                <button
-                  type="button"
-                  onClick={() => setForm(prev => ({ ...prev, categoryOption: 'existing' }))}
-                  className={`flex-1 py-3 px-4 ml-4 rounded-lg border-2 transition-all duration-300 flex items-center justify-center space-x-2 ${
-                    form.categoryOption === 'existing'
-                      ? `${darkMode ? 'border-purple-500 bg-purple-900/30' : 'border-purple-500 bg-purple-100'} shadow-md`
-                      : `${darkMode ? 'border-gray-600 hover:border-gray-500' : 'border-gray-300 hover:border-gray-400'}`
-                  }`}
-                >
-                  <FiChevronDown className={form.categoryOption === 'existing' ? 'text-purple-500' : ''} />
-                  <span>{t('Existing_Category')}</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setForm(prev => ({ ...prev, categoryOption: 'new' }))}
-                  className={`flex-1 py-3 px-4 rounded-lg border-2 transition-all duration-300 flex items-center justify-center space-x-2 ${
-                    form.categoryOption === 'new'
-                      ? `${darkMode ? 'border-pink-500 bg-pink-900/30' : 'border-pink-500 bg-pink-100'} shadow-md`
-                      : `${darkMode ? 'border-gray-600 hover:border-gray-500' : 'border-gray-300 hover:border-gray-400'}`
-                  }`}
-                >
-                  <FiPlus className={form.categoryOption === 'new' ? 'text-pink-500' : ''} />
-                  <span>{t('New_Category')}</span>
-                </button>
-              </div>
-            </div>
+{/* Category Option Toggle */}
+<div className="mb-6">
+  <label className="block mb-3 font-medium text-lg">{t('Category_Type')}*</label>
+  <div className="flex space-x-4">
+    <button
+      type="button"
+      onClick={() => setForm(prev => ({ ...prev, categoryOption: 'existing' }))}
+      className={`flex-1 py-3 px-4 rounded-lg border-2 transition-all duration-300 flex items-center justify-center space-x-2 ${
+        form.categoryOption === 'existing'
+          ? `${darkMode ? 'border-purple-500 bg-purple-900/30' : 'border-purple-500 bg-purple-100'} shadow-md`
+          : `${darkMode ? 'border-gray-600 hover:border-gray-500' : 'border-gray-300 hover:border-gray-400'}`
+      }`}
+    >
+      <FiChevronDown className={form.categoryOption === 'existing' ? 'text-purple-500' : ''} />
+      <span>{t('Existing_Category')}</span>
+    </button>
+    <button
+      type="button"
+      onClick={() => setForm(prev => ({ ...prev, categoryOption: 'new' }))}
+      className={`flex-1 py-3 px-4 rounded-lg border-2 transition-all duration-300 flex items-center justify-center space-x-2 ${
+        form.categoryOption === 'new'
+          ? `${darkMode ? 'border-pink-500 bg-pink-900/30' : 'border-pink-500 bg-pink-100'} shadow-md`
+          : `${darkMode ? 'border-gray-600 hover:border-gray-500' : 'border-gray-300 hover:border-gray-400'}`
+      }`}
+    >
+      <FiPlus className={form.categoryOption === 'new' ? 'text-pink-500' : ''} />
+      <span>{t('New_Category')}</span>
+    </button>
+  </div>
+</div>
 
             {/* Category Fields */}
             <div ref={categoryWrapperRef} className="grid grid-cols-1 md:grid-cols-2 gap-6">
