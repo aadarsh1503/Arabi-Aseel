@@ -371,7 +371,14 @@
   "Description": "الوصف",
   "Cancel": "إلغاء",
   "Update_Item": "تحديث العنصر",
-  "Add_Item": "إضافة عنصر"
+  "Add_Item": "إضافة عنصر",
+  
+    "Select_Category": "اختر الفئة",
+    "Category_Type": "نوع الفئة",
+    "Existing_Category": "فئة موجودة",
+    "New_Category": "فئة جديدة"
+  
+  
 
 
 

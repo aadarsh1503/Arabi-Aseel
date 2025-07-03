@@ -169,7 +169,7 @@ const AdminPanel = () => {
         await axios.put(`https://arabi-aseel-1.onrender.com/api/admin/menu/${editingId}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
         notify.success('Item updated successfully', darkMode);
       } else {
-        await axios.post('http://localhost:5000/api/admin/menu', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+        await axios.post('https://arabi-aseel-1.onrender.com/api/admin/menu', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
         notify.success('Item added successfully', darkMode);
       }
       fetchData(); // Refetch all data to get the latest state

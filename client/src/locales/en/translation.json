@@ -370,7 +370,11 @@
   "Description": "Description",
   "Cancel": "Cancel",
   "Update_Item": "Update Item",
-  "Add_Item": "Add Item"
+  "Add_Item": "Add Item",
+  "Select_Category":"Select Category",
+  "Category_Type":"Category Type",
+  "Existing_Category":"Existing Category",
+  "New_Category":"New Category"
 
 
 
