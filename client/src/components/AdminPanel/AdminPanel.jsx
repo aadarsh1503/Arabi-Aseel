@@ -11,6 +11,7 @@ import LogoutModal from './LogoutModal';
 import ItemCard from './ItemCard';
 import ItemModal from './ItemModal';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../Authcontext/Authcontext';
 
 // Toast Notification Configuration
 const notify = {
@@ -44,7 +45,7 @@ const AdminPanel = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === 'ar';
-
+  const { logout } = useAuth(); 
   // Fetch initial data
   const fetchData = async () => {
     try {
@@ -98,12 +99,12 @@ const AdminPanel = () => {
   }, [items, searchQuery, selectedCategory, availabilityFilter]);
   
   
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    notify.info('Logged out successfully', darkMode);
-    navigate('/login');
-  };
+  // const handleLogout = () => {
+  //   localStorage.removeItem('token');
+  //   localStorage.removeItem('user');
+  //   notify.info('Logged out successfully', darkMode);
+  //   navigate('/login');
+  // };
 
   const handleEdit = (item) => {
     setEditingItem(item);
@@ -205,7 +206,7 @@ const AdminPanel = () => {
     <div className={`min-h-screen p-6 ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-800'}`}>
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
       
-      <LogoutModal show={showLogoutConfirm} onClose={() => setShowLogoutConfirm(false)} onConfirm={handleLogout} darkMode={darkMode} />
+      <LogoutModal show={showLogoutConfirm} onClose={() => setShowLogoutConfirm(false)}  onConfirm={logout} darkMode={darkMode}   />
       
       <ItemModal
         showModal={showModal}
