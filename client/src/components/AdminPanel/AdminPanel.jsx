@@ -1,7 +1,7 @@
 // src/AdminPanel.jsx
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import { FiSearch, FiPlus, FiX, FiFilter, FiMoon, FiSun, FiGrid, FiList, FiLogOut, FiDownload, FiAlertTriangle } from 'react-icons/fi';
+import { FiSearch, FiPlus, FiFilter, FiMoon, FiSun, FiGrid, FiList, FiLogOut, FiDownload } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Puff } from 'react-loader-spinner';
@@ -11,8 +11,6 @@ import LogoutModal from './LogoutModal';
 import ItemCard from './ItemCard';
 import ItemModal from './ItemModal';
 import { useTranslation } from 'react-i18next';
-// Import the new components
-
 
 // Toast Notification Configuration
 const notify = {
@@ -24,7 +22,6 @@ const notify = {
 
 const AdminPanel = () => {
   const [items, setItems] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
@@ -45,28 +42,20 @@ const AdminPanel = () => {
   const [buttonLoading, setButtonLoading] = useState({ edit: null, delete: null, submit: false });
   
   const navigate = useNavigate();
-  const hasShownToast = useRef(false);
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const isRTL = i18n.language === 'ar';
 
   // Fetch initial data
   const fetchData = async () => {
     try {
-      !hasShownToast.current && setLoading(true);
+      setLoading(true);
       const res = await axios.get('https://arabi-aseel-1.onrender.com/api/admin/menu');
-      setItems(res.data);
-      setCategories([...new Set(res.data.map(item => item.category_name))]);
-      if (!hasShownToast.current) {
-        notify.success('Menu loaded successfully', darkMode);
-        hasShownToast.current = true;
-      }
+      setItems(res.data); // Store the full array of item objects
+      notify.success('Menu loaded successfully', darkMode);
     } catch (err) {
       console.error("Error fetching data:", err.message);
       setError(err.message);
-      if (!hasShownToast.current) {
-        notify.error(`Failed to load menu: ${err.message}`, darkMode);
-        hasShownToast.current = true;
-      }
+      notify.error(`Failed to load menu: ${err.message}`, darkMode);
     } finally {
       setLoading(false);
     }
@@ -76,10 +65,24 @@ const AdminPanel = () => {
     fetchData();
   }, []);
 
-  // Memoized filtered items
+  // A memoized value to get the unique categories for the filter dropdown and page titles.
+  const uniqueCategories = useMemo(() => {
+    const categoryMap = new Map();
+    items.forEach(item => {
+      if (item.category_name && !categoryMap.has(item.category_name)) {
+        categoryMap.set(item.category_name, {
+          en: item.category_name,
+          ar: item.category_name_ar,
+        });
+      }
+    });
+    return Array.from(categoryMap.values());
+  }, [items]);
+
+  // Memoized filtered items for display
   const normalizeArabic = (str = '') =>
     str.replace(/\u0640/g, '') // Remove Tatweel (ـ)
-       .replace(/[\u0610-\u061A\u064B-\u065F\u06D6-\u06ED]/g, '') // Remove Arabic diacritics
+       .replace(/[\u0610-\u061A\u064B-\u065F\u06D6-\u06ED]/g, ''); // Remove Arabic diacritics
   
   const filteredItems = useMemo(() => {
     return items
@@ -113,7 +116,8 @@ const AdminPanel = () => {
       try {
         await axios.delete(`https://arabi-aseel-1.onrender.com/api/admin/menu/${id}`);
         notify.success('Item deleted successfully', darkMode);
-        setItems(prev => prev.filter(item => item.menu_id !== id));
+        // Refetch data to ensure UI is perfectly in sync
+        fetchData();
       } catch (error) {
         notify.error(`Failed to delete item: ${error.message}`, darkMode);
       } finally {
@@ -125,12 +129,14 @@ const AdminPanel = () => {
   const handleStatusToggle = async (itemId, currentStatus) => {
     const newStatus = currentStatus === 'available' ? 'not available' : 'available';
     setStatusLoading(itemId);
+    // Optimistically update UI
     setItems(prev => prev.map(item => item.menu_id === itemId ? { ...item, status: newStatus } : item));
     try {
       await axios.patch(`https://arabi-aseel-1.onrender.com/api/admin/menu/${itemId}/status`, { status: newStatus });
       notify.success('Status updated!', darkMode);
     } catch (error) {
       notify.error('Failed to update status. Reverting.', darkMode);
+      // Revert UI on failure
       setItems(prev => prev.map(item => item.menu_id === itemId ? { ...item, status: currentStatus } : item));
     } finally {
       setStatusLoading(null);
@@ -141,7 +147,6 @@ const AdminPanel = () => {
     setButtonLoading(prev => ({ ...prev, submit: true }));
     const formData = new FormData();
     
-    // Append all form data
     formData.append('category_name', form.category_name);
     formData.append('category_name_ar', form.category_name_ar);
     formData.append('price_type', form.price_type);
@@ -164,7 +169,7 @@ const AdminPanel = () => {
         await axios.put(`https://arabi-aseel-1.onrender.com/api/admin/menu/${editingId}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
         notify.success('Item updated successfully', darkMode);
       } else {
-        await axios.post('https://arabi-aseel-1.onrender.com/api/admin/menu', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+        await axios.post('http://localhost:5000/api/admin/menu', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
         notify.success('Item added successfully', darkMode);
       }
       fetchData(); // Refetch all data to get the latest state
@@ -196,7 +201,6 @@ const AdminPanel = () => {
     notify.success('Export started', darkMode);
   };
 
-
   return (
     <div className={`min-h-screen p-6 ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-800'}`}>
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
@@ -209,14 +213,14 @@ const AdminPanel = () => {
         editingItem={editingItem}
         onSubmit={handleFormSubmit}
         darkMode={darkMode}
-        categories={categories}
+        categories={items} // THIS IS THE KEY FIX: Pass the full `items` array here.
         isLoading={buttonLoading.submit}
       />
 
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">Menu Admin Panel</h1>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">{t('Menu_Admin_Panel')}</h1>
           <div className="flex items-center space-x-4">
             <button onClick={() => setViewMode(v => v === 'grid' ? 'list' : 'grid')} className={`p-2  ml-4 rounded-full shadow transition-all hover:scale-110 ${darkMode ? 'bg-gray-700' : 'bg-white'}`} title={viewMode === 'grid' ? 'List View' : 'Grid View'}>
               {viewMode === 'grid' ? <FiList size={20} /> : <FiGrid size={20} />}
@@ -237,21 +241,28 @@ const AdminPanel = () => {
         <div className={`sticky top-0 z-10 py-4 ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-md rounded-lg mb-6 p-4`}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="relative"><FiSearch className="absolute left-3 top-3 text-gray-400" /><input type="text" placeholder="Search by name..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className={`pl-10 pr-4 py-2 w-full rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} focus:ring-purple-500`} /></div>
-            <div className="relative"><FiFilter className="absolute left-3 top-3 text-gray-400" /><select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} className={`pl-10 pr-4 py-2 w-full rounded-lg border appearance-none ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} focus:ring-purple-500`}><option value="all">All Categories</option>{categories.map((cat) => {
- const matchedItem = items.find(item => item.category_name === cat);
-  return (
-    <option key={cat} value={cat}>
-      {isRTL ? (matchedItem?.category_name_ar || cat) : cat}
-    </option>
-  );
-})}</select></div>
-            <div className="relative"><select value={availabilityFilter} onChange={(e) => setAvailabilityFilter(e.target.value)} className={`pl-4 pr-10 py-2 w-full rounded-lg border appearance-none ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} focus:ring-purple-500`}><option value="all">All Availability</option><option value="available">Available</option><option value="not available">Not Available</option></select></div>
+            <div className="relative">
+              <FiFilter className="absolute left-3 top-3 text-gray-400" />
+              <select 
+                value={selectedCategory} 
+                onChange={(e) => setSelectedCategory(e.target.value)} 
+                className={`pl-10 pr-4 py-2 w-full rounded-lg border appearance-none ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} focus:ring-purple-500`}
+              >
+                <option value="all">{t('All_Categories')}</option>
+                {uniqueCategories.map((cat) => (
+                  <option key={cat.en} value={cat.en}>
+                    {isRTL ? cat.ar : cat.en}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="relative"><select value={availabilityFilter} onChange={(e) => setAvailabilityFilter(e.target.value)} className={`pl-4 pr-10 py-2 w-full rounded-lg border appearance-none ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} focus:ring-purple-500`}><option value="all">{t('All_Availability')}</option><option value="available">{t('Available')}</option><option value="not available">{t('Not_Available')}</option></select></div>
           </div>
         </div>
         
         <div className="flex justify-end mb-6">
           <button onClick={() => { setEditingItem(null); setShowModal(true); }} className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-pink-500 text-white px-4 py-2 rounded-lg shadow hover:from-purple-700 hover:to-pink-600">
-            <FiPlus /><span>Add New Item</span>
+            <FiPlus className='ml-2' /><span>{t('Add_New_Item')}</span>
           </button>
         </div>
 
@@ -263,38 +274,38 @@ const AdminPanel = () => {
         ) : filteredItems.length === 0 ? (
             <div className={`p-8 text-center rounded-lg ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow`}><h3 className="text-xl font-medium">No items found</h3><p>Try adjusting your filters.</p></div>
         ) : (
-<div className="space-y-8">
-  {[...new Set(filteredItems.map(item => item.category_name))].map(category => {
-    const categoryItem = filteredItems.find(item => item.category_name === category);
+          <div className="space-y-8">
+            {uniqueCategories
+              .filter(cat => selectedCategory === 'all' || cat.en === selectedCategory)
+              .map(category => {
+                const itemsInCategory = filteredItems.filter(item => item.category_name === category.en);
+                if (itemsInCategory.length === 0) return null; // Don't render category if no items match filters
 
-    return (
-      <div key={category}>
-        <h2 className={`text-2xl font-bold mb-4 pb-2 border-b ${darkMode ? 'border-amber-200/30' : 'border-amber-200'}`}>
-          {isRTL
-            ? categoryItem?.category_name_ar || category
-            : category}
-        </h2>
+                return (
+                  <div key={category.en}>
+                    <h2 className={`text-2xl font-bold mb-4 pb-2 border-b ${darkMode ? 'border-amber-200/30' : 'border-amber-200'}`}>
+                      {isRTL ? category.ar : category.en}
+                    </h2>
 
-        <div className={viewMode === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6' : 'space-y-5'}>
-          {filteredItems.filter(item => item.category_name === category).map(item => (
-            <ItemCard 
-              key={item.menu_id}
-              item={item}
-              viewMode={viewMode}
-              darkMode={darkMode}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              onStatusToggle={handleStatusToggle}
-              buttonLoading={buttonLoading}
-              statusLoading={statusLoading}
-            />
-          ))}
-        </div>
-      </div>
-    );
-  })}
-</div>
-
+                    <div className={viewMode === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6' : 'space-y-5'}>
+                      {itemsInCategory.map(item => (
+                        <ItemCard 
+                          key={item.menu_id}
+                          item={item}
+                          viewMode={viewMode}
+                          darkMode={darkMode}
+                          onEdit={handleEdit}
+                          onDelete={handleDelete}
+                          onStatusToggle={handleStatusToggle}
+                          buttonLoading={buttonLoading}
+                          statusLoading={statusLoading}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
         )}
       </div>
     </div>

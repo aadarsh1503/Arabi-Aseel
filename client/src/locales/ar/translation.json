@@ -318,7 +318,65 @@
   "awesome_food4": "مینو شاندار ہے، بہت سارے بہترین اختیارات کے ساتھ۔ عملہ بہت توجہ دینے والا ہے، اور ہر چیز ہمیشہ گھریلو اور مزیدار ذائقے والی ہوتی ہے۔",
   "awesome_food5": "کھانا حیرت انگیز سے بڑھ کر ہے، نام واقعی اس کے معیار پر پورا اترتا ہے، اصلی عربی کھانا۔ میں نے ان کا مندی اور مجبوس آزمایا، ذائقہ لاجواب تھا۔",
   "awesome_food6": "عید الاضحی کے لیے کیٹرنگ اچھی تھی، اگلی بار گوشت کو تھوڑا زیادہ پکانا یقینی بنائیں لیکن ذائقہ مزیدار اور رسیلا تھا :-)",
-  "per_portion":"فی حصہ"
+  "per_portion":"فی حصہ",
+  "login": {
+    "title": "تسجيل الدخول إلى مطبخ عربي أصيل",
+    "form": {
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "signInButton": "تسجيل الدخول"
+    },
+    "toast": {
+      "success": "تم تسجيل الدخول بنجاح! جاري إعادة التوجيه...",
+      "error": "فشل تسجيل الدخول. يرجى المحاولة مرة أخرى."
+    },
+    "validation": {
+      "email": {
+        "invalid": "عنوان بريد إلكتروني غير صالح",
+        "required": "البريد الإلكتروني مطلوب"
+      },
+      "password": {
+        "required": "كلمة المرور مطلوبة"
+      }
+    }
+  },
+  "Add_New_Item": "أضف عنصرًا جديدًا",
+  "Menu_Admin_Panel": "ایڈمن پینل مینو",
+  "Not_Available": "غير متوفر",
+"All_Availability": "جميع التوفر",
+"Available": "متوفر",
+"All_Categories": "جميع الفئات",
+
+  "Editing_Item": "تعديل العنصر",
+  "Add_New_Menu_Item": "إضافة عنصر جديد إلى القائمة",
+  "Category_Name_English": "اسم الفئة (إنجليزي)",
+  "Placeholder_Main_Courses": "مثلاً: الأطباق الرئيسية",
+  "Category_Name_Arabic": "اسم الفئة (عربي)",
+  "Placeholder_Arabic_Main_Courses": "مثلاً: الأطباق الرئيسية",
+  "Item_Image": "صورة العنصر",
+  "File_Selected": "تم اختيار الملف",
+  "Choose_File": "اختر ملف",
+  "Pricing_Type": "نوع التسعير",
+  "Q_H_F": "ربع / نصف / كامل",
+  "Per_Portion": "لكل حصة",
+  "Quarter_Price": "سعر الربع",
+  "Placeholder_Quarter_Price": "مثلاً: 2.5",
+  "Half_Price": "سعر النصف",
+  "Placeholder_Half_Price": "مثلاً: 5.0",
+  "Full_Price": "سعر الكامل",
+  "Placeholder_Full_Price": "مثلاً: 10.0",
+  "Per_Portion_Price": "السعر لكل حصة",
+  "Version": "النسخة",
+  "Name": "الاسم",
+  "Description": "الوصف",
+  "Cancel": "إلغاء",
+  "Update_Item": "تحديث العنصر",
+  "Add_Item": "إضافة عنصر"
+
+
+
+
+
 
         
         

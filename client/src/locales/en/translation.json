@@ -317,7 +317,63 @@
 "awesome_food4":"The menu is fantastic, with so many great options. Staff is super attentive, and everything always tastes homemade and delicious.",
 "awesome_food5":"The food is more than wonderful, the name really lives up to it, authentic Arab cuisine. I tried their mandi and majboos, the taste is amazing.",
 "awesome_food6":"catering for Eid Al Adha was good  ,, ensure to cook meat littel more  next time but teaste was cool & juicy :-)",
-"per_portion":"Per Portion"
+"per_portion":"Per Portion",
+"login": {
+  "title": "Login to Arabi Aseel Kitchen",
+  "form": {
+    "email": "Email Address",
+    "password": "Password",
+    "signInButton": "Sign In"
+  },
+  "toast": {
+    "success": "Login successful! Redirecting...",
+    "error": "Login failed. Please try again."
+  },
+  "validation": {
+    "email": {
+      "invalid": "Invalid email address",
+      "required": "Email is required"
+    },
+    "password": {
+      "required": "Password is required"
+    }
+  }
+},
+"Add_New_Item":"Add New Item",
+"Menu_Admin_Panel":"Menu Admin Panel",
+"Not_Available": "Not Available",
+"All_Availability": "All Availability",
+"Available": "Available",
+"All_Categories": "All Categories",
+
+  "Editing_Item": "Editing Item",
+  "Add_New_Menu_Item": "Add New Menu Item",
+  "Category_Name_English": "Category Name (English)",
+  "Placeholder_Main_Courses": "e.g., Main Courses",
+  "Category_Name_Arabic": "Category Name (Arabic)",
+  "Placeholder_Arabic_Main_Courses": "e.g., الأطباق الرئيسية",
+  "Item_Image": "Item Image",
+  "File_Selected": "File Selected",
+  "Choose_File": "Choose File",
+  "Pricing_Type": "Pricing Type",
+  "Q_H_F": "Q/H/F",
+  "Per_Portion": "Per Portion",
+  "Quarter_Price": "Quarter Price",
+  "Placeholder_Quarter_Price": "e.g., 2.5",
+  "Half_Price": "Half Price",
+  "Placeholder_Half_Price": "e.g., 5.0",
+  "Full_Price": "Full Price",
+  "Placeholder_Full_Price": "e.g., 10.0",
+  "Per_Portion_Price": "Per Portion Price",
+  "Version": "Version",
+  "Name": "Name",
+  "Description": "Description",
+  "Cancel": "Cancel",
+  "Update_Item": "Update Item",
+  "Add_Item": "Add Item"
+
+
+
 
 
   
