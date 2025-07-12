@@ -20,14 +20,13 @@ import Signup from './components/Signup/Signup';
 import Login from './components/Login/Login';
 
 // Import Auth and Route Protection
-
-import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'; // <-- Your protected route component
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
 // Import Translation and Direction
 import { DirectionProvider } from './components/DirectionContext';
 import './i18n';
 import { AuthProvider } from './components/Authcontext/Authcontext';
-
+import Chef from './components/Chefs/Chef';
 
 // MUI Theme (no changes needed here)
 const theme = createTheme({
@@ -46,23 +45,14 @@ const theme = createTheme({
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
   },
 });
-
 function App() {
-  // The old useEffect with token checks is no longer needed here.
-  // The AuthProvider now handles all initial token verification logic.
-  // Axios interceptors can still be useful but are not the primary
-  // mechanism for route protection in this new setup.
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
-        {/* 2. WRAP YOUR ENTIRE APP WITH AuthProvider */}
         <AuthProvider>
           <DirectionProvider>
-            {/* Your layout components can be inside or outside the Routes as needed */}
             <Navbar />
-            
               <Routes>
                 {/* --- Public Routes --- */}
                 <Route path="/" element={<Hero />} />
@@ -72,9 +62,9 @@ function App() {
                 <Route path="/reservation" element={<Reservation />} />
                 <Route path="/menu" element={<MenuItem1 />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
+                <Route path="/sig5436272ertyvv" element={<Signup />} />
 
-                {/* --- Protected Admin Route --- */}
+          
                 <Route
                   path="/admin"
                   element={
@@ -83,8 +73,17 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
+                
+
+                <Route
+                  path="/chef"
+                  element={
+                    <ProtectedRoute>
+                      <Chef />
+                    </ProtectedRoute>
+                  }
+                />
               </Routes>
-        
             <Footer />
           </DirectionProvider>
         </AuthProvider>

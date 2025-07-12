@@ -25,6 +25,8 @@ const Navbar = () => {
       window.location.pathname === "/menu" ||
       window.location.pathname === "/contact" ||
       window.location.pathname === "/admin" ||
+      window.location.pathname === "/chef" ||
+
       window.location.pathname === "/login" ||
       window.location.pathname === "/signup" ||
       window.location.pathname === "/aboutUs"
@@ -41,6 +43,8 @@ const Navbar = () => {
       window.location.pathname === "/contact" ||
       window.location.pathname === "/admin" ||
       window.location.pathname === "/login" ||
+      window.location.pathname === "/chef" ||
+
       window.location.pathname === "/signup" ||
       window.location.pathname === "/aboutUs"
     ) {

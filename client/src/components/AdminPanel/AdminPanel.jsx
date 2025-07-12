@@ -6,6 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Puff } from 'react-loader-spinner';
 import { useNavigate } from 'react-router-dom';
+import { GiChefToque } from 'react-icons/gi';
 import * as XLSX from 'xlsx';
 import LogoutModal from './LogoutModal';
 import ItemCard from './ItemCard';
@@ -223,6 +224,15 @@ const AdminPanel = () => {
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">{t('Menu_Admin_Panel')}</h1>
           <div className="flex items-center space-x-4">
+          <button
+              onClick={() => navigate('/chef')}
+              className="p-2.5 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-md
+                         hover:shadow-lg hover:shadow-cyan-500/40
+                         transform transition-all duration-300 hover:scale-110"
+              title="Manage Chefs"
+            >
+              <GiChefToque size={22} />
+            </button>
             <button onClick={() => setViewMode(v => v === 'grid' ? 'list' : 'grid')} className={`p-2  ml-4 rounded-full shadow transition-all hover:scale-110 ${darkMode ? 'bg-gray-700' : 'bg-white'}`} title={viewMode === 'grid' ? 'List View' : 'Grid View'}>
               {viewMode === 'grid' ? <FiList size={20} /> : <FiGrid size={20} />}
             </button>
