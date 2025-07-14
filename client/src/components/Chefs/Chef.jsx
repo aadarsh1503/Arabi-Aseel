@@ -495,33 +495,29 @@ const Chef = () => {
             )}
             
             <div className="container font-noto-serif mx-auto p-4  md:p-8">
-                 <header className="flex w-full items-center justify-between gap-6 mb-12">
-            
-            {/* Item 1: Page Toggle */}
-            <PageToggle activePage="chef" />
+            <header className="flex w-full -ml-12 -mr-12 items-center justify-between gap-6 mb-12 px-4 sm:px-6 lg:px-8">
+  
+    <div>
+        <PageToggle activePage="chef" />
+    </div>
 
-            {/* Item 2: Title */}
-            {/* Removed `mr-10`. The parent `gap-6` now handles the spacing. */}
-            <h1 className="flex-grow text-4xl md:text-5xl font-noto-serif font-bold bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent pb-2 text-center">
-                {t('chefsPageTitle', 'Manage Culinary Artists')}
-            </h1>
+   
+    <h1 className="flex-grow text-center text-4xl md:text-5xl font-noto-serif font-bold bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent pb-2">
+        {t('chefsPageTitle', 'Manage Culinary Artists')}
+    </h1>
 
-            {/* Item 3: Logout Button */}
-            <button 
-                onClick={() => setIsLogoutModalOpen(true)} 
-                // --- CHANGES IN BUTTON ---
-                // 1. Replaced `space-x-2` with `gap-2`. 
-                //    `gap-2` works correctly in both LTR and RTL for spacing flex items.
-                // 2. Added `flex-shrink-0` to prevent the button from shrinking if the title is too long.
-                className="flex flex-shrink-0 items-center gap-2 px-4 py-2 rounded-lg text-red-500 bg-red-100 hover:bg-red-200 transition-colors" 
-                title={t('logout', 'Logout')}
-            >
-                <LogOut size={20} />
-                <span className="font-semibold hidden md:inline">
-                {t('logout')}
-                </span>
-            </button>
-        </header>
+   
+    <button 
+        onClick={() => setIsLogoutModalOpen(true)} 
+        className="flex flex-shrink-0 items-center gap-2 px-4 py-2 rounded-lg text-red-500 bg-red-100 hover:bg-red-200 transition-colors" 
+        title={t('logout', 'Logout')}
+    >
+        <LogOut size={20} />
+        <span className="font-semibold hidden md:inline">
+        {t('logout')}
+        </span>
+    </button>
+</header>
                 
                 <div className={`max-w-3xl mx-auto font-noto-serif bg-white/60 backdrop-blur-lg p-8 rounded-2xl shadow-lg shadow-slate-200/50 mb-16 ${isRTL ? 'text-right' : ''}`}>
                     <form onSubmit={handleSubmit} className="space-y-6">
