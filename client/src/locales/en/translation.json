@@ -406,7 +406,12 @@
   "deleteConfirmation": "Are you sure you want to permanently delete this chef?",
   "chefDeletedSuccess": "Chef deleted successfully!",
   "deleteChefError": "Failed to delete chef. Reverting changes.",
-  "All_Fields_Mandatory": "All fields are mandatory."
+  "All_Fields_Mandatory": "All fields are mandatory.",
+   "Enter_New_Category": "Enter New Category",
+  "Enter_Arabic_Category": "Enter Arabic Category",
+   "Menu": "Menu",
+  "Chef": "Chef",
+     "logout": "Logout"
 
 
 

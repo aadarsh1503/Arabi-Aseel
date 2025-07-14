@@ -408,7 +408,12 @@
   "deleteConfirmation": "هل أنت متأكد أنك تريد حذف هذا الشيف نهائيًا؟",
   "chefDeletedSuccess": "تم حذف الشيف بنجاح!",
   "deleteChefError": "فشل في حذف الشيف. يتم استعادة البيانات.",
-  "All_Fields_Mandatory": "كل الحقول إلزامية."
+  "All_Fields_Mandatory": "كل الحقول إلزامية.",
+   "Enter_New_Category": "أدخل فئة جديدة",
+  "Enter_Arabic_Category": "أدخل الفئة باللغة العربية",
+   "Menu": "القائمة",
+  "Chef": "الطاهي",
+   "logout": "تسجيل الخروج"
 
   
   

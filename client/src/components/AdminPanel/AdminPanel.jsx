@@ -217,7 +217,7 @@ const AdminPanel = () => {
           
           <div className="flex items-center space-x-4">
             {/* The old Chef icon button has been removed from here */}
-            <button onClick={() => setViewMode(v => v === 'grid' ? 'list' : 'grid')} className={`p-2 rounded-full shadow transition-all hover:scale-110 ${darkMode ? 'bg-gray-700' : 'bg-white'}`} title={viewMode === 'grid' ? 'List View' : 'Grid View'}>
+            <button onClick={() => setViewMode(v => v === 'grid' ? 'list' : 'grid')} className={`p-2 ml-4 rounded-full shadow transition-all hover:scale-110 ${darkMode ? 'bg-gray-700' : 'bg-white'}`} title={viewMode === 'grid' ? 'List View' : 'Grid View'}>
               {viewMode === 'grid' ? <FiList size={20} /> : <FiGrid size={20} />}
             </button>
             <button onClick={() => setDarkMode(!darkMode)} className={`p-2 rounded-full shadow transition-all hover:scale-110 ${darkMode ? 'bg-gray-700' : 'bg-white'}`} title={darkMode ? 'Light Mode' : 'Dark Mode'}>

@@ -262,7 +262,16 @@ const ItemModal = ({
       e.target.value = "";
     }
   };
-
+  const getSliderTransformClass = () => {
+    if (form.categoryOption === "existing") {
+      // For "existing", the slider is always at the starting position
+      return "translate-x-0";
+    }
+    // For "new", the direction depends on RTL/LTR
+    return isRTL ? "-translate-x-full" : "translate-x-full";
+  };
+  
+  const sliderTransformClass = getSliderTransformClass();
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -390,46 +399,55 @@ const ItemModal = ({
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="mb-6">
-              <label className="block mb-3 font-medium text-lg">
-                {t("Category_Type")}*
-              </label>
-              <div
-                className={`relative flex w-full rounded-full ${
-                  darkMode ? "bg-gray-900" : "bg-gray-200"
-                }`}
-              >
-                <div
-                  className={`absolute top-0 left-0 h-full w-1/2 rounded-full bg-black transition-transform duration-300 ease-in-out transform ${
-                    form.categoryOption === "new" ? "translate-x-full" : "translate-x-0"
-                  }`}
-                />
-                <button
-                  type="button"
-                  onClick={() =>
-                    handleChange({ target: { name: "categoryOption", value: "existing" } })
-                  }
-                  className={`relative w-1/2 py-2.5 text-center font-semibold transition-colors duration-300 ${
-                    form.categoryOption === "existing"
-                      ? "text-white"
-                      : darkMode ? "text-gray-300" : "text-black"
-                  }`} >
-                  {t("Existing_Category")}
-                </button>
-                <button
-                  type="button"
-                  onClick={() =>
-                    handleChange({ target: { name: "categoryOption", value: "new" } })
-                  }
-                  className={`relative w-1/2 py-2.5 text-center font-semibold transition-colors duration-300 ${
-                    form.categoryOption === "new"
-                      ? "text-white"
-                      : darkMode ? "text-gray-300" : "text-black"
-                  }`} >
-                  {t("New_Category")}
-                </button>
-              </div>
-            </div>
+          <div className="mb-6">
+    <label className="block mb-3 font-medium text-lg">
+      {t("Category_Type")}*
+    </label>
+    <div
+      className={`relative flex w-full rounded-full ${
+        darkMode ? "bg-gray-900" : "bg-gray-200"
+      }`}
+    >
+      {/* Slider Element: Updated with logical properties and dynamic transform */}
+      <div
+        className={`absolute top-0 start-0 h-full w-1/2 rounded-full bg-black transition-transform duration-300 ease-in-out transform ${sliderTransformClass}`}
+      />
+
+      {/* Button 1: Existing Category */}
+      <button
+        type="button"
+        onClick={() =>
+          handleChange({ target: { name: "categoryOption", value: "existing" } })
+        }
+        className={`relative w-1/2 py-2.5 text-center font-semibold transition-colors duration-300 ${
+          form.categoryOption === "existing"
+            ? "text-white"
+            : darkMode
+            ? "text-gray-300"
+            : "text-black"
+        }`}
+      >
+        {t("Existing_Category")}
+      </button>
+
+      {/* Button 2: New Category */}
+      <button
+        type="button"
+        onClick={() =>
+          handleChange({ target: { name: "categoryOption", value: "new" } })
+        }
+        className={`relative w-1/2 py-2.5 text-center font-semibold transition-colors duration-300 ${
+          form.categoryOption === "new"
+            ? "text-white"
+            : darkMode
+            ? "text-gray-300"
+            : "text-black"
+        }`}
+      >
+        {t("New_Category")}
+      </button>
+    </div>
+  </div>
             <div
               ref={categoryWrapperRef}
               className="grid grid-cols-1 md:grid-cols-2 gap-6"
