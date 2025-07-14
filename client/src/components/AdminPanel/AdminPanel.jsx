@@ -6,13 +6,14 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Puff } from 'react-loader-spinner';
 import { useNavigate } from 'react-router-dom';
-import { GiChefToque } from 'react-icons/gi';
 import * as XLSX from 'xlsx';
 import LogoutModal from './LogoutModal';
 import ItemCard from './ItemCard';
 import ItemModal from './ItemModal';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../Authcontext/Authcontext';
+import PageToggle from './PageToggle';
+
 
 // Toast Notification Configuration
 const notify = {
@@ -99,14 +100,6 @@ const AdminPanel = () => {
       });
   }, [items, searchQuery, selectedCategory, availabilityFilter]);
   
-  
-  // const handleLogout = () => {
-  //   localStorage.removeItem('token');
-  //   localStorage.removeItem('user');
-  //   notify.info('Logged out successfully', darkMode);
-  //   navigate('/login');
-  // };
-
   const handleEdit = (item) => {
     setEditingItem(item);
     setShowModal(true);
@@ -118,7 +111,6 @@ const AdminPanel = () => {
       try {
         await axios.delete(`https://arabi-aseel-1.onrender.com/api/admin/menu/${id}`);
         notify.success('Item deleted successfully', darkMode);
-        // Refetch data to ensure UI is perfectly in sync
         fetchData();
       } catch (error) {
         notify.error(`Failed to delete item: ${error.message}`, darkMode);
@@ -131,14 +123,12 @@ const AdminPanel = () => {
   const handleStatusToggle = async (itemId, currentStatus) => {
     const newStatus = currentStatus === 'available' ? 'not available' : 'available';
     setStatusLoading(itemId);
-    // Optimistically update UI
     setItems(prev => prev.map(item => item.menu_id === itemId ? { ...item, status: newStatus } : item));
     try {
       await axios.patch(`https://arabi-aseel-1.onrender.com/api/admin/menu/${itemId}/status`, { status: newStatus });
       notify.success('Status updated!', darkMode);
     } catch (error) {
       notify.error('Failed to update status. Reverting.', darkMode);
-      // Revert UI on failure
       setItems(prev => prev.map(item => item.menu_id === itemId ? { ...item, status: currentStatus } : item));
     } finally {
       setStatusLoading(null);
@@ -174,7 +164,7 @@ const AdminPanel = () => {
         await axios.post('https://arabi-aseel-1.onrender.com/api/admin/menu', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
         notify.success('Item added successfully', darkMode);
       }
-      fetchData(); // Refetch all data to get the latest state
+      fetchData();
       setShowModal(false);
       setEditingItem(null);
     } catch (error) {
@@ -215,25 +205,19 @@ const AdminPanel = () => {
         editingItem={editingItem}
         onSubmit={handleFormSubmit}
         darkMode={darkMode}
-        categories={items} // THIS IS THE KEY FIX: Pass the full `items` array here.
+        categories={items}
         isLoading={buttonLoading.submit}
       />
 
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
+        {/* Header -- UPDATED */}
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">{t('Menu_Admin_Panel')}</h1>
+          {/* Replaced the H1 title with the new sexy toggle component */}
+          <PageToggle activePage="menu" darkMode={darkMode} />
+          
           <div className="flex items-center space-x-4">
-          <button
-              onClick={() => navigate('/chef')}
-              className="p-2.5 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-md
-                         hover:shadow-lg hover:shadow-cyan-500/40
-                         transform transition-all duration-300 hover:scale-110"
-              title="Manage Chefs"
-            >
-              <GiChefToque size={22} />
-            </button>
-            <button onClick={() => setViewMode(v => v === 'grid' ? 'list' : 'grid')} className={`p-2  ml-4 rounded-full shadow transition-all hover:scale-110 ${darkMode ? 'bg-gray-700' : 'bg-white'}`} title={viewMode === 'grid' ? 'List View' : 'Grid View'}>
+            {/* The old Chef icon button has been removed from here */}
+            <button onClick={() => setViewMode(v => v === 'grid' ? 'list' : 'grid')} className={`p-2 rounded-full shadow transition-all hover:scale-110 ${darkMode ? 'bg-gray-700' : 'bg-white'}`} title={viewMode === 'grid' ? 'List View' : 'Grid View'}>
               {viewMode === 'grid' ? <FiList size={20} /> : <FiGrid size={20} />}
             </button>
             <button onClick={() => setDarkMode(!darkMode)} className={`p-2 rounded-full shadow transition-all hover:scale-110 ${darkMode ? 'bg-gray-700' : 'bg-white'}`} title={darkMode ? 'Light Mode' : 'Dark Mode'}>
@@ -290,7 +274,7 @@ const AdminPanel = () => {
               .filter(cat => selectedCategory === 'all' || cat.en === selectedCategory)
               .map(category => {
                 const itemsInCategory = filteredItems.filter(item => item.category_name === category.en);
-                if (itemsInCategory.length === 0) return null; // Don't render category if no items match filters
+                if (itemsInCategory.length === 0) return null;
 
                 return (
                   <div key={category.en}>

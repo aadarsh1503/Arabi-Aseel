@@ -405,7 +405,8 @@
   "updateChefError": "Failed to update chef.",
   "deleteConfirmation": "Are you sure you want to permanently delete this chef?",
   "chefDeletedSuccess": "Chef deleted successfully!",
-  "deleteChefError": "Failed to delete chef. Reverting changes."
+  "deleteChefError": "Failed to delete chef. Reverting changes.",
+  "All_Fields_Mandatory": "All fields are mandatory."
 
 
 

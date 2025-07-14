@@ -1,6 +1,7 @@
 // src/components/ItemCard.jsx
 import React, { useState, useEffect } from 'react';
 import { FiEdit2, FiTrash2 } from 'react-icons/fi';
+import "./card.css"
 import { useTranslation } from 'react-i18next';
 import "./a.css"
 const ItemCard = ({ item, viewMode, darkMode, onEdit, onDelete, onStatusToggle, buttonLoading, statusLoading }) => {

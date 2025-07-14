@@ -1,0 +1,25 @@
+/* ======================================= */
+/*  Custom Animation for Cropper Modal     */
+/* ======================================= */
+
+/* 1. This defines the animation itself, from start (0%) to finish (100%) */
+@keyframes fade-in-scale {
+    from { /* 'from' is the same as 0% */
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to { /* 'to' is the same as 100% */
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  /* 2. This creates the utility class that you use in your HTML/JSX */
+  /*    It applies the keyframes animation with specific settings. */
+  .animate-fade-in-scale {
+    animation-name: fade-in-scale;
+    animation-duration: 0.3s;
+    animation-timing-function: ease-out;
+    /* 'forwards' ensures the element stays in its final state (at 100%) after the animation ends */
+    animation-fill-mode: forwards; 
+  }

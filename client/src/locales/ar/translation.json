@@ -407,7 +407,9 @@
   "updateChefError": "فشل في تحديث بيانات الشيف.",
   "deleteConfirmation": "هل أنت متأكد أنك تريد حذف هذا الشيف نهائيًا؟",
   "chefDeletedSuccess": "تم حذف الشيف بنجاح!",
-  "deleteChefError": "فشل في حذف الشيف. يتم استعادة البيانات."
+  "deleteChefError": "فشل في حذف الشيف. يتم استعادة البيانات.",
+  "All_Fields_Mandatory": "كل الحقول إلزامية."
+
   
   
 
