@@ -333,7 +333,7 @@ const ItemModal = ({
   if (!showModal) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed font-noto-serif inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div
         className={`relative rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto ${
           darkMode ? "bg-gray-800 text-gray-100" : "bg-white text-gray-800"
@@ -410,7 +410,7 @@ const ItemModal = ({
     >
       {/* Slider Element: Updated with logical properties and dynamic transform */}
       <div
-        className={`absolute top-0 start-0 h-full w-1/2 rounded-full bg-black transition-transform duration-300 ease-in-out transform ${sliderTransformClass}`}
+        className={`absolute top-0 start-0 h-full w-1/2 rounded-full bg-[#724F38] transition-transform duration-300 ease-in-out transform ${sliderTransformClass}`}
       />
 
       {/* Button 1: Existing Category */}
@@ -421,7 +421,7 @@ const ItemModal = ({
         }
         className={`relative w-1/2 py-2.5 text-center font-semibold transition-colors duration-300 ${
           form.categoryOption === "existing"
-            ? "text-white"
+            ? "text-white "
             : darkMode
             ? "text-gray-300"
             : "text-black"
@@ -502,8 +502,8 @@ const ItemModal = ({
                     autoComplete="off"
                     placeholder={t("Enter_New_Category")}
                     className={`w-full p-3 rounded-lg border-2 ${
-                      darkMode ? "bg-gray-700 border-pink-500/50" : "bg-white border-pink-300"
-                    } focus:border-pink-500`}
+                      darkMode ? "bg-gray-700 border-[#724F38]" : "bg-white border-[#724F38]"
+                    } focus:border-[#724F38]`}
                   />
                 )}
               </div>
@@ -557,8 +557,8 @@ const ItemModal = ({
                     autoComplete="off"
                     placeholder={t("Enter_Arabic_Category")}
                     className={`w-full p-3 rounded-lg border-2 ${
-                      darkMode ? "bg-gray-700 border-pink-500/50" : "bg-white border-pink-300"
-                    } focus:border-pink-500`}
+                      darkMode ? "bg-gray-700 border-[#724F38]" : "bg-white border-[#724F38]"
+                    } focus:border-[#724F38]`}
                   />
                 )}
               </div>
@@ -653,12 +653,12 @@ const ItemModal = ({
                   <div>
                     <label className="block mb-2">{t("Name")}*</label>
                     <input name={`translations.${i}.name`} value={translation.name} onChange={handleChange}
-                      className={`w-full p-3 rounded-lg border-2 ${ darkMode ? "bg-gray-700 border-gray-600" : "bg-white border-gray-300" } focus:border-purple-500 transition-colors duration-300`} />
+                       placeholder={t("Enter_Name")} className={`w-full p-3 rounded-lg border-2 ${ darkMode ? "bg-gray-700 border-gray-600" : "bg-white border-gray-300" } focus:border-purple-500 transition-colors duration-300`} />
                   </div>
                   <div>
                     <label className="block mb-2">{t("Description")}</label>
                     <textarea name={`translations.${i}.description`} value={translation.description} onChange={handleChange} rows={3}
-                      className={`w-full p-3 rounded-lg border-2 ${ darkMode ? "bg-gray-700 border-gray-600" : "bg-white border-gray-300" } focus:border-purple-500 transition-colors duration-300`} />
+                     placeholder={t("Enter_Description")}  className={`w-full p-3 rounded-lg border-2 ${ darkMode ? "bg-gray-700 border-gray-600" : "bg-white border-gray-300" } focus:border-purple-500 transition-colors duration-300`} />
                   </div>
                 </div>
               </div>
@@ -670,7 +670,7 @@ const ItemModal = ({
                 {t("Cancel")}
               </button>
               <button type="submit" disabled={isLoading}
-                className={`px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 text-white hover:from-purple-700 hover:to-pink-600 transition-all duration-300 flex items-center justify-center min-w-[140px] ${ isLoading ? "opacity-80" : "shadow-lg hover:shadow-xl" }`} >
+                className={`px-6 py-3 rounded-xl bg-[#724F38] text-white hover:from-purple-700 hover:to-pink-600 transition-all duration-300 flex items-center justify-center min-w-[140px] ${ isLoading ? "opacity-80" : "shadow-lg hover:shadow-xl" }`} >
                 {isLoading ? ( <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> ) : editingItem ? ( t("Update_Item") ) : ( t("Add_Item") )}
               </button>
             </div>

@@ -376,7 +376,7 @@
   "Existing_Category":"Existing Category",
   "New_Category":"New Category",
   "chefsPageTitle": "Chefs Page",
-  "addNewArtist": "Add New Artist",
+  "addNewArtist": "Add New Chef",
   "chefsNameEn": "Chef's Name (EN)",
   "chefsNameAr": "اسم الشيف (AR)",
   "designationEn": "Designation (EN)",
@@ -386,7 +386,7 @@
   "adding": "Adding...",
   "addChef": "Add Chef",
   "noChefsFound": "No Chefs Found",
-  "addFirstChef": "Be the first to add a culinary artist to your team!",
+  "addFirstChef": "Be the first to add a culinary chef to your team!",
   "editChefDetails": "Edit Chef Details",
   "englishName": "English Name",
   "arabicName": "اسم (Arabic Name)",
@@ -411,7 +411,16 @@
   "Enter_Arabic_Category": "Enter Arabic Category",
    "Menu": "Menu",
   "Chef": "Chef",
-     "logout": "Logout"
+     "logout": "Logout",
+      "Image_Crop_Info": "Crop the image before uploading",
+      "confirmCrop":"Confirm Crop",
+      "cropImageInstruction":"Adjust the selection to a 1:1 ratio for the best fit.",
+      "cropImage":"Crop Your Image",
+      "Enter_Description": "Enter Description",
+"Enter_Name": "Enter Name",
+"confirmNewArtistMessage":"Please review the details below before saving.",
+"confirmNewArtistTitle":"Confirm New Chef",
+"confirmAndAdd":"Confirm & Add"
 
 
 

@@ -110,7 +110,7 @@ const ItemCard = ({ item, viewMode, darkMode, onEdit, onDelete, onStatusToggle, 
   {status === 'available' ? (
     <>
       <span className="relative flex h-2 w-2 me-2 rtl:ms-2 rtl:me-0">
-        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#724F38] opacity-75"></span>
         <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
       </span>
       <span>LIVE</span>

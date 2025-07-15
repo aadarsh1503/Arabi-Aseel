@@ -256,7 +256,7 @@ const AdminPanel = () => {
         </div>
         
         <div className="flex justify-end mb-6">
-          <button onClick={() => { setEditingItem(null); setShowModal(true); }} className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-pink-500 text-white px-4 py-2 rounded-lg shadow hover:from-purple-700 hover:to-pink-600">
+          <button onClick={() => { setEditingItem(null); setShowModal(true); }} className="flex items-center space-x-2 bg-[#724F38] text-white px-4 py-2 rounded-lg shadow hover:from-purple-700 hover:to-pink-600">
             <FiPlus className='ml-2' /><span>{t('Add_New_Item')}</span>
           </button>
         </div>

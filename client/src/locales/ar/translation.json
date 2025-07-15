@@ -413,7 +413,18 @@
   "Enter_Arabic_Category": "أدخل الفئة باللغة العربية",
    "Menu": "القائمة",
   "Chef": "الطاهي",
-   "logout": "تسجيل الخروج"
+   "logout": "تسجيل الخروج",
+    "Image_Crop_Info": "قص الصورة قبل التحميل",
+    "confirmCrop": "تأكيد القص",
+    "cropImageInstruction": "اضبط التحديد بنسبة 1:1 للحصول على أفضل ملاءمة.",
+    "cropImage": "قص صورتك",
+    "Enter_Description": "أدخل الوصف",
+"Enter_Name": "أدخل الاسم",
+"confirmNewArtistMessage": "يرجى مراجعة التفاصيل أدناه قبل الحفظ.",
+"confirmNewArtistTitle": "تأكيد الطاهي الجديد",
+"confirmAndAdd": "تأكيد وإضافة"
+
+
 
   
   

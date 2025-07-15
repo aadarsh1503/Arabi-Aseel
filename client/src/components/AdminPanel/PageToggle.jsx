@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 /**
  * A futuristic, stylish toggle switch for navigating between Menu and Chef pages.
  * Features a sliding, glowing indicator and micro-interactions for a premium feel.
- * The design is now LTR and RTL friendly.
+ * The design is now LTR and RTL friendly, with a clean white background and a sharp outline.
  *
  * @param {object} props - The component props.
  * @param {'menu' | 'chef'} props.activePage - The currently active page.
@@ -35,16 +35,17 @@ const PageToggle = ({ activePage }) => {
       : 'translate-x-0'; // Initial position
 
   const buttonBaseClasses =
-    'relative z-10 w-1/2 rounded-full py-2.5 text-center text-sm font-semibold transition-all duration-300 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500 dark:focus-visible:ring-offset-gray-900';
+    'relative z-10 w-1/2 rounded-full py-2.5 text-center text-sm font-semibold transition-colors duration-300 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500 dark:focus-visible:ring-offset-gray-900';
 
   return (
-    <div className="relative flex w-64 items-center rounded-full bg-gray-200 p-1 shadow-inner dark:bg-black/20 dark:shadow-none">
+    // UPDATED: Changed background to white and added a border
+    <div className="relative flex w-64 items-center rounded-full bg-white p-1 border border-gray-900 dark:border-gray-300">
       
-      {/* The Sliding, Glowing Indicator */}
+      {/* The Sliding, Glowing Indicator (No changes here) */}
       <span
         className={`absolute top-1 start-1 h-[calc(100%-0.5rem)] 
                    w-[calc(50%-0.25rem)]
-                   rounded-full bg-gradient-to-r from-red-600 to-rose-500 
+                   rounded-full bg-[#724F38]
                    shadow-md shadow-red-500/30
                    transition-transform duration-300 ease-in-out
                    ${sliderTransformClass}
@@ -58,8 +59,10 @@ const PageToggle = ({ activePage }) => {
         onClick={() => handleNavigate('menu')}
         className={`${buttonBaseClasses} ${
           activePage === 'menu'
+            // Active text color is white (on the brown slider)
             ? 'text-white'
-            : 'text-gray-700 hover:text-black dark:text-black dark:hover:text-white'
+            // UPDATED: Inactive text is now gray, changing to black on hover for better contrast on white BG
+            : 'text-gray-500 hover:text-black'
         }`}
         aria-current={activePage === 'menu'}
       >
@@ -72,8 +75,10 @@ const PageToggle = ({ activePage }) => {
         onClick={() => handleNavigate('chef')}
         className={`${buttonBaseClasses} ${
           activePage === 'chef'
+            // Active text color is white (on the brown slider)
             ? 'text-white'
-            : 'text-gray-700 hover:text-black dark:text-black dark:hover:text-white'
+            // UPDATED: Inactive text is now gray, changing to black on hover for better contrast on white BG
+            : 'text-gray-500 hover:text-black'
         }`}
         aria-current={activePage === 'chef'}
       >
