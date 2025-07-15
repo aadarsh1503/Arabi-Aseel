@@ -806,7 +806,7 @@ const Chef = () => {
               </div>
             </div>
             <h2 className="text-2xl font-bold text-slate-800 text-center mb-2">
-              {t("logoutConfirmTitle")}
+            Confirm Logout
             </h2>
             <p className="text-slate-600 text-center mb-8">
               {t("logoutConfirmMessage")}
