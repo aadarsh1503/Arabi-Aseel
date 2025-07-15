@@ -26,6 +26,7 @@ import { useTranslation } from 'react-i18next';
 
 import "./login.css";
 import { useAuth } from '../Authcontext/Authcontext';
+import { authApi } from '../../api/axiosConfig';
 
 const Login = () => {
   const { t, i18n } = useTranslation();
@@ -63,7 +64,7 @@ const Login = () => {
       setBackendErrors({ email: '', password: '' });
       
       try {
-        const response = await axios.post('https://arabi-aseel-1.onrender.com/api/auth/login', {
+        const response = await authApi.post('/auth/login', {
           email: values.email,
           password: values.password
         });

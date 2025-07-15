@@ -13,6 +13,7 @@ import ItemModal from './ItemModal';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../Authcontext/Authcontext';
 import PageToggle from './PageToggle';
+import { menuApi } from '../../api/axiosConfig';
 
 
 // Toast Notification Configuration
@@ -52,7 +53,7 @@ const AdminPanel = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('https://arabi-aseel-1.onrender.com/api/admin/menu');
+      const res = await menuApi.get('/admin/menu'); 
       setItems(res.data); // Store the full array of item objects
       notify.success('Menu loaded successfully', darkMode);
     } catch (err) {
@@ -109,7 +110,7 @@ const AdminPanel = () => {
     if (window.confirm('Are you sure you want to delete this item?')) {
       setButtonLoading(prev => ({ ...prev, delete: id }));
       try {
-        await axios.delete(`https://arabi-aseel-1.onrender.com/api/admin/menu/${id}`);
+        await menuApi.delete(`/admin/menu/${id}`);
         notify.success('Item deleted successfully', darkMode);
         fetchData();
       } catch (error) {
@@ -125,7 +126,7 @@ const AdminPanel = () => {
     setStatusLoading(itemId);
     setItems(prev => prev.map(item => item.menu_id === itemId ? { ...item, status: newStatus } : item));
     try {
-      await axios.patch(`https://arabi-aseel-1.onrender.com/api/admin/menu/${itemId}/status`, { status: newStatus });
+      await menuApi.patch(`/admin/menu/${itemId}/status`, { status: newStatus });
       notify.success('Status updated!', darkMode);
     } catch (error) {
       notify.error('Failed to update status. Reverting.', darkMode);
@@ -158,10 +159,10 @@ const AdminPanel = () => {
 
     try {
       if (editingId) {
-        await axios.put(`https://arabi-aseel-1.onrender.com/api/admin/menu/${editingId}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+        await menuApi.put(`/admin/menu/${editingId}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
         notify.success('Item updated successfully', darkMode);
       } else {
-        await axios.post('https://arabi-aseel-1.onrender.com/api/admin/menu', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+        await menuApi.post('/admin/menu', formData, { headers: { 'Content--Type': 'multipart/form-data' } });
         notify.success('Item added successfully', darkMode);
       }
       fetchData();

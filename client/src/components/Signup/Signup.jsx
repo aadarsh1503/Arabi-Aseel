@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import axios from 'axios';
+import { authApi } from '../../api/axiosConfig'; // Ensure this path is correct
 import { 
   Box, 
   Button, 
@@ -48,13 +48,12 @@ const Signup = () => {
     onSubmit: async (values) => {
       setLoading(true);
       try {
-        await axios.post('https://arabi-aseel-1.onrender.com/api/auth/signup', {
+        await authApi.post('/auth/signup', {
           name: values.name,
           email: values.email,
           password: values.password
         });
         
-        // Show success toast with countdown
         toastId.current = toast.success(`Account created successfully! Redirecting in ${countdown} seconds...`, {
           position: "top-right",
           autoClose: 5000,
@@ -68,7 +67,6 @@ const Signup = () => {
         
         setIsSuccess(true);
         
-        // Start countdown
         const timer = setInterval(() => {
           setCountdown((prev) => {
             const newCount = prev - 1;
@@ -80,7 +78,6 @@ const Signup = () => {
           });
         }, 1000);
         
-        // Redirect to login after 5 seconds
         setTimeout(() => {
           clearInterval(timer);
           navigate('/login');
@@ -104,7 +101,6 @@ const Signup = () => {
     }
   });
 
-  // Update the countdown message
   useEffect(() => {
     if (isSuccess && countdown > 0) {
       toast.update(toastId.current, {
@@ -121,7 +117,6 @@ const Signup = () => {
       transition={{ duration: 0.5 }}
       className='mb-32'
     >
-      {/* Toast Container should be placed at the root level */}
       <ToastContainer 
         position="top-right"
         autoClose={5000}

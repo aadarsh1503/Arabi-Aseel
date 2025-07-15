@@ -27,6 +27,7 @@ import PageToggle from "../AdminPanel/PageToggle";
 // New imports for image cropping
 import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
+import { chefApi } from "../../api/axiosConfig";
 
 const API_URL = "https://arabi-aseel-1.onrender.com/api/chefs";
 
@@ -515,7 +516,7 @@ const Chef = () => {
   const fetchChefs = async () => {
     setIsFetching(true);
     try {
-      const response = await axios.get(API_URL);
+      const response = await chefApi.get('/chefs');
       setChefs(response.data);
     } catch (error) {
       toast.error(
@@ -592,7 +593,7 @@ const Chef = () => {
     if (!pendingChefData) return;
     setIsSubmitting(true);
 
-    const promise = axios.post(API_URL, pendingChefData.formData, {
+    const promise = chefApi.post('/chefs/', pendingChefData.formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
@@ -650,7 +651,7 @@ const Chef = () => {
     if (newImage) formData.append("image", newImage);
 
     setIsSubmitting(true);
-    const promise = axios.put(`${API_URL}/${id}`, formData, {
+    const promise = chefApi.put(`/chefs/${id}`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     toast.promise(promise, {
@@ -699,7 +700,8 @@ const Chef = () => {
 
   const handleDelete = async (id) => {
     if (window.confirm(t("deleteConfirmation"))) {
-      const promise = axios.delete(`${API_URL}/${id}`);
+      const promise = chefApi.delete(`/chefs/${id}`);
+
       toast.promise(promise, {
         pending: {
           render: () => (
