@@ -272,9 +272,29 @@ const ItemModal = ({
   };
   
   const sliderTransformClass = getSliderTransformClass();
+  const getCleanPriceValue = (currentValue) => {
+    let cleanValue = String(currentValue).replace(/[^\d.]/g, '');
+    const dotIndex = cleanValue.indexOf('.');
+    if (dotIndex > -1) {
+      cleanValue =
+        cleanValue.substring(0, dotIndex + 1) +
+        cleanValue.substring(dotIndex + 1).replace(/\./g, '');
+    }
+    return cleanValue;
+  };
+
+
+  const getCleanTextValue = (currentValue) => {
+
+    return String(currentValue).replace(/\d/g, '');
+  };
+
+
+ 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
+   
     if (name === "categoryOption") {
       setForm((prev) => ({
         ...prev,
@@ -285,20 +305,45 @@ const ItemModal = ({
       return;
     }
 
+    // Portion Price (Q, H, F) logic
     if (name.startsWith("price.")) {
       const key = name.split(".")[1];
-      setForm((prev) => ({ ...prev, price: { ...prev.price, [key]: value } }));
+      const cleanedValue = getCleanPriceValue(value);
+      setForm((prev) => ({
+        ...prev,
+        price: { ...prev.price, [key]: cleanedValue },
+      }));
+    
+  
     } else if (name.startsWith("translations.")) {
       const [_, index, field] = name.split(".");
+      
+      let finalValue = value;
+
+    
+      if (field === 'name') {
+        finalValue = getCleanTextValue(value);
+      }
+      
+   
       setForm((prev) => {
         const updatedTranslations = [...prev.translations];
-        updatedTranslations[index][field] = value;
+        updatedTranslations[index][field] = finalValue;
         return { ...prev, translations: updatedTranslations };
       });
+      
+   
     } else {
-      setForm((prev) => ({ ...prev, [name]: value }));
+      let finalValue = value;
+      if (name === 'price_per_portion') {
+        finalValue = getCleanPriceValue(value);
+      }
+     
+
+      setForm((prev) => ({ ...prev, [name]: finalValue }));
     }
   };
+
 
   const handleEnSuggestionSelect = (category) => {
     setForm((prev) => ({
@@ -366,11 +411,11 @@ const ItemModal = ({
                 />
               </ReactCrop>
             </div>
-            <div className="flex justify-center space-x-4">
+            <div className="flex justify-center  space-x-4">
               <button
                 type="button"
                 onClick={() => setImageSrcForCrop("")}
-                className="px-6 py-2 rounded-lg bg-gray-600 text-white hover:bg-gray-500 transition-colors"
+                className="px-6 py-2 rounded-lg bg-gray-600 ml-2 text-white hover:bg-gray-500 transition-colors"
               >
                 {t("Cancel")}
               </button>
@@ -603,7 +648,7 @@ const ItemModal = ({
                   <span>{t("Q_H_F")}</span>
                 </label>
                 <label className="flex items-center">
-                  <input type="radio" name="price_type" value="per_portion" checked={form.price_type === "per_portion"} onChange={handleChange} className="mr-2 ml-2 h-5 w-5 accent-pink-500" />{" "}
+                  <input type="radio" name="price_type"  value="per_portion" checked={form.price_type === "per_portion"} onChange={handleChange}  className="mr-2 ml-2 h-5 w-5 accent-pink-500" />{" "}
                   <span>{t("Per_Portion")}</span>
                 </label>
               </div>
@@ -615,7 +660,7 @@ const ItemModal = ({
                   <label className="block mb-2 font-medium">{t("Quarter_Price")}</label>
                   <div className="relative">
                     <span className="absolute left-3 top-3 text-gray-400">Q</span>
-                    <input name="price.Q" value={form.price.Q} onChange={handleChange} placeholder={t("Placeholder_Quarter_Price")}
+                    <input name="price.Q"  type="number" value={form.price.Q} onChange={handleChange} placeholder={t("Placeholder_Quarter_Price")}
                       className={`w-full p-3 pl-8 rounded-lg border-2 ${ darkMode ? "bg-gray-700 border-gray-600" : "bg-white border-gray-300" } focus:border-purple-500 transition-colors duration-300`} />
                   </div>
                 </div>
@@ -623,7 +668,7 @@ const ItemModal = ({
                   <label className="block mb-2 font-medium">{t("Half_Price")}</label>
                   <div className="relative">
                     <span className="absolute left-3 top-3 text-gray-400">H</span>
-                    <input name="price.H" value={form.price.H} onChange={handleChange} placeholder={t("Placeholder_Half_Price")}
+                    <input name="price.H"  type="number" value={form.price.H} onChange={handleChange} placeholder={t("Placeholder_Half_Price")}
                       className={`w-full p-3 pl-8 rounded-lg border-2 ${ darkMode ? "bg-gray-700 border-gray-600" : "bg-white border-gray-300" } focus:border-purple-500 transition-colors duration-300`} />
                   </div>
                 </div>
@@ -631,7 +676,7 @@ const ItemModal = ({
                   <label className="block mb-2 font-medium">{t("Full_Price")}</label>
                   <div className="relative">
                     <span className="absolute left-3 top-3 text-gray-400">F</span>
-                    <input name="price.F" value={form.price.F} onChange={handleChange} placeholder={t("Placeholder_Full_Price")}
+                    <input name="price.F"  type="number" value={form.price.F} onChange={handleChange} placeholder={t("Placeholder_Full_Price")}
                       className={`w-full p-3 pl-8 rounded-lg border-2 ${ darkMode ? "bg-gray-700 border-gray-600" : "bg-white border-gray-300" } focus:border-purple-500 transition-colors duration-300`} />
                   </div>
                 </div>
@@ -639,8 +684,8 @@ const ItemModal = ({
             ) : (
               <div>
                 <label className="block mb-2 font-medium">{t("Per_Portion_Price")}*</label>
-                <input name="price_per_portion" value={form.price_per_portion} onChange={handleChange}
-                  className={`w-full p-3 rounded-lg border-2 ${ darkMode ? "bg-gray-700 border-gray-600" : "bg-white border-gray-300" } focus:border-pink-500 transition-colors duration-300`} />
+                <input name="price_per_portion"  type="number" value={form.price_per_portion} onChange={handleChange}
+                 placeholder="e.g. 2.500" className={`w-full p-3 rounded-lg border-2 ${ darkMode ? "bg-gray-700 border-gray-600" : "bg-white border-gray-300" } focus:border-pink-500 transition-colors duration-300`} />
               </div>
             )}
 

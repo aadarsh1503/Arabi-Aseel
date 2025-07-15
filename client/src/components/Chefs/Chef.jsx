@@ -231,6 +231,7 @@ const ImageCropModal = ({ src, onClose, onCropComplete }) => {
 // ===================================================================
 const EditChefModal = ({ chef, onClose, onSave, isLoading }) => {
   const { t } = useTranslation();
+  const removeNumbers = (value) => String(value).replace(/\d/g, '');
   const [name, setName] = useState(chef.name);
   const [designation, setDesignation] = useState(chef.designation);
   const [nameAr, setNameAr] = useState(chef.name_ar);
@@ -294,14 +295,14 @@ const EditChefModal = ({ chef, onClose, onSave, isLoading }) => {
             <input
               type="text"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => setName(removeNumbers(e.target.value))}
               placeholder={t("englishName", "English Name")}
               className="w-full p-3 bg-white/50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
             />
             <input
               type="text"
               value={nameAr}
-              onChange={(e) => setNameAr(e.target.value)}
+              onChange={(e) => setNameAr(removeNumbers(e.target.value))}
               placeholder={t("arabicName", "Arabic Name")}
               dir="rtl"
               className="w-full p-3 bg-white/50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
@@ -309,14 +310,14 @@ const EditChefModal = ({ chef, onClose, onSave, isLoading }) => {
             <input
               type="text"
               value={designation}
-              onChange={(e) => setDesignation(e.target.value)}
+              onChange={(e) => setDesignation(removeNumbers(e.target.value))}
               placeholder={t("englishDesignation", "English Designation")}
               className="w-full p-3 bg-white/50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
             />
             <input
               type="text"
               value={designationAr}
-              onChange={(e) => setDesignationAr(e.target.value)}
+              onChange={(e) => setDesignationAr(removeNumbers(e.target.value))}
               placeholder={t("arabicDesignation", "Arabic Designation")}
               dir="rtl"
               className="w-full p-3 bg-white/50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
@@ -480,12 +481,11 @@ const ConfirmationModal = ({
   );
 };
 
-// ===================================================================
-// MAIN COMPONENT: Chef
-// ===================================================================
+
 const Chef = () => {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
+  const removeNumbers = (value) => String(value).replace(/\d/g, '');
   const navigate = useNavigate();
   const { logout } = useAuth();
 
@@ -892,7 +892,7 @@ const Chef = () => {
                   type="text"
                   placeholder={t("chefsNameEn")}
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => setName(removeNumbers(e.target.value))}
                   className={`w-full ${
                     isRTL ? "pr-10" : "pl-10"
                   } p-3 bg-slate-100 border border-transparent rounded-lg focus:ring-2 focus:ring-cyan-500 focus:bg-white transition`}
@@ -909,7 +909,7 @@ const Chef = () => {
                   type="text"
                   placeholder={t("chefsNameAr")}
                   value={nameAr}
-                  onChange={(e) => setNameAr(e.target.value)}
+                  onChange={(e) => setNameAr(removeNumbers(e.target.value))}
                   dir="rtl"
                   className={`w-full ${
                     isRTL ? "pl-10 text-left" : "pr-10 text-right"
@@ -927,7 +927,7 @@ const Chef = () => {
                   type="text"
                   placeholder={t("designationEn")}
                   value={designation}
-                  onChange={(e) => setDesignation(e.target.value)}
+                  onChange={(e) => setDesignation(removeNumbers(e.target.value))}
                   className={`w-full ${
                     isRTL ? "pr-10" : "pl-10"
                   } p-3 bg-slate-100 border border-transparent rounded-lg focus:ring-2 focus:ring-cyan-500 focus:bg-white transition`}
@@ -944,7 +944,7 @@ const Chef = () => {
                   type="text"
                   placeholder={t("designationAr")}
                   value={designationAr}
-                  onChange={(e) => setDesignationAr(e.target.value)}
+                  onChange={(e) => setDesignationAr(removeNumbers(e.target.value))}
                   dir="rtl"
                   className={`w-full ${
                     isRTL ? "pl-10 text-left" : "pr-10 text-right"

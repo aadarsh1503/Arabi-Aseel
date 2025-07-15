@@ -420,7 +420,25 @@
 "Enter_Name": "Enter Name",
 "confirmNewArtistMessage":"Please review the details below before saving.",
 "confirmNewArtistTitle":"Confirm New Chef",
-"confirmAndAdd":"Confirm & Add"
+"confirmAndAdd":"Confirm & Add",
+"fillAllFieldsAndImageWarning": "Please fill in all fields and upload an image.",
+"addingChefPending": "Adding chef...",
+"chefAddedSuccess": "Chef added successfully!",
+"addChefError": "Error adding chef.",
+"chefUpdatedSuccess": "Chef updated successfully!",
+"updateChefError": "Error updating chef.",
+"deletingChefPending": "Deleting chef...",
+"updatingChefPending": "Updating chef...",
+"chefDeletedSuccess": "Chef deleted successfully!",
+"deleteChefError": "Error deleting chef.",
+"logoutConfirmMessage": "Are you sure you want to logout?",
+"Change_Image": "Change Image",
+"Crop_Save": "Crop & Save",
+"Crop_Image": "Crop Image",
+"Required_Ratio": "Required Ratio"
+
+
+
 
 
 

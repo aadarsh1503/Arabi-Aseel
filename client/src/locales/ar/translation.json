@@ -422,7 +422,13 @@
 "Enter_Name": "أدخل الاسم",
 "confirmNewArtistMessage": "يرجى مراجعة التفاصيل أدناه قبل الحفظ.",
 "confirmNewArtistTitle": "تأكيد الطاهي الجديد",
-"confirmAndAdd": "تأكيد وإضافة"
+"confirmAndAdd": "تأكيد وإضافة",
+"Change_Image": "تغيير الصورة",
+"Crop_Save": "قص وحفظ",
+"Crop_Image": "قص الصورة",
+"Required_Ratio": "النسبة المطلوبة"
+
+
 
 
 
