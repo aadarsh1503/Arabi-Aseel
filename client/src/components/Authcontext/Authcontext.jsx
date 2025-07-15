@@ -51,10 +51,10 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
     setToken(null);
     setUser(null);
-    navigate('/login');
+    
   };
 
-  // Add this to your context value if you want to check loading state
+  
   const value = {
     user,
     token,
