@@ -16,30 +16,31 @@ const imagekit = new ImageKit({
 // SECURE Multer Configuration for Chefs
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
+  limits: {
+    fileSize: 10 * 1024 * 1024 // 10 MB
+  },
   fileFilter: async (req, file, cb) => {
-    // FIX: First, check if a file was even provided.
-    // If not, it's a valid request (e.g., updating text fields), so allow it.
+    // *** THIS IS THE MOST IMPORTANT PART ***
+    // VERIFY THIS 'IF' BLOCK EXISTS IN YOUR FILE
     if (!file) {
       return cb(null, true);
     }
 
-    // Now that we know a file exists, we can safely check its type.
+    // Now that we know a file exists, we can safely perform our validation.
     try {
-      // NOTE: Using file.mimetype is faster and safer than reading the buffer here.
-      // The browser sends this, and while it can be spoofed, it's a good first check.
-      const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
-      if (allowedMimeTypes.includes(file.mimetype)) {
-        cb(null, true); // Accept the file
-      } else {
-        // For extra security, you could still check fileTypeFromBuffer here as a fallback
-        const fileType = await fileTypeFromBuffer(file.buffer);
-        if (fileType && allowedMimeTypes.includes(fileType.mime)) {
-          cb(null, true);
-        } else {
-          cb(new Error('Invalid file type. Only JPEG, PNG, and WEBP images are allowed.'), false); // Reject the file
-        }
+      const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+
+      if (!allowedMimeTypes.includes(file.mimetype)) {
+        return cb(new Error('Invalid file type. Only JPEG, PNG, WEBP, and GIF are allowed.'), false);
       }
+      
+      const fileType = await fileTypeFromBuffer(file.buffer);
+      if (!fileType || !allowedMimeTypes.includes(fileType.mime)) {
+          return cb(new Error('File content does not match allowed image types!'), false);
+      }
+
+      cb(null, true);
+
     } catch (error) {
       cb(error);
     }
