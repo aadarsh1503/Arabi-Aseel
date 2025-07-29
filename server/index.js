@@ -12,8 +12,8 @@ const PORT = process.env.PORT || 5000;
 // --- ROBUST CORS Configuration for Production ---
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://arabiaseel.com',
-  'https://arabiaseel.vercel.app'
+  'https://arabiaseel.com/',
+  'https://arabiaseel.vercel.app/'
 ];
 
 const corsOptions = {
