@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { authApi } from '../../api/axiosConfig'; // Ensure this path is correct
+import api from '../../api/axiosConfig';
 import { 
   Box, 
   Button, 
@@ -48,7 +48,7 @@ const Signup = () => {
     onSubmit: async (values) => {
       setLoading(true);
       try {
-        await authApi.post('/auth/signup', {
+        await api.post('/auth/signup', {
           name: values.name,
           email: values.email,
           password: values.password

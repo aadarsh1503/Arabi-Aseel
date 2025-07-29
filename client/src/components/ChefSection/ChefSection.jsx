@@ -19,9 +19,9 @@ const ChefsSection = () => {
     const fetchChefs = async () => {
       try {
         setLoading(true);
-        // Using the public route to get all chefs
+      
         const response = await axios.get(API_URL);
-        // .slice(0, 3) को हटा दिया गया है ताकि सभी शेफ दिखाए जा सकें
+     
         setChefs(response.data); 
       } catch (err) {
         console.error("Failed to fetch chefs:", err);

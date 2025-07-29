@@ -1,73 +1,53 @@
-// src/Authcontext/Authcontext.js
-
 import { createContext, useContext, useState, useEffect } from 'react';
-// We don't need useNavigate in this file
-// import { useNavigate } from 'react-router-dom';
-
-// CHANGE 1: Import your centralized authApi instance
-import { authApi } from '../../api/axiosConfig'; // Adjust the path if necessary
+import api from '../../api/axiosConfig';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  // CHANGE 1: Read from 'authToken'
+  const [token, setToken] = useState(localStorage.getItem('authToken') || null);
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('token') || null);
   const [loading, setLoading] = useState(true);
 
-  // Your original, working useEffect logic is preserved.
   useEffect(() => {
-    const verifyToken = async () => {
-      try {
-        if (token) {
-          // CHANGE 2: Use authApi for the /verify call
-          const response = await authApi.get('/auth/verify', {
-            headers: { Authorization: `Bearer ${token}` }
-          });
-          
-          if (response.data.valid) {
-            // CHANGE 3: Use authApi for the /me call
-            const userResponse = await authApi.get('/auth/me', {
-              headers: { Authorization: `Bearer ${token}` }
-            });
-            setUser(userResponse.data);
-          } else {
-            logout();
-          }
+    const verifySession = async () => {
+      // No need to pass headers manually, the interceptor does it!
+      if (token) {
+        try {
+          // The interceptor will add the token header automatically
+          const userResponse = await api.get('/auth/me'); 
+          setUser(userResponse.data);
+        } catch (error) {
+          // The interceptor will handle 401s and redirect.
+          // We can just log out the state here.
+          console.error("Session verification failed", error);
+          logout();
         }
-      } catch (error) {
-        logout();
-      } finally {
-        setLoading(false);
       }
+      setLoading(false);
     };
+    verifySession();
+  }, [token]); // Run this effect when the token changes
 
-    verifyToken();
-  }, []); // Your empty dependency array is correct and is preserved.
-
-  // Your login function is unchanged.
   const login = (newToken, userData) => {
-    localStorage.setItem('token', newToken);
+    // CHANGE 2: Save to 'authToken'
+    localStorage.setItem('authToken', newToken);
     setToken(newToken);
     setUser(userData);
   };
 
-  // Your logout function is unchanged.
   const logout = () => {
-    localStorage.removeItem('token');
+    // CHANGE 3: Remove from 'authToken'
+    localStorage.removeItem('authToken');
     setToken(null);
     setUser(null);
   };
 
-  const value = {
-    user,
-    token,
-    login,
-    logout,
-    loading
-  };
+  const value = { user, token, login, logout, loading };
 
   return (
     <AuthContext.Provider value={value}>
+      {/* Render children only when loading is complete */}
       {!loading && children}
     </AuthContext.Provider>
   );

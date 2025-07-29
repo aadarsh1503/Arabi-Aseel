@@ -3,7 +3,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../Authcontext/Authcontext"; // Ensure this path is correct
+import api from '../../api/axiosConfig';
 import {
   Plus,
   Edit,
@@ -27,7 +27,8 @@ import PageToggle from "../AdminPanel/PageToggle";
 // New imports for image cropping
 import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
-import { chefApi } from "../../api/axiosConfig";
+import { useAuth } from "../Authcontext/Authcontext";
+
 
 const API_URL = "https://arabi-aseel-1.onrender.com/api/chefs";
 
@@ -488,7 +489,7 @@ const Chef = () => {
   const isRTL = i18n.language === "ar";
   const removeNumbers = (value) => String(value).replace(/\d/g, '');
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout } = useAuth(); // <--- This is correct
 
   // State Management
   const [chefs, setChefs] = useState([]);
@@ -516,7 +517,7 @@ const Chef = () => {
   const fetchChefs = async () => {
     setIsFetching(true);
     try {
-      const response = await chefApi.get('/chefs');
+      const response = await api.get('/chefs');
       setChefs(response.data);
     } catch (error) {
       toast.error(
@@ -593,7 +594,7 @@ const Chef = () => {
     if (!pendingChefData) return;
     setIsSubmitting(true);
 
-    const promise = chefApi.post('/chefs/', pendingChefData.formData, {
+    const promise = api.post('/chefs/', pendingChefData.formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
@@ -651,7 +652,7 @@ const Chef = () => {
     if (newImage) formData.append("image", newImage);
 
     setIsSubmitting(true);
-    const promise = chefApi.put(`/chefs/${id}`, formData, {
+    const promise = api.put(`/chefs/${id}`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     toast.promise(promise, {
@@ -700,7 +701,7 @@ const Chef = () => {
 
   const handleDelete = async (id) => {
     if (window.confirm(t("deleteConfirmation"))) {
-      const promise = chefApi.delete(`/chefs/${id}`);
+      const promise = api.delete(`/chefs/${id}`);
 
       toast.promise(promise, {
         pending: {

@@ -1,28 +1,42 @@
 import axios from 'axios';
 
-// 1. Create an instance for the Menu API
-const menuApi = axios.create({
-  baseURL: import.meta.env.VITE_API_MENU_URL,
+// Create a single, intelligent Axios instance.
+// REMOVED the default 'Content-Type' header. Axios will handle it automatically.
+const api = axios.create({
+  baseURL:"https://arabi-aseel-1.onrender.com/api",
 });
 
-// 2. Create another instance for the Auth API
-const authApi = axios.create({
-  baseURL: import.meta.env.VITE_API_AUTH_URL,
-});
+// --- Smart Request Interceptor ---
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('authToken');
+    const publicRoutes = ['/auth/login', '/auth/signup', '/auth/verify'];
+    const isPublicRoute = publicRoutes.some(route => config.url.startsWith(route));
 
-const chefApi = axios.create({
-    baseURL: import.meta.env.VITE_API_CHEF_URL,
-});
-// You can add interceptors to each one if needed. For example, to add a token to menuApi calls:
-/*
-menuApi.interceptors.request.use(config => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    if (token && !isPublicRoute) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
-  return config;
-});
-*/
+);
 
-// 3. Export both instances using named exports
-export { menuApi, authApi , chefApi};
+// --- Response Interceptor for Handling 401 Errors ---
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      console.error("Authentication Error: Token is invalid or expired. Redirecting to login.");
+      localStorage.removeItem('authToken');
+      if (window.location.pathname !== '/login') {
+         window.location.href = '/login';
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
+export default api;

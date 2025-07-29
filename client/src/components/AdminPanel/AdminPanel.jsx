@@ -1,7 +1,6 @@
-// src/AdminPanel.jsx
 import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import { FiSearch, FiPlus, FiFilter, FiMoon, FiSun, FiGrid, FiList, FiLogOut, FiDownload } from 'react-icons/fi';
+import { FiSearch, FiPlus, FiFilter, FiMoon, FiSun, FiGrid, FiList, FiLogOut, FiDownload, FiPrinter } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Puff } from 'react-loader-spinner';
@@ -13,9 +12,9 @@ import ItemModal from './ItemModal';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../Authcontext/Authcontext';
 import PageToggle from './PageToggle';
-import { menuApi } from '../../api/axiosConfig';
 
-
+import MenuExporter from './MenuExporter'; // <-- IMPORT THE NEW COMPONENT
+import api from '../../api/axiosConfig';
 // Toast Notification Configuration
 const notify = {
   success: (message, darkMode) => toast.success(message, { theme: darkMode ? 'dark' : 'light' }),
@@ -40,6 +39,7 @@ const AdminPanel = () => {
   const [showModal, setShowModal] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [showMenuExporter, setShowMenuExporter] = useState(false); // <-- ADD STATE FOR EXPORTER
   
   // Loading states for actions
   const [statusLoading, setStatusLoading] = useState(null);
@@ -53,8 +53,8 @@ const AdminPanel = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const res = await menuApi.get('/admin/menu'); 
-      setItems(res.data); // Store the full array of item objects
+      const res = await api.get('/admin/menu'); 
+      setItems(res.data);
       notify.success('Menu loaded successfully', darkMode);
     } catch (err) {
       console.error("Error fetching data:", err.message);
@@ -69,7 +69,6 @@ const AdminPanel = () => {
     fetchData();
   }, []);
 
-  // A memoized value to get the unique categories for the filter dropdown and page titles.
   const uniqueCategories = useMemo(() => {
     const categoryMap = new Map();
     items.forEach(item => {
@@ -83,10 +82,8 @@ const AdminPanel = () => {
     return Array.from(categoryMap.values());
   }, [items]);
 
-  // Memoized filtered items for display
   const normalizeArabic = (str = '') =>
-    str.replace(/\u0640/g, '') // Remove Tatweel (ـ)
-       .replace(/[\u0610-\u061A\u064B-\u065F\u06D6-\u06ED]/g, ''); // Remove Arabic diacritics
+    str.replace(/\u0640/g, '').replace(/[\u0610-\u061A\u064B-\u065F\u06D6-\u06ED]/g, '');
   
   const filteredItems = useMemo(() => {
     return items
@@ -110,7 +107,7 @@ const AdminPanel = () => {
     if (window.confirm('Are you sure you want to delete this item?')) {
       setButtonLoading(prev => ({ ...prev, delete: id }));
       try {
-        await menuApi.delete(`/admin/menu/${id}`);
+        await api.delete(`/admin/menu/${id}`);
         notify.success('Item deleted successfully', darkMode);
         fetchData();
       } catch (error) {
@@ -126,7 +123,7 @@ const AdminPanel = () => {
     setStatusLoading(itemId);
     setItems(prev => prev.map(item => item.menu_id === itemId ? { ...item, status: newStatus } : item));
     try {
-      await menuApi.patch(`/admin/menu/${itemId}/status`, { status: newStatus });
+      await api.patch(`/admin/menu/${itemId}/status`, { status: newStatus });
       notify.success('Status updated!', darkMode);
     } catch (error) {
       notify.error('Failed to update status. Reverting.', darkMode);
@@ -159,10 +156,12 @@ const AdminPanel = () => {
 
     try {
       if (editingId) {
-        await menuApi.put(`/admin/menu/${editingId}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+        // Let Axios handle the headers automatically for FormData
+        await api.put(`/admin/menu/${editingId}`, formData);
         notify.success('Item updated successfully', darkMode);
       } else {
-        await menuApi.post('/admin/menu', formData, { headers: { 'Content--Type': 'multipart/form-data' } });
+        // Let Axios handle the headers automatically for FormData
+        await api.post('/admin/menu', formData);
         notify.success('Item added successfully', darkMode);
       }
       fetchData();
@@ -184,8 +183,8 @@ const AdminPanel = () => {
       'Category (EN)': item.category_name, 'Category (AR)': item.category_name_ar,
       'Name (EN)': item.translations.find(t => t.language === 'en')?.name,
       'Name (AR)': item.translations.find(t => t.language === 'ar')?.name,
-      'Price Type': item.price_type, 'Q Price': item.price_q, 'H Price': item.price_h, 'F Price': item.price_f,
-      'Portion Price': item.price_per_portion, 'Status': item.status,
+      'Price Type': item.price_type, 'Q Price': item.price?.q, 'H Price': item.price?.h, 'F Price': item.price?.f,
+      'Portion Price': item.price?.per_portion, 'Status': item.status,
     }));
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
@@ -210,14 +209,18 @@ const AdminPanel = () => {
         isLoading={buttonLoading.submit}
       />
 
+      {/* RENDER THE NEW EXPORTER MODAL */}
+      <MenuExporter 
+        show={showMenuExporter}
+        onClose={() => setShowMenuExporter(false)}
+        items={items} 
+      />
+
       <div className="max-w-7xl mx-auto">
-        {/* Header -- UPDATED */}
         <div className="flex justify-between items-center mb-8">
-          {/* Replaced the H1 title with the new sexy toggle component */}
           <PageToggle activePage="menu" darkMode={darkMode} />
           
           <div className="flex items-center space-x-4">
-            {/* The old Chef icon button has been removed from here */}
             <button onClick={() => setViewMode(v => v === 'grid' ? 'list' : 'grid')} className={`p-2 ml-4 rounded-full shadow transition-all hover:scale-110 ${darkMode ? 'bg-gray-700' : 'bg-white'}`} title={viewMode === 'grid' ? 'List View' : 'Grid View'}>
               {viewMode === 'grid' ? <FiList size={20} /> : <FiGrid size={20} />}
             </button>
@@ -227,6 +230,12 @@ const AdminPanel = () => {
             <button onClick={exportToExcel} className="p-2 rounded-full bg-green-100 dark:bg-green-800 shadow hover:scale-110" title="Export to Excel">
               <FiDownload size={20} className="text-green-600 dark:text-green-300" />
             </button>
+
+            {/* ADD THE NEW EXPORT PDF/IMAGE BUTTON */}
+            <button onClick={() => setShowMenuExporter(true)} className="p-2 rounded-full bg-blue-100 dark:bg-blue-800 shadow hover:scale-110" title="Export as PDF/Image">
+              <FiPrinter size={20} className="text-blue-600 dark:text-blue-300" />
+            </button>
+            
             <button onClick={() => setShowLogoutConfirm(true)} className="p-2 rounded-full bg-red-100 dark:bg-red-900 shadow hover:scale-110" title="Logout">
               <FiLogOut size={20} className="text-red-600 dark:text-red-300" />
             </button>
