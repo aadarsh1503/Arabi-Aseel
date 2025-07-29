@@ -15,26 +15,38 @@ const imagekit = new ImageKit({
 
 // --- UPDATED & SECURE Multer Configuration ---
 const upload = multer({
-  storage: multer.memoryStorage(), // Use memory storage to access the file buffer
+  storage: multer.memoryStorage(),
   limits: {
     fileSize: 10 * 1024 * 1024 // 10 MB
   },
   fileFilter: async (req, file, cb) => {
-    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-    
-    // 1. Check the provided mimetype from the client
-    if (!allowedMimeTypes.includes(file.mimetype)) {
-      return cb(new Error('Invalid file type. Only JPEG, PNG, WEBP, and GIF are allowed.'), false);
-    }
-    
-    // 2. Verify the actual file type from its content (magic numbers)
-    // This is much more secure than just checking the mimetype or extension.
-    const fileType = await fileTypeFromBuffer(file.buffer);
-    if (!fileType || !allowedMimeTypes.includes(fileType.mime)) {
-        return cb(new Error('File content does not match allowed image types!'), false);
+    // ✅ FIX: First, check if a file was provided.
+    // If not, it's a valid request (e.g., updating text fields), so allow it to proceed.
+    if (!file) {
+      return cb(null, true);
     }
 
-    cb(null, true); // File is valid
+    // Now that we know a file exists, we can safely perform our validation.
+    try {
+      const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+
+      // 1. Check the client-provided mimetype (quick check)
+      if (!allowedMimeTypes.includes(file.mimetype)) {
+        return cb(new Error('Invalid file type. Only JPEG, PNG, WEBP, and GIF are allowed.'), false);
+      }
+
+      // 2. Verify the actual file content (secure check)
+      const fileType = await fileTypeFromBuffer(file.buffer);
+      if (!fileType || !allowedMimeTypes.includes(fileType.mime)) {
+          return cb(new Error('File content does not match allowed image types!'), false);
+      }
+
+      // If both checks pass, the file is valid.
+      cb(null, true);
+
+    } catch (error) {
+      cb(error);
+    }
   }
 });
 

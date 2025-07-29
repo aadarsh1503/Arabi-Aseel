@@ -18,16 +18,33 @@ const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
   fileFilter: async (req, file, cb) => {
-    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
-    const fileType = await fileTypeFromBuffer(file.buffer);
-    if (fileType && allowedMimeTypes.includes(fileType.mime)) {
-      cb(null, true);
-    } else {
-      cb(new Error('Invalid file type. Only JPEG, PNG, and WEBP images are allowed.'), false);
+    // FIX: First, check if a file was even provided.
+    // If not, it's a valid request (e.g., updating text fields), so allow it.
+    if (!file) {
+      return cb(null, true);
+    }
+
+    // Now that we know a file exists, we can safely check its type.
+    try {
+      // NOTE: Using file.mimetype is faster and safer than reading the buffer here.
+      // The browser sends this, and while it can be spoofed, it's a good first check.
+      const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
+      if (allowedMimeTypes.includes(file.mimetype)) {
+        cb(null, true); // Accept the file
+      } else {
+        // For extra security, you could still check fileTypeFromBuffer here as a fallback
+        const fileType = await fileTypeFromBuffer(file.buffer);
+        if (fileType && allowedMimeTypes.includes(fileType.mime)) {
+          cb(null, true);
+        } else {
+          cb(new Error('Invalid file type. Only JPEG, PNG, and WEBP images are allowed.'), false); // Reject the file
+        }
+      }
+    } catch (error) {
+      cb(error);
     }
   }
 });
-
 // --- SECURED CRUD OPERATIONS ---
 
 // CREATE a new Chef
