@@ -1,64 +1,61 @@
 const express = require('express');
+const router = express.Router();
+const db = require('../db');
 const multer = require('multer');
 const ImageKit = require('imagekit');
-const db = require('../db'); // Apne db connection file ka path check kar lein
-
-const router = express.Router();
-
-// Multer ko memory storage use karne ke liye configure karein
-const upload = multer({ storage: multer.memoryStorage() });
+const { fileTypeFromBuffer } = require('file-type');
+const { protect } = require('../middleware/authMiddleware');
 
 // ImageKit Configuration
 const imagekit = new ImageKit({
-    publicKey: process.env.IMAGEKIT_PUBLIC_KEY || 'public_RYKRKdzOdcoWnPjzcMpGEj1X78w=',
-    privateKey: process.env.IMAGEKIT_PRIVATE_KEY || 'private_W75POQcM70YTIeEzNaHGUUMMGMc=',
-    urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT || 'https://ik.imagekit.io/nugjaumnw/Arabiaseel/'
+    publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
+    privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
+    urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT
 });
 
-// === CRUD OPERATIONS (UPDATED) ===
+// SECURE Multer Configuration for Chefs
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
+  fileFilter: async (req, file, cb) => {
+    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    const fileType = await fileTypeFromBuffer(file.buffer);
+    if (fileType && allowedMimeTypes.includes(fileType.mime)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type. Only JPEG, PNG, and WEBP images are allowed.'), false);
+    }
+  }
+});
+
+// --- SECURED CRUD OPERATIONS ---
 
 // CREATE a new Chef
-router.post('/', upload.single('image'), async (req, res) => {
+router.post('/', protect, upload.single('image'), async (req, res) => {
   try {
-    // UPDATE: Get Arabic fields from body
     const { name, designation, name_ar, designation_ar } = req.body;
-    
-    // UPDATE: Validation for all fields
     if (!name || !designation || !name_ar || !designation_ar || !req.file) {
       return res.status(400).json({ message: 'All fields (English & Arabic) and image are required.' });
     }
-
-    // Image ko ImageKit par upload karein
     const imageUploadResponse = await imagekit.upload({
       file: req.file.buffer,
       fileName: `chef_${Date.now()}_${req.file.originalname}`,
       folder: '/chefs/'
     });
-
-    // UPDATE: SQL Insert Query with Arabic fields
     const [result] = await db.execute(
       'INSERT INTO chefs (name, designation, name_ar, designation_ar, image_url, image_file_id) VALUES (?, ?, ?, ?, ?, ?)',
       [name, designation, name_ar, designation_ar, imageUploadResponse.url, imageUploadResponse.fileId]
     );
-
-    res.status(201).json({
-      id: result.insertId,
-      name,
-      designation,
-      name_ar,
-      designation_ar,
-      imageUrl: imageUploadResponse.url
-    });
+    res.status(201).json({ id: result.insertId, name, designation, name_ar, designation_ar, imageUrl: imageUploadResponse.url });
   } catch (error) {
     console.error('Error creating chef:', error);
     res.status(500).json({ message: 'Server error while creating chef.' });
   }
 });
 
-// READ all Chefs
+// READ all Chefs (Public is okay)
 router.get('/', async (req, res) => {
   try {
-    // UPDATE: Select Arabic fields as well
     const [chefs] = await db.execute('SELECT id, name, designation, name_ar, designation_ar, image_url FROM chefs ORDER BY created_at DESC');
     res.status(200).json(chefs);
   } catch (error) {
@@ -68,61 +65,41 @@ router.get('/', async (req, res) => {
 });
 
 // UPDATE a Chef
-router.put('/:id', upload.single('image'), async (req, res) => {
+router.put('/:id', protect, upload.single('image'), async (req, res) => {
     const { id } = req.params;
-    // UPDATE: Get Arabic fields from body
     const { name, designation, name_ar, designation_ar } = req.body;
-
     try {
         const [rows] = await db.execute('SELECT image_file_id FROM chefs WHERE id = ?', [id]);
-        if (rows.length === 0) {
-            return res.status(404).json({ message: 'Chef not found.' });
-        }
-        const oldImageFileId = rows[0].image_file_id;
-
-        // UPDATE: Base SQL query and params for all fields
+        if (rows.length === 0) return res.status(404).json({ message: 'Chef not found.' });
+        
         let sql = 'UPDATE chefs SET name = ?, designation = ?, name_ar = ?, designation_ar = ?';
         const params = [name, designation, name_ar, designation_ar];
 
-        // Agar nayi image upload hui hai (this part remains the same)
         if (req.file) {
-            const uploadResponse = await imagekit.upload({
-                file: req.file.buffer,
-                fileName: `chef_${Date.now()}_${req.file.originalname}`,
-                folder: '/chefs/'
-            });
-            
+            const uploadResponse = await imagekit.upload({ file: req.file.buffer, fileName: `chef_${Date.now()}_${req.file.originalname}`, folder: '/chefs/' });
             sql += ', image_url = ?, image_file_id = ?';
             params.push(uploadResponse.url, uploadResponse.fileId);
-
-            if (oldImageFileId) {
-                await imagekit.deleteFile(oldImageFileId);
-            }
+            if (rows[0].image_file_id) await imagekit.deleteFile(rows[0].image_file_id);
         }
         
         sql += ' WHERE id = ?';
         params.push(id);
-
         await db.execute(sql, params);
-        
         res.status(200).json({ message: 'Chef updated successfully.' });
-
     } catch (error) {
         console.error('Error updating chef:', error);
         res.status(500).json({ message: 'Server error while updating chef.' });
     }
 });
 
-// DELETE a Chef (No changes needed in this route)
-router.delete('/:id', async (req, res) => {
+// DELETE a Chef
+router.delete('/:id', protect, async (req, res) => {
   try {
     const { id } = req.params;
     const [rows] = await db.execute('SELECT image_file_id FROM chefs WHERE id = ?', [id]);
-    if (rows.length === 0) {
-      return res.status(404).json({ message: 'Chef not found.' });
-    }
-    const imageFileId = rows[0].image_file_id;
-    await imagekit.deleteFile(imageFileId);
+    if (rows.length === 0) return res.status(404).json({ message: 'Chef not found.' });
+    
+    if(rows[0].image_file_id) await imagekit.deleteFile(rows[0].image_file_id);
     await db.execute('DELETE FROM chefs WHERE id = ?', [id]);
     res.status(200).json({ message: 'Chef deleted successfully.' });
   } catch (error) {

@@ -1,29 +1,23 @@
+require('dotenv').config(); // Ensure dotenv is loaded first
 const express = require('express');
 const cors = require('cors');
-const bodyParser = require('body-parser');
 const adminRoutes = require('./routes/admin');
 const publicRoutes = require('./routes/public');
-const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRoutes');
 const chefRoutes = require('./routes/chefRoutes');
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// ✅ CORS Configuration
+// --- CORS Configuration ---
 const allowedOrigins = [
   'http://localhost:5173',
   'https://arabiaseel.com',
   'https://arabiaseel.vercel.app'
 ];
-
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.includes(origin)) {
       return callback(null, true);
     } else {
       return callback(new Error('Not allowed by CORS'));
@@ -32,16 +26,29 @@ app.use(cors({
   credentials: true
 }));
 
-// Middleware
-app.use(bodyParser.json());
+// --- CRITICAL: Correct Middleware Setup ---
+// Use the built-in Express middleware. This should come BEFORE your routes.
+// express.json() is for parsing application/json
+app.use(express.json()); 
+// express.urlencoded() is for parsing application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: true }));
+console.log('[Server Start] JWT_SECRET:', process.env.JWT_SECRET);
+// Multer (which you use in your routes) will handle multipart/form-data.
+// By NOT using a global body-parser that conflicts, we allow multer to work correctly.
 
-// Routes
+// --- Routes ---
+// Mount your routes AFTER the middleware.
 app.use('/api/admin', adminRoutes);
 app.use('/api/public', publicRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/chefs', chefRoutes);
 
-// Server
+// --- Simple Root Route for Health Check ---
+app.get('/', (req, res) => {
+    res.send('Arabi Aseel API is running!');
+});
+
+// --- Server Startup ---
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
