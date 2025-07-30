@@ -19,37 +19,20 @@ const upload = multer({
   limits: {
     fileSize: 10 * 1024 * 1024 // 10 MB
   },
-  fileFilter: async (req, file, cb) => {
-    // ✅ FIX: First, check if a file was provided.
-    // If not, it's a valid request (e.g., updating text fields), so allow it to proceed.
-    if (!file) {
-      return cb(null, true);
-    }
-
-    // Now that we know a file exists, we can safely perform our validation.
-    try {
-      const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-
-      // 1. Check the client-provided mimetype (quick check)
-      if (!allowedMimeTypes.includes(file.mimetype)) {
-        return cb(new Error('Invalid file type. Only JPEG, PNG, WEBP, and GIF are allowed.'), false);
-      }
-
-      // 2. Verify the actual file content (secure check)
-      const fileType = await fileTypeFromBuffer(file.buffer);
-      if (!fileType || !allowedMimeTypes.includes(fileType.mime)) {
-          return cb(new Error('File content does not match allowed image types!'), false);
-      }
-
-      // If both checks pass, the file is valid.
-      cb(null, true);
-
-    } catch (error) {
-      cb(error);
+  fileFilter: (req, file, cb) => {
+    // We only do a basic, quick check on the mimetype here.
+    // The secure check will happen in the route handler.
+    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    
+    if (file && allowedMimeTypes.includes(file.mimetype)) {
+      cb(null, true); // Accept the file
+    } else {
+      // You can reject the file here if you want, or just let the route handler deal with it.
+      // Rejecting is slightly more efficient.
+      cb(new Error('Invalid file type. Only JPEG, PNG, WEBP, and GIF are allowed.'), false);
     }
   }
 });
-
 // Helper to parse form fields (no changes here)
 const parseFormDataFields = (body) => {
   try {
@@ -65,22 +48,29 @@ const parseFormDataFields = (body) => {
   }
 };
 
-// --- SECURED ROUTES ---
-// All routes that create, update, or delete data are now protected by the 'protect' middleware.
 
-// POST: Add new menu item
 router.post('/menu', protect, upload.single('image'), async (req, res) => {
   try {
     const formData = parseFormDataFields(req.body);
     const { category_name, category_name_ar, price, translations, price_type } = formData;
     const imageFile = req.file;
 
+    // --- 1. Basic Field Validation ---
     if (!category_name || !price || !translations) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
     let image_url = '';
+
+    // --- 2. Secure File Handling & Validation ---
     if (imageFile) {
+      const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+      const fileType = await fileTypeFromBuffer(imageFile.buffer);
+
+      if (!fileType || !allowedMimeTypes.includes(fileType.mime)) {
+          return res.status(400).json({ error: 'File content validation failed! Invalid file type.' });
+      }
+
       const result = await imagekit.upload({
         file: imageFile.buffer,
         fileName: imageFile.originalname,
@@ -90,20 +80,24 @@ router.post('/menu', protect, upload.single('image'), async (req, res) => {
       image_url = result.url;
     }
 
-    // Category handling
+    // --- 3. Database Operations (Category Handling) ---
     const [categoryRows] = await db.execute('SELECT id FROM categories WHERE key_name = ?', [category_name]);
     let category_id;
+
     if (categoryRows.length > 0) {
       category_id = categoryRows[0].id;
       if (category_name_ar) {
         await db.execute('UPDATE categories SET ar_name = ? WHERE id = ?', [category_name_ar, category_id]);
       }
     } else {
-      const [insertCategory] = await db.execute('INSERT INTO categories (key_name, ar_name) VALUES (?, ?)', [category_name, category_name_ar || '']);
+      const [insertCategory] = await db.execute(
+        'INSERT INTO categories (key_name, ar_name) VALUES (?, ?)',
+        [category_name, category_name_ar || '']
+      );
       category_id = insertCategory.insertId;
     }
 
-    // Insert menu item
+    // --- 4. Database Operations (Insert Menu Item & Translations) ---
     const [menuResult] = await db.execute(
       'INSERT INTO menu_items (category_id, image_url, price_q, price_h, price_f, price_type, price_per_portion) VALUES (?, ?, ?, ?, ?, ?, ?)',
       [
@@ -117,15 +111,33 @@ router.post('/menu', protect, upload.single('image'), async (req, res) => {
     );
     const menu_id = menuResult.insertId;
 
-    // Insert translations
     for (const t of translations) {
-      await db.execute('INSERT INTO menu_item_translations (menu_item_id, language_code, name, description) VALUES (?, ?, ?, ?)', [menu_id, t.language, t.name, t.description]);
+      await db.execute(
+        'INSERT INTO menu_item_translations (menu_item_id, language_code, name, description) VALUES (?, ?, ?, ?)',
+        [menu_id, t.language, t.name, t.description]
+      );
     }
+    
+    // --- 5. Success Response ---
+    res.status(201).json({
+      message: 'Menu item added successfully',
+      data: { menu_id, image_url }
+    });
 
-    res.status(201).json({ message: 'Menu item added successfully', data: { menu_id, image_url } });
   } catch (err) {
-    console.error('Error in /menu POST:', err);
-    res.status(500).json({ error: 'Internal server error', details: err.message });
+    // This console.error is kept for essential server-side error logging
+    console.error('❌ Error in /menu POST:', err);
+
+    if (err instanceof multer.MulterError) {
+      return res.status(400).json({ error: `File upload error: ${err.message}` });
+    }
+    if (err.message.startsWith('Invalid file type')) {
+        return res.status(400).json({ error: err.message });
+    }
+    res.status(500).json({
+      error: 'Internal server error',
+      details: err.message
+    });
   }
 });
 

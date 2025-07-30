@@ -6,43 +6,29 @@ const ImageKit = require('imagekit');
 const { fileTypeFromBuffer } = require('file-type');
 const { protect } = require('../middleware/authMiddleware');
 
-// ImageKit Configuration
+
 const imagekit = new ImageKit({
     publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
     privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
     urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT
 });
 
-// SECURE Multer Configuration for Chefs
+
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
     fileSize: 10 * 1024 * 1024 // 10 MB
   },
-  fileFilter: async (req, file, cb) => {
-    // *** THIS IS THE MOST IMPORTANT PART ***
-    // VERIFY THIS 'IF' BLOCK EXISTS IN YOUR FILE
-    if (!file) {
-      return cb(null, true);
-    }
+  fileFilter: (req, file, cb) => {
 
-    // Now that we know a file exists, we can safely perform our validation.
-    try {
-      const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-
-      if (!allowedMimeTypes.includes(file.mimetype)) {
-        return cb(new Error('Invalid file type. Only JPEG, PNG, WEBP, and GIF are allowed.'), false);
-      }
-      
-      const fileType = await fileTypeFromBuffer(file.buffer);
-      if (!fileType || !allowedMimeTypes.includes(fileType.mime)) {
-          return cb(new Error('File content does not match allowed image types!'), false);
-      }
-
-      cb(null, true);
-
-    } catch (error) {
-      cb(error);
+    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    
+    if (file && allowedMimeTypes.includes(file.mimetype)) {
+      cb(null, true); // Accept the file
+    } else {
+      // You can reject the file here if you want, or just let the route handler deal with it.
+      // Rejecting is slightly more efficient.
+      cb(new Error('Invalid file type. Only JPEG, PNG, WEBP, and GIF are allowed.'), false);
     }
   }
 });
