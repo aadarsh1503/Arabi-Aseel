@@ -20,32 +20,44 @@ const upload = multer({
     fileSize: 10 * 1024 * 1024 // 10 MB
   },
   fileFilter: (req, file, cb) => {
-
-    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-    
-    if (file && allowedMimeTypes.includes(file.mimetype)) {
-      cb(null, true); // Accept the file
+  
+    const allowedClientMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (allowedClientMimeTypes.includes(file.mimetype)) {
+      cb(null, true);
     } else {
-      // You can reject the file here if you want, or just let the route handler deal with it.
-      // Rejecting is slightly more efficient.
-      cb(new Error('Invalid file type. Only JPEG, PNG, WEBP, and GIF are allowed.'), false);
+      
+      cb(new Error('Invalid file type declared by client. Only JPEG, PNG, and WEBP are allowed.'), false);
     }
   }
 });
-// --- SECURED CRUD OPERATIONS ---
+
+
 
 // CREATE a new Chef
 router.post('/', protect, upload.single('image'), async (req, res) => {
   try {
     const { name, designation, name_ar, designation_ar } = req.body;
+    
     if (!name || !designation || !name_ar || !designation_ar || !req.file) {
       return res.status(400).json({ message: 'All fields (English & Arabic) and image are required.' });
     }
+
+
+    const allowedActualMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    const fileType = await fileTypeFromBuffer(req.file.buffer);
+
+    
+    if (!fileType || !allowedActualMimeTypes.includes(fileType.mime)) {
+        return res.status(400).json({ message: 'Invalid file content. Only JPEG, PNG, and WEBP files are allowed.' });
+    }
+   
+
     const imageUploadResponse = await imagekit.upload({
       file: req.file.buffer,
       fileName: `chef_${Date.now()}_${req.file.originalname}`,
       folder: '/chefs/'
     });
+
     const [result] = await db.execute(
       'INSERT INTO chefs (name, designation, name_ar, designation_ar, image_url, image_file_id) VALUES (?, ?, ?, ?, ?, ?)',
       [name, designation, name_ar, designation_ar, imageUploadResponse.url, imageUploadResponse.fileId]
@@ -56,8 +68,8 @@ router.post('/', protect, upload.single('image'), async (req, res) => {
     res.status(500).json({ message: 'Server error while creating chef.' });
   }
 });
-
-// READ all Chefs (Public is okay)
+console.log("JWT_SECRET used for verify:", process.env.JWT_SECRET);
+// READ all Chefs
 router.get('/', async (req, res) => {
   try {
     const [chefs] = await db.execute('SELECT id, name, designation, name_ar, designation_ar, image_url FROM chefs ORDER BY created_at DESC');
@@ -80,6 +92,15 @@ router.put('/:id', protect, upload.single('image'), async (req, res) => {
         const params = [name, designation, name_ar, designation_ar];
 
         if (req.file) {
+            // --- STEP 2: SECURE VALIDATION FOR UPDATE ---
+            const allowedActualMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
+            const fileType = await fileTypeFromBuffer(req.file.buffer);
+
+            if (!fileType || !allowedActualMimeTypes.includes(fileType.mime)) {
+                return res.status(400).json({ message: 'Invalid file content. Only JPEG, PNG, and WEBP files are allowed.' });
+            }
+            // --- VALIDATION COMPLETE ---
+
             const uploadResponse = await imagekit.upload({ file: req.file.buffer, fileName: `chef_${Date.now()}_${req.file.originalname}`, folder: '/chefs/' });
             sql += ', image_url = ?, image_file_id = ?';
             params.push(uploadResponse.url, uploadResponse.fileId);

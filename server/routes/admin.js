@@ -3,8 +3,8 @@ const router = express.Router();
 const db = require('../db');
 const multer = require('multer');
 const ImageKit = require('imagekit');
-const { fileTypeFromBuffer } = require('file-type'); // <-- Import for validation
-const { protect } = require('../middleware/authMiddleware'); // <-- Import auth middleware
+const { fileTypeFromBuffer } = require('file-type');
+const { protect } = require('../middleware/authMiddleware'); 
 
 // Configure ImageKit (no changes here)
 const imagekit = new ImageKit({
@@ -20,15 +20,13 @@ const upload = multer({
     fileSize: 10 * 1024 * 1024 // 10 MB
   },
   fileFilter: (req, file, cb) => {
-    // We only do a basic, quick check on the mimetype here.
-    // The secure check will happen in the route handler.
+
     const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
     
     if (file && allowedMimeTypes.includes(file.mimetype)) {
       cb(null, true); // Accept the file
     } else {
-      // You can reject the file here if you want, or just let the route handler deal with it.
-      // Rejecting is slightly more efficient.
+
       cb(new Error('Invalid file type. Only JPEG, PNG, WEBP, and GIF are allowed.'), false);
     }
   }
