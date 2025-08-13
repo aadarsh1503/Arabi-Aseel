@@ -170,24 +170,14 @@ const MenuSection = () => {
                 <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-amber-500 to-amber-700 bg-clip-text text-transparent mb-4">
                     {t('our_menu')}
                 </h1>
-                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                    {t('menu_subtitle')}
-                </p>
-                <div className="mt-8 flex justify-center">
+               
+                <div className="mt- flex justify-center">
                     <div className="w-24 h-1 bg-gradient-to-r from-amber-400 to-amber-600 rounded-full"></div>
                 </div>
             </div>
             
-                     {/* ====================================================== */}
-            {/* == NEW: Ultra-Sexy Animated Sticky Filter Bar       == */}
-            {/* ====================================================== */}
-            {/* ====================================================== */}
-            {/* == NEW: Ultra-Sexy Animated Sticky Filter Bar       == */}
-            {/* ====================================================== */}
-            {/* ====================================================== */}
-            {/* == NEW: Ultra-Sexy Animated Sticky Filter Bar       == */}
-            {/* ====================================================== */}
-            <div className="sticky top-0 z-40  backdrop-blur-md py-4 border-b border-gray-200">
+  
+            <div className="sticky top-0 z-40 mt-0 lg:-mt-6  backdrop-blur-md py-4 border-b border-gray-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     {/* Main flex container for the two separate panels */}
                     <div className="flex flex-col md:flex-row items-center  gap-4">
