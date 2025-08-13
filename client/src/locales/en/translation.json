@@ -435,7 +435,10 @@
 "Change_Image": "Change Image",
 "Crop_Save": "Crop & Save",
 "Crop_Image": "Crop Image",
-"Required_Ratio": "Required Ratio"
+"Required_Ratio": "Required Ratio",
+"no_items_found": "No items found",
+"try_adjusting_filters": "Try adjusting your filters",
+"search_items": "Search items"
 
 
 

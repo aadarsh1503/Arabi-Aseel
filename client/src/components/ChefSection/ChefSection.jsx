@@ -76,7 +76,7 @@ const ChefsSection = () => {
       <div className="flex flex-wrap justify-center gap-x-24 gap-y-12">
         {/* Map through the fetched chefs data */}
         {chefs.map((chef) => (
-          // chef.id को chef._id में बदला गया है, क्योंकि API से _id आ रहा है
+     
           <div key={chef._id} className="text-center"> 
             <div className="relative w-72 h-72 mx-auto mb-4">
               <div className="absolute inset-0 flex items-center justify-center">

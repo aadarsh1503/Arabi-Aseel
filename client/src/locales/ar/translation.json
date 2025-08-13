@@ -426,7 +426,10 @@
 "Change_Image": "تغيير الصورة",
 "Crop_Save": "قص وحفظ",
 "Crop_Image": "قص الصورة",
-"Required_Ratio": "النسبة المطلوبة"
+"Required_Ratio": "النسبة المطلوبة",
+ "no_items_found": "لم يتم العثور على أي عناصر",
+ "try_adjusting_filters": "حاول تعديل عوامل التصفية الخاصة بك",
+  "search_items": "ابحث عن عناصر"
 
 
 
