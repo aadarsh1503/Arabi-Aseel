@@ -164,9 +164,9 @@ const MenuSection = () => {
     }
 
     return (
-        <div className="bg-white">
+        <div className="bg-white mt-4 lg:mt-8">
             {/* Header */}
-            <div className="max-w-7xl mx-auto text-center py-12 px-4 sm:px-6 lg:px-8">
+            {/* <div className="max-w-7xl mx-auto text-center py-12 px-4 sm:px-6 lg:px-8">
                 <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-amber-500 to-amber-700 bg-clip-text text-transparent mb-4">
                     {t('our_menu')}
                 </h1>
@@ -174,7 +174,7 @@ const MenuSection = () => {
                 <div className="mt- flex justify-center">
                     <div className="w-24 h-1 bg-gradient-to-r from-amber-400 to-amber-600 rounded-full"></div>
                 </div>
-            </div>
+            </div> */}
             
   
             <div className="sticky top-0 z-40 mt-0 lg:-mt-6  backdrop-blur-md py-4 border-b border-gray-200">
