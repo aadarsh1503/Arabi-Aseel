@@ -51,7 +51,7 @@ const ContactForm = () => {
           email: formData.email,
           phone: formData.phone,
           message: formattedMessage,
-          to: 'info@arabiaseel.com',
+          to: 'aadarshchauhan35@gmail.com',
           subject: `New Contact from ${formData.email})`
         })
       });
