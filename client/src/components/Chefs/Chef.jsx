@@ -558,10 +558,19 @@ const Chef = () => {
     setImagePreview("");
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log("🚀 handleSubmit triggered");
+  
     if (!name || !designation || !nameAr || !designationAr || !image) {
+      console.warn("⚠️ Validation failed: Some fields are missing", {
+        name,
+        designation,
+        nameAr,
+        designationAr,
+        image,
+      });
+  
       toast.warn(
         <ToastContent
           message={t("fillAllFieldsAndImageWarning")}
@@ -571,14 +580,16 @@ const Chef = () => {
       );
       return;
     }
-
+  
     const formData = new FormData();
     formData.append("name", name);
     formData.append("designation", designation);
     formData.append("name_ar", nameAr);
     formData.append("designation_ar", designationAr);
     formData.append("image", image);
-
+  
+    logFormData(formData); // ✅ Proper FormData print karega
+  
     setPendingChefData({
       formData,
       name,
@@ -587,62 +598,69 @@ const Chef = () => {
       designation_ar: designationAr,
       imagePreview,
     });
+  
+    console.log("✅ PendingChefData set:", {
+      name,
+      nameAr,
+      designation,
+      designationAr,
+      imagePreview,
+    });
+  
     setIsConfirmModalOpen(true);
+    console.log("🟢 Confirmation modal opened");
   };
-
+  
   const handleConfirmAndSave = async () => {
-    if (!pendingChefData) return;
+    console.log("🚀 handleConfirmAndSave triggered");
+  
+    if (!pendingChefData) {
+      console.warn("⚠️ No pendingChefData found, aborting save");
+      return;
+    }
+  
     setIsSubmitting(true);
-
-    const promise = api.post('/chefs/', pendingChefData.formData, {
+    console.log("⏳ Submitting started with data:", {
+      name: pendingChefData.name,
+      name_ar: pendingChefData.name_ar,
+      designation: pendingChefData.designation,
+      designation_ar: pendingChefData.designation_ar,
+    });
+  
+    logFormData(pendingChefData.formData); // ✅ Print exact formData
+  
+    const promise = api.post("/chefs/", pendingChefData.formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
-
-    toast.promise(promise, {
-      pending: {
-        render: () => (
-          <ToastContent
-            message={t("addingChefPending")}
-            IconComponent={Info}
-            iconColor="text-white"
-          />
-        ),
-        icon: false,
-      },
-      success: {
-        render: () => (
-          <ToastContent
-            message={t("chefAddedSuccess")}
-            IconComponent={CheckCircle}
-            iconColor="text-white"
-          />
-        ),
-        icon: "🎉",
-      },
-      error: {
-        render: () => (
-          <ToastContent
-            message={t("addChefError")}
-            IconComponent={XCircle}
-            iconColor="text-white"
-          />
-        ),
-        icon: "🔥",
-      },
-    });
-
+  
     try {
-      await promise;
+      const response = await promise;
+      console.log("✅ API success response:", response.data);
+  
       resetForm();
-      fetchChefs();
+      console.log("🔄 Form reset");
+  
+      await fetchChefs();
+      console.log("📥 Chefs list re-fetched");
     } catch (error) {
+      console.error("❌ API request failed:", {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      });
     } finally {
       setIsSubmitting(false);
       setIsConfirmModalOpen(false);
       setPendingChefData(null);
+      console.log("⏹️ Submission finished, modal closed, pendingChefData cleared");
     }
   };
-
+  const logFormData = (formData) => {
+    console.log("📦 FormData content:");
+    for (let pair of formData.entries()) {
+      console.log(`   ${pair[0]}:`, pair[1]);
+    }
+  };  
   const handleUpdate = async (id, data, newImage) => {
     const formData = new FormData();
     formData.append("name", data.name);

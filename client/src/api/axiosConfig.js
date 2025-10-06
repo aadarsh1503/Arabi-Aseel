@@ -3,7 +3,7 @@ import axios from 'axios';
 // Create a single, intelligent Axios instance.
 // REMOVED the default 'Content-Type' header. Axios will handle it automatically.
 const api = axios.create({
-  baseURL:"https://arabi-aseel-1.onrender.com/api",
+  baseURL:"https://arabiaseel.crmgcc.net/api",
 });
 
 // --- Smart Request Interceptor ---

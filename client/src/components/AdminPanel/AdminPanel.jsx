@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import axios from 'axios';
+// axios import ko hata sakte hain agar aap ise direct use nahi kar rahe
+// import axios from 'axios'; 
 import { FiSearch, FiPlus, FiFilter, FiMoon, FiSun, FiGrid, FiList, FiLogOut, FiDownload, FiPrinter } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import 'react-toastify/ReactToastify.css';
 import { Puff } from 'react-loader-spinner';
 import { useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
@@ -13,8 +14,9 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../Authcontext/Authcontext';
 import PageToggle from './PageToggle';
 
-import MenuExporter from './MenuExporter'; // <-- IMPORT THE NEW COMPONENT
-import api from '../../api/axiosConfig';
+import MenuExporter from './MenuExporter';
+import api from '../../api/axiosConfig'; // API instance ko import karna zaroori hai
+
 // Toast Notification Configuration
 const notify = {
   success: (message, darkMode) => toast.success(message, { theme: darkMode ? 'dark' : 'light' }),
@@ -39,7 +41,7 @@ const AdminPanel = () => {
   const [showModal, setShowModal] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-  const [showMenuExporter, setShowMenuExporter] = useState(false); // <-- ADD STATE FOR EXPORTER
+  const [showMenuExporter, setShowMenuExporter] = useState(false);
   
   // Loading states for actions
   const [statusLoading, setStatusLoading] = useState(null);
@@ -48,16 +50,29 @@ const AdminPanel = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === 'ar';
-  const { logout } = useAuth(); 
+  
+  // CHANGE 1: AuthContext se 'token' bhi nikal lein
+  const { logout, token } = useAuth(); 
+
   // Fetch initial data
   const fetchData = async () => {
+    // CHANGE 2: API call karne se pehle token check karein
+    if (!token) {
+        setLoading(false);
+        notify.error("Please log in to access the admin panel.", darkMode);
+        navigate('/login'); // User ko login page par redirect karein
+        return; // Function ko yahin rok dein
+    }
+
     try {
       setLoading(true);
+      // Ab yeh call tabhi hogi jab token maujood hai
       const res = await api.get('/admin/menu'); 
       setItems(res.data);
       notify.success('Menu loaded successfully', darkMode);
     } catch (err) {
-      console.error("Error fetching data:", err.message);
+      // Interceptor 401 errors ko handle kar lega, but network errors yahan aayenge
+      console.error("Error fetching data:", err);
       setError(err.message);
       notify.error(`Failed to load menu: ${err.message}`, darkMode);
     } finally {
@@ -65,9 +80,10 @@ const AdminPanel = () => {
     }
   };
 
+  // CHANGE 3: useEffect ko token par depend karayein
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [token]); // Jab token badlega (logout), toh yeh effect dobara chalega
 
   const uniqueCategories = useMemo(() => {
     const categoryMap = new Map();
@@ -107,6 +123,7 @@ const AdminPanel = () => {
     if (window.confirm('Are you sure you want to delete this item?')) {
       setButtonLoading(prev => ({ ...prev, delete: id }));
       try {
+        // Interceptor yahan token khud laga dega
         await api.delete(`/admin/menu/${id}`);
         notify.success('Item deleted successfully', darkMode);
         fetchData();
@@ -123,6 +140,7 @@ const AdminPanel = () => {
     setStatusLoading(itemId);
     setItems(prev => prev.map(item => item.menu_id === itemId ? { ...item, status: newStatus } : item));
     try {
+      // Interceptor yahan token khud laga dega
       await api.patch(`/admin/menu/${itemId}/status`, { status: newStatus });
       notify.success('Status updated!', darkMode);
     } catch (error) {
@@ -134,47 +152,75 @@ const AdminPanel = () => {
   };
   
   const handleFormSubmit = async (form, imageFile, editingId) => {
+    console.log("🔹 handleFormSubmit called with:", { form, imageFile, editingId });
+  
     setButtonLoading(prev => ({ ...prev, submit: true }));
+    console.log("⏳ Submit button loading state set to true");
+  
     const formData = new FormData();
-    
+  
     formData.append('category_name', form.category_name);
     formData.append('category_name_ar', form.category_name_ar);
     formData.append('price_type', form.price_type);
     formData.append('translations', JSON.stringify(form.translations));
-    
+  
+    console.log("✅ Basic fields appended:", {
+      category_name: form.category_name,
+      category_name_ar: form.category_name_ar,
+      price_type: form.price_type,
+      translations: form.translations,
+    });
+  
     if (form.price_type === 'per_portion') {
-        formData.append('price', JSON.stringify({ per_portion: form.price_per_portion }));
+      formData.append('price', JSON.stringify({ per_portion: form.price_per_portion }));
+      console.log("💰 Price appended (per_portion):", form.price_per_portion);
     } else {
-        formData.append('price', JSON.stringify(form.price));
+      formData.append('price', JSON.stringify(form.price));
+      console.log("💰 Price appended (normal):", form.price);
     }
-
+  
     if (imageFile) {
-        formData.append('image', imageFile);
+      formData.append('image', imageFile);
+      console.log("🖼️ New image appended:", imageFile.name || imageFile);
     } else if (editingId) {
-        formData.append('current_image_url', form.image_url);
+      formData.append('current_image_url', form.image_url);
+      console.log("🔗 Existing image URL appended:", form.image_url);
     }
-
+  
     try {
       if (editingId) {
-        // Let Axios handle the headers automatically for FormData
+        console.log(`✏️ Updating item with ID: ${editingId}`);
         await api.put(`/admin/menu/${editingId}`, formData);
         notify.success('Item updated successfully', darkMode);
+        console.log("✅ Item updated successfully");
       } else {
-        // Let Axios handle the headers automatically for FormData
+        console.log("➕ Adding new item");
         await api.post('/admin/menu', formData);
         notify.success('Item added successfully', darkMode);
+        console.log("✅ Item added successfully");
       }
+  
       fetchData();
+      console.log("🔄 Data refreshed");
+  
       setShowModal(false);
       setEditingItem(null);
+      console.log("📌 Modal closed and editingItem reset");
     } catch (error) {
-      notify.error(`Failed to save item: ${error.response?.data?.message || error.message}`, darkMode);
+      console.error("❌ Error while saving item:", error.response?.data || error);
+      notify.error(
+        `Failed to save item: ${error.response?.data?.message || error.message}`,
+        darkMode
+      );
     } finally {
       setButtonLoading(prev => ({ ...prev, submit: false }));
+      console.log("⏹️ Submit button loading state reset to false");
     }
   };
   
+  
   const exportToExcel = () => {
+    // ... (This function remains unchanged)
     if (filteredItems.length === 0) {
       notify.warning('No data to export', darkMode);
       return;
@@ -193,6 +239,16 @@ const AdminPanel = () => {
     notify.success('Export started', darkMode);
   };
 
+  // Jab tak initial check ho raha hai, loader dikhana behtar hai.
+  if (loading && items.length === 0) {
+      return <div className="flex justify-center items-center h-screen"><Puff color={darkMode ? "#a78bfa" : "#8b5cf6"} /></div>
+  }
+
+  // Agar token nahi hai aur loading band ho gayi hai, toh kuch na dikhayein kyunki redirect ho raha hoga
+  if (!token && !loading) {
+      return null;
+  }
+
   return (
     <div className={`min-h-screen p-6 ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-800'}`}>
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
@@ -209,7 +265,6 @@ const AdminPanel = () => {
         isLoading={buttonLoading.submit}
       />
 
-      {/* RENDER THE NEW EXPORTER MODAL */}
       <MenuExporter 
         show={showMenuExporter}
         onClose={() => setShowMenuExporter(false)}
@@ -230,12 +285,9 @@ const AdminPanel = () => {
             <button onClick={exportToExcel} className="p-2 rounded-full bg-green-100 dark:bg-green-800 shadow hover:scale-110" title="Export to Excel">
               <FiDownload size={20} className="text-green-600 dark:text-green-300" />
             </button>
-
-            {/* ADD THE NEW EXPORT PDF/IMAGE BUTTON */}
             <button onClick={() => setShowMenuExporter(true)} className="p-2 rounded-full bg-blue-100 dark:bg-blue-800 shadow hover:scale-110" title="Export as PDF/Image">
               <FiPrinter size={20} className="text-blue-600 dark:text-blue-300" />
             </button>
-            
             <button onClick={() => setShowLogoutConfirm(true)} className="p-2 rounded-full bg-red-100 dark:bg-red-900 shadow hover:scale-110" title="Logout">
               <FiLogOut size={20} className="text-red-600 dark:text-red-300" />
             </button>
