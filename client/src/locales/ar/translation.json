@@ -429,7 +429,26 @@
 "Required_Ratio": "النسبة المطلوبة",
  "no_items_found": "لم يتم العثور على أي عناصر",
  "try_adjusting_filters": "حاول تعديل عوامل التصفية الخاصة بك",
-  "search_items": "ابحث عن عناصر"
+  "search_items": "ابحث عن عناصر",
+  "forgotPasswordTitle": "هل نسيت كلمة المرور؟",
+  "forgotPasswordInstructions": "لا مشكلة. فقط أدخل عنوان البريد الإلكتروني الذي استخدمته للتسجيل لدينا وسنرسل لك رابط إعادة التعيين.",
+  "forgotPasswordFormEmail": "عنوان البريد الإلكتروني",
+  "forgotPasswordFormSendButton": "إرسال رابط إعادة التعيين",
+  "forgotPasswordValidationEmailInvalid": "عنوان البريد الإلكتروني غير صالح",
+  "forgotPasswordValidationEmailRequired": "البريد الإلكتروني مطلوب",
+  "forgotPasswordToastError": "حدث خطأ. يرجى المحاولة مرة أخرى.",
+
+  "resetPasswordTitle": "إعادة تعيين كلمة المرور",
+  "resetPasswordFormPassword": "كلمة المرور الجديدة",
+  "resetPasswordFormConfirmPassword": "تأكيد كلمة المرور الجديدة",
+  "resetPasswordFormResetButton": "إعادة تعيين كلمة المرور",
+  "resetPasswordValidationPasswordMin": "يجب أن تحتوي كلمة المرور على 6 أحرف على الأقل",
+  "resetPasswordValidationPasswordRequired": "كلمة المرور مطلوبة",
+  "resetPasswordValidationConfirmPasswordMatch": "يجب أن تتطابق كلمتا المرور",
+  "resetPasswordValidationConfirmPasswordRequired": "يرجى تأكيد كلمة المرور الخاصة بك",
+  "resetPasswordToastSuccess": "تمت إعادة تعيين كلمة المرور بنجاح! سيتم تحويلك إلى صفحة تسجيل الدخول...",
+  "resetPasswordToastError": "فشل في إعادة تعيين كلمة المرور. قد يكون الرابط غير صالح أو منتهي الصلاحية.",
+    "forgotPassword1": "پاس ورڈ بھول گئے؟"
 
 
 

@@ -1,4 +1,7 @@
+// src/components/RootLayout/Navbar/Navbar.jsx
+
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom"; // Paso 1: Importar useLocation
 import { useTranslation } from "react-i18next";
 import {
   FaHome,
@@ -12,47 +15,48 @@ import i2 from "./i2.png";
 import ar from "./ar.png";
 import a2 from "./a2.png";
 import LanguageToggle from "../../../LanguageToggle";
-import { AiOutlineEnvironment, AiOutlineMail, AiOutlinePhone } from "react-icons/ai";
+import {
+  AiOutlineEnvironment,
+  AiOutlineMail,
+  AiOutlinePhone,
+} from "react-icons/ai";
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
+  const location = useLocation(); // Paso 2: Usar el hook para obtener la ubicación actual
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isRTL, setIsRTL] = useState(i18n.language === "ar");
 
   const [navbarStyle, setNavbarStyle] = useState("bg-opacity-0");
-  useEffect(() => {
-    if (
-      window.location.pathname === "/menu" ||
-      window.location.pathname === "/contact" ||
-      window.location.pathname === "/admin" ||
-      window.location.pathname === "/chef" ||
-
-      window.location.pathname === "/login" ||
-      window.location.pathname === "/signup" ||
-      window.location.pathname === "/aboutUs"
-    ) {
-      setNavbarStyle("bg-opacity-100 bg-black");
-    } else {
-      setNavbarStyle("bg-opacity-0");
-    }
-  }, []);
   const [navbarStyle1, setNavbarStyle1] = useState("bg-opacity-0");
-  useEffect(() => {
-    if (
-      window.location.pathname === "/menu" ||
-      window.location.pathname === "/contact" ||
-      window.location.pathname === "/admin" ||
-      window.location.pathname === "/login" ||
-      window.location.pathname === "/chef" ||
 
-      window.location.pathname === "/signup" ||
-      window.location.pathname === "/aboutUs"
-    ) {
+  useEffect(() => {
+   
+    const solidBgPaths = [
+      "/menu",
+      "/contact",
+      "/admin",
+      "/chef",
+      "/login",
+      "/sig5436272ertyvv",
+      "/aboutUs",
+      "/forgot-password",
+      "/reset-password", 
+    ];
+
+   
+    const needsSolidBg = solidBgPaths.some((path) =>
+      location.pathname.startsWith(path)
+    );
+
+    if (needsSolidBg) {
+      setNavbarStyle("bg-opacity-100 bg-black");
       setNavbarStyle1("bg-opacity-100 bg-[#724f38]");
     } else {
+      setNavbarStyle("bg-opacity-0");
       setNavbarStyle1("bg-opacity-0");
     }
-  }, []);
+  }, [location.pathname]); 
 
   useEffect(() => {
     setIsRTL(i18n.language === "ar");
@@ -60,10 +64,21 @@ const Navbar = () => {
 
   const menuItems = [
     { icon: <FaHome className="mr-2 ml-2" />, text: t("home"), route: "/" },
-    { icon: <FaFileAlt className="mr-2 ml-2" />, text: t("about_us"), route: "/aboutUs" },
-    { icon: <FaUtensils className="mr-2 ml-2" />, text: t("menu"), route: "/menu" },
-   
-    { icon: <FaComments className="mr-2 ml-2" />, text: t("contact"), route: "/contact" },
+    {
+      icon: <FaFileAlt className="mr-2 ml-2" />,
+      text: t("about_us"),
+      route: "/aboutUs",
+    },
+    {
+      icon: <FaUtensils className="mr-2 ml-2" />,
+      text: t("menu"),
+      route: "/menu",
+    },
+    {
+      icon: <FaComments className="mr-2 ml-2" />,
+      text: t("contact"),
+      route: "/contact",
+    },
   ];
 
   const handleToggleMenu = () => {
@@ -71,74 +86,78 @@ const Navbar = () => {
   };
 
   return (
-    <div className={`relative z-50 bg-black bg-opacity-60 ${isRTL ? "text-right" : "text-left"}`}>
-    {/* Top Bar */}
-    <div className={` bg-opacity-0 text-white text-sm py-2 ${navbarStyle1}`}>
-    <div className="max-w-7xl mx-auto flex justify-between items-center px-4">
-  {/* Contact Information */}
-  <div className="flex space-x-4 items-center">
-  {/* Phone Section */}
-  <div className="flex items-center space-x-2">
-  <AiOutlinePhone className="text-base lg:text-lg ml-2 text-white" />
-  <div className="text-sm lg:text-sm  text-white" dir="ltr">
-    <a href="tel:+97317772211" className="hover:underline leading-tight">+973 17772211</a>
-    <span className="mx-1">/</span>
-    <a href="tel:+97333117441" className="hover:underline leading-tight">+973 33117441</a>
-  </div>
-</div>
-
-
-  {/* Email Section */}
-  <div className="flex items-center space-x-2">
-    <AiOutlineMail className="lg:text-lg text-xs ml-2" />
-    <a
-      href="mailto:info@arabiaseel.com"
-      className=" hover:underline"
+    <div
+      className={`relative z-50 bg-black bg-opacity-60 ${
+        isRTL ? "text-right" : "text-left"
+      }`}
     >
-      info@arabiaseel.com
-    </a>
-  </div>
-</div>
+      {/* Top Bar */}
+      <div className={`text-white text-sm py-2 ${navbarStyle1}`}>
+        <div className="max-w-7xl mx-auto flex justify-between items-center px-4">
+          {/* Contact Information */}
+          <div className="flex space-x-4 items-center">
+            {/* Phone Section */}
+            <div className="flex items-center space-x-2">
+              <AiOutlinePhone className="text-base lg:text-lg ml-2 text-white" />
+              <div
+                className="text-sm lg:text-sm  text-white"
+                dir="ltr"
+              >
+                <a
+                  href="tel:+97317772211"
+                  className="hover:underline leading-tight"
+                >
+                  +973 17772211
+                </a>
+                <span className="mx-1">/</span>
+                <a
+                  href="tel:+97333117441"
+                  className="hover:underline leading-tight"
+                >
+                  +973 33117441
+                </a>
+              </div>
+            </div>
 
-{/* Address Section */}
-<div className="lg:flex items-center hidden  space-x-2 relative left-4">
-  <AiOutlineEnvironment className="lg:text-lg text-xs ml-2" />
-  <a
-     href="https://www.google.com/maps/place/Arabiaseel+Kitchen/@26.2015165,50.5328398,17z/data=!4m15!1m8!3m7!1s0x3e49afc54b8b1169:0xcb06c2186a95290a!2sArabiaseel+Kitchen!8m2!3d26.201529!4d50.5328325!10e5!16s%2Fg%2F11mcq4rk30!3m5!1s0x3e49afc54b8b1169:0xcb06c2186a95290a!8m2!3d26.201529!4d50.5328325!16s%2Fg%2F11mcq4rk30?entry=ttu&g_ep=EgoyMDI1MDQwOS4wIKXMDSoASAFQAw%3D%3D"
-    className=" hover:underline"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    {t("address")}
-  </a>
-</div>
+            {/* Email Section */}
+            <div className="flex items-center space-x-2">
+              <AiOutlineMail className="lg:text-lg text-xs ml-2" />
+              <a href="mailto:info@arabiaseel.com" className=" hover:underline">
+                info@arabiaseel.com
+              </a>
+            </div>
+          </div>
 
-
-</div>
-
-    </div>
+          {/* Address Section */}
+          <div className="lg:flex items-center hidden  space-x-2 relative left-4">
+            <AiOutlineEnvironment className="lg:text-lg text-xs ml-2" />
+            <a
+              href="https://www.google.com/maps/place/Arabiaseel+Kitchen/@26.2015165,50.5328398,17z/data=!4m15!1m8!3m7!1s0x3e49afc54b8b1169:0xcb06c2186a95290a!2sArabiaseel+Kitchen!8m2!3d26.201529!4d50.5328325!10e5!16s%2Fg%2F11mcq4rk30!3m5!1s0x3e49afc54b8b1169:0xcb06c2186a95290a!8m2!3d26.201529!4d50.5328325!16s%2Fg%2F11mcq4rk30?entry=ttu&g_ep=EgoyMDI1MDQwOS4wIKXMDSoASAFQAw%3D%3D"
+              className=" hover:underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t("address")}
+            </a>
+          </div>
+        </div>
+      </div>
       {/* Main Navbar */}
       <nav
         className={`text-white left-0 w-full shadow-lg p-2 top-0 z-30 ${navbarStyle}`}
         dir={isRTL ? "rtl" : "ltr"}
       >
         <div className="flex max-w-7xl mx-auto justify-between items-center">
-        {isRTL ? (
-    <img
-      src={a2}
-      alt="RTL Logo"
-      className="h-20 p-3 w-20"
-    />
-  ) : (
-    <img
-      src={i2}
-      alt="LTR Logo"
-      className="h-20  w-20"
-    />
-  )}
+          {isRTL ? (
+            <img src={a2} alt="RTL Logo" className="h-20 p-3 w-20" />
+          ) : (
+            <img src={i2} alt="LTR Logo" className="h-20  w-20" />
+          )}
           <div
             onClick={handleToggleMenu}
-            className={`lg:hidden cursor-pointer text-xl z-30 absolute ${isRTL ? "left-4" : "right-4"}`}
+            className={`lg:hidden cursor-pointer text-xl z-30 absolute ${
+              isRTL ? "left-4" : "right-4"
+            }`}
           >
             {isMenuOpen ? <span></span> : <span>☰</span>}
           </div>
@@ -150,7 +169,7 @@ const Navbar = () => {
                   <a
                     href={item.route}
                     className={`cursor-pointer flex items-center ${
-                      window.location.pathname === item.route
+                      location.pathname === item.route
                         ? "text-yellow-500"
                         : "hover:text-brown"
                     }`}

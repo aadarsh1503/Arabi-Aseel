@@ -27,6 +27,8 @@ import { DirectionProvider } from './components/DirectionContext';
 import './i18n';
 import { AuthProvider } from './components/Authcontext/Authcontext';
 import Chef from './components/Chefs/Chef';
+import ForgotPassword from './components/Login/ForgotPassword';
+import ResetPassword from './components/Login/ResetPassword';
 
 // MUI Theme (no changes needed here)
 const theme = createTheme({
@@ -63,7 +65,8 @@ function App() {
                 <Route path="/menu" element={<MenuItem1 />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/sig5436272ertyvv" element={<Signup />} />
-
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password/:token" element={<ResetPassword />} />
           
                 <Route
                   path="/admin"

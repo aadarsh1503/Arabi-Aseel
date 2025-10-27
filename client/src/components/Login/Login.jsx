@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { Link } from 'react-router-dom'; 
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -224,6 +225,11 @@ const Login = () => {
                     t('login.form.signInButton')
                   )}
                 </Button>
+                <Box textAlign="center">
+                <Link to="/forgot-password" variant="body2">
+                    {t('forgotPassword1')}
+                </Link>
+            </Box>
               </form>
             </Paper>
           </Box>
