@@ -1,10 +1,11 @@
-const express = require('express');
+import express from 'express';
+import db from '../db.js'; // Added .js extension
+import multer from 'multer';
+import ImageKit from 'imagekit';
+import { fileTypeFromBuffer } from 'file-type';
+import { protect } from '../middleware/authMiddleware.js'; // Added .js extension
+
 const router = express.Router();
-const db = require('../db');
-const multer = require('multer');
-const ImageKit = require('imagekit');
-const { fileTypeFromBuffer } = require('file-type');
-const { protect } = require('../middleware/authMiddleware'); 
 
 // Configure ImageKit (no changes here)
 const imagekit = new ImageKit({
@@ -20,17 +21,16 @@ const upload = multer({
     fileSize: 10 * 1024 * 1024 // 10 MB
   },
   fileFilter: (req, file, cb) => {
-
     const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
     
     if (file && allowedMimeTypes.includes(file.mimetype)) {
       cb(null, true); // Accept the file
     } else {
-
       cb(new Error('Invalid file type. Only JPEG, PNG, WEBP, and GIF are allowed.'), false);
     }
   }
 });
+
 // Helper to parse form fields (no changes here)
 const parseFormDataFields = (body) => {
   try {
@@ -45,7 +45,6 @@ const parseFormDataFields = (body) => {
     throw new Error('Invalid JSON data in form fields');
   }
 };
-
 
 router.post('/menu', protect, upload.single('image'), async (req, res) => {
   try {
@@ -123,7 +122,6 @@ router.post('/menu', protect, upload.single('image'), async (req, res) => {
     });
 
   } catch (err) {
-    // This console.error is kept for essential server-side error logging
     console.error('❌ Error in /menu POST:', err);
 
     if (err instanceof multer.MulterError) {
@@ -139,11 +137,8 @@ router.post('/menu', protect, upload.single('image'), async (req, res) => {
   }
 });
 
-// GET: Get all menu items (This can remain public for the admin panel to load)
+// GET: Get all menu items
 router.get('/menu', async (req, res) => {
-  // ... (Your GET logic remains the same)
-  // No need to protect this if the admin panel needs to fetch data before a user is technically logged in
-  // Or, if you prefer, you can add `protect` here as well.
   try {
     const [menuItems] = await db.execute(`
       SELECT m.id AS menu_id, m.image_url, m.price_q, m.price_h, m.price_f, m.price_type, m.price_per_portion, m.status, m.created_at,
@@ -169,7 +164,6 @@ router.get('/menu', async (req, res) => {
 
 // PATCH: Update menu item status
 router.patch('/menu/:id/status', protect, async (req, res) => {
-  // ... (Your PATCH logic remains the same)
   const { id } = req.params;
   const { status } = req.body;
   if (!status || !['available', 'not available'].includes(status)) {
@@ -187,7 +181,6 @@ router.patch('/menu/:id/status', protect, async (req, res) => {
 
 // DELETE: Delete a menu item
 router.delete('/menu/:id', protect, async (req, res) => {
-  // ... (Your DELETE logic remains the same)
   try {
     const { id } = req.params;
     const [menuRows] = await db.execute('SELECT category_id, image_url FROM menu_items WHERE id = ?', [id]);
@@ -210,7 +203,6 @@ router.delete('/menu/:id', protect, async (req, res) => {
 
 // PUT: Update a menu item
 router.put('/menu/:id', protect, upload.single('image'), async (req, res) => {
-  // ... (Your PUT logic remains the same)
   try {
     const { id } = req.params;
     const formData = parseFormDataFields(req.body);
@@ -267,4 +259,4 @@ router.put('/menu/:id', protect, upload.single('image'), async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
