@@ -88,7 +88,7 @@ const Hero = () => {
       <PopularCategories />
       <ServiceSection />
       <PromotionSection />
-      <SpecialsMenu />
+      {/* <SpecialsMenu /> */}
       <OnlineOrderSection />
       <OpeningHours />
       <ChefsSection />
