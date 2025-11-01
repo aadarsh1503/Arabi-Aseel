@@ -1,7 +1,7 @@
 // src/components/RootLayout/Navbar/Navbar.jsx
 
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom"; // Paso 1: Importar useLocation
+import { useLocation } from "react-router-dom"; 
 import { useTranslation } from "react-i18next";
 import {
   FaHome,

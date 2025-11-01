@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import axios from "axios";
 import leaf from "./leaf.png";
 
-const API_URL = 'https://arabi-aseel-1.onrender.com/api/chefs';
+const API_URL = '/api/chefs';
 
 const ChefsSection = () => {
   const { t, i18n } = useTranslation();

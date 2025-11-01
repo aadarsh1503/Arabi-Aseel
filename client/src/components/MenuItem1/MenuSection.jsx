@@ -36,7 +36,7 @@ const MenuSection = () => {
         const fetchMenuData = async () => {
             try {
                 setLoading(true);
-                const res = await axios.get('https://arabi-aseel-1.onrender.com/api/admin/menu');
+                const res = await axios.get('/api/admin/menu');
                 const rawData = res.data;
         
                 const availableItems = rawData.filter(item => item.status === 'available');

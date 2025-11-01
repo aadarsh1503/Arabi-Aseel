@@ -1,26 +1,70 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
+import axios from "axios"; // Import axios for API calls
 import { useTranslation } from 'react-i18next';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import "react-datetime/css/react-datetime.css";
-import Datetime from "react-datetime";
 import "./popular.css";
 
 const PopularCategories = () => {
-  const { t } = useTranslation();
-  const [date, setDate] = useState(null);
-  const [time, setTime] = useState(null);
+  const { t, i18n } = useTranslation();
+  
+  
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleDateChange = (selectedDate) => setDate(selectedDate);
-  const handleTimeChange = (selectedTime) => setTime(selectedTime);
 
-  const categories = [
-    { id: 1, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/04/27.jpg', title: t('salmon_fry'), subtitle: t('sea_food'), link: '/menu' },
-    { id: 2, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/04/25.jpg', title: t('beverage'), subtitle: t('hot_chocolate'), link: '/menu' },
-    { id: 3, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/04/26.jpg', title: t('salmon_fry'), subtitle: t('sea_food'), link: '/menu' },
-    { id: 4, image: 'https://wp.validthemes.net/restan/wp-content/uploads/2024/04/28.jpg', title: t('burger'), subtitle: t('fast_food'), link: '/menu' },
-  ];
+  useEffect(() => {
+    const fetchPopularItems = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get('/api/admin/menu');
+        
+        // Filter for available items that have an image URL
+        const availableItems = res.data.filter(
+          item => item.status === 'available' && item.image_url
+        );
+        
+        // To simulate "popular" items, we'll take the first 6 from the available list.
+        // You could later implement a proper "is_popular" flag in your API.
+        const popularItems = availableItems.slice(0, 6);
+
+        // Transform the API data to match the format your component needs
+        const transformedCategories = popularItems.map(item => {
+          const isRTL = i18n.language === 'ar';
+          
+          // Get the correct translation for the item name (title)
+          const title = isRTL 
+            ? item.translations.find(t => t.language === 'ar')?.name || item.translations.find(t => t.language === 'en')?.name
+            : item.translations.find(t => t.language === 'en')?.name;
+          
+          // Get the correct translation for the category name (subtitle)
+          const subtitle = isRTL 
+            ? item.category_name_ar || item.category_name 
+            : item.category_name;
+
+          return {
+            id: item.menu_id,
+            image: item.image_url,
+            title: title,
+            subtitle: subtitle,
+            link: '/menu' // Static link as in the original code
+          };
+        });
+
+        setCategories(transformedCategories);
+        
+      } catch (err) {
+        console.error("Error fetching popular categories:", err);
+        setError("Failed to load items. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPopularItems();
+  }, [i18n.language]); // Re-fetch if the language changes
 
   const settings = {
     dots: true,
@@ -38,6 +82,24 @@ const PopularCategories = () => {
     ],
   };
 
+  // Display a loading state
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center p-12">
+        <h2 className="text-xl">Loading Popular Items...</h2>
+      </div>
+    );
+  }
+
+  // Display an error state
+  if (error) {
+    return (
+      <div className="flex justify-center items-center p-12 text-red-500">
+        <h2 className="text-xl">{error}</h2>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col lg:flex-row font-poppins justify-between items-start p-12">
       <div className="lg:w-100 ml-0 mr-0 w-full">
@@ -50,16 +112,16 @@ const PopularCategories = () => {
                 <img
                   src={category.image}
                   alt={category.title}
-                  className="w-full h-100 bg-white object-cover"
+                  className="w-full h-[200px] bg-white object-cover"
                 />
               </a>
               <a href="/menu">
-              <div className="absolute inset-0 mt-32 bg-gradient-to-b from-transparent to-black opacity-50"></div>
-              
-              <div className="absolute bottom-0 left-0 right-0 p-4 w-[254px] ml-[16px] shadow-none text-center rounded-b-xl">
-                <p className="text-yellow-500 text-left font-bold">{category.subtitle}</p>
-                <h3 className="text-xl text-white text-left font-semibold">{category.title}</h3>
-              </div>
+                <div className="absolute inset-0 mt-38 bg-gradient-to-b from-transparent to-black opacity-50"></div>
+                
+                <div className="absolute bottom-0 left-0 right-0 p-4 w-[254px] ml-[16px] shadow-none text-center rounded-b-xl">
+                  <p className="text-yellow-500 text-left font-bold">{category.subtitle}</p>
+                  <h3 className="text-xl text-white text-left font-semibold">{category.title}</h3>
+                </div>
               </a>
             </div>
           ))}

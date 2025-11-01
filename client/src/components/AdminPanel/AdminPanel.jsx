@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-// axios import ko hata sakte hain agar aap ise direct use nahi kar rahe
-// import axios from 'axios'; 
+
 import { FiSearch, FiPlus, FiFilter, FiMoon, FiSun, FiGrid, FiList, FiLogOut, FiDownload, FiPrinter } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/ReactToastify.css';
@@ -51,27 +50,27 @@ const AdminPanel = () => {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === 'ar';
   
-  // CHANGE 1: AuthContext se 'token' bhi nikal lein
+
   const { logout, token } = useAuth(); 
 
   // Fetch initial data
   const fetchData = async () => {
-    // CHANGE 2: API call karne se pehle token check karein
+
     if (!token) {
         setLoading(false);
         notify.error("Please log in to access the admin panel.", darkMode);
-        navigate('/login'); // User ko login page par redirect karein
-        return; // Function ko yahin rok dein
+        navigate('/login');
+        return; 
     }
 
     try {
       setLoading(true);
-      // Ab yeh call tabhi hogi jab token maujood hai
+   
       const res = await api.get('/admin/menu'); 
       setItems(res.data);
       notify.success('Menu loaded successfully', darkMode);
     } catch (err) {
-      // Interceptor 401 errors ko handle kar lega, but network errors yahan aayenge
+
       console.error("Error fetching data:", err);
       setError(err.message);
       notify.error(`Failed to load menu: ${err.message}`, darkMode);
@@ -80,10 +79,10 @@ const AdminPanel = () => {
     }
   };
 
-  // CHANGE 3: useEffect ko token par depend karayein
+  
   useEffect(() => {
     fetchData();
-  }, [token]); // Jab token badlega (logout), toh yeh effect dobara chalega
+  }, [token]);
 
   const uniqueCategories = useMemo(() => {
     const categoryMap = new Map();
@@ -123,7 +122,7 @@ const AdminPanel = () => {
     if (window.confirm('Are you sure you want to delete this item?')) {
       setButtonLoading(prev => ({ ...prev, delete: id }));
       try {
-        // Interceptor yahan token khud laga dega
+ 
         await api.delete(`/admin/menu/${id}`);
         notify.success('Item deleted successfully', darkMode);
         fetchData();
@@ -140,7 +139,7 @@ const AdminPanel = () => {
     setStatusLoading(itemId);
     setItems(prev => prev.map(item => item.menu_id === itemId ? { ...item, status: newStatus } : item));
     try {
-      // Interceptor yahan token khud laga dega
+ 
       await api.patch(`/admin/menu/${itemId}/status`, { status: newStatus });
       notify.success('Status updated!', darkMode);
     } catch (error) {
@@ -239,12 +238,12 @@ const AdminPanel = () => {
     notify.success('Export started', darkMode);
   };
 
-  // Jab tak initial check ho raha hai, loader dikhana behtar hai.
+
   if (loading && items.length === 0) {
       return <div className="flex justify-center items-center h-screen"><Puff color={darkMode ? "#a78bfa" : "#8b5cf6"} /></div>
   }
 
-  // Agar token nahi hai aur loading band ho gayi hai, toh kuch na dikhayein kyunki redirect ho raha hoga
+ 
   if (!token && !loading) {
       return null;
   }

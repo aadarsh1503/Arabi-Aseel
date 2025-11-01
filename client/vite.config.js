@@ -7,4 +7,13 @@ export default defineConfig({
   build: {
     outDir: 'build',
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://arabi-aseel-1.onrender.com', 
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 })

@@ -30,7 +30,7 @@ import "react-image-crop/dist/ReactCrop.css";
 import { useAuth } from "../Authcontext/Authcontext";
 
 
-const API_URL = "https://arabi-aseel-1.onrender.com/api/chefs";
+const API_URL = "/api/chefs";
 
 // ===================================================================
 // HELPER: Futuristic Toast Content
