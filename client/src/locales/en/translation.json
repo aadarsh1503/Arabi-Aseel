@@ -457,7 +457,8 @@
   "resetPasswordValidationConfirmPasswordRequired": "Please confirm your password",
   "resetPasswordToastSuccess": "Password reset successfully! Redirecting to login...",
   "resetPasswordToastError": "Failed to reset password. The link may be invalid or expired.",
-  "forgotPassword1":"Forgot Password ?"
+  "forgotPassword1":"Forgot Password ?",
+    "all_days": "All Days"
 
 
 

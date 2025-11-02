@@ -448,7 +448,8 @@
   "resetPasswordValidationConfirmPasswordRequired": "يرجى تأكيد كلمة المرور الخاصة بك",
   "resetPasswordToastSuccess": "تمت إعادة تعيين كلمة المرور بنجاح! سيتم تحويلك إلى صفحة تسجيل الدخول...",
   "resetPasswordToastError": "فشل في إعادة تعيين كلمة المرور. قد يكون الرابط غير صالح أو منتهي الصلاحية.",
-    "forgotPassword1": "پاس ورڈ بھول گئے؟"
+    "forgotPassword1": "پاس ورڈ بھول گئے؟",
+    "all_days": "كل الأيام"
 
 
 

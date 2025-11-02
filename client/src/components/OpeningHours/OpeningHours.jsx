@@ -1,21 +1,46 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next'; // Import i18next hook for translation
-
+import { useTranslation } from 'react-i18next';
+import i2 from "./i2.png";
+import a2 from "./a2.png"
 const OpeningHours = () => {
-  const { t,i18n } = useTranslation(); // Use i18next translation hook
-  const isRTL = i18n.language === 'ar'; // Check if the language is Arabic (RTL)
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === 'ar';
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 min-h-screen px-4 max-w-7xl mx-auto mt-6 lg:mt-16 relative gap-8">
-      {/* Left Column: Video and RESTAN text */}
+    <div className="grid grid-cols-1  lg:grid-cols-2 min-h-screen px-4 max-w-7xl mx-auto  relative gap-8">
+      
+      {/* Left Column */}
       <div className="relative flex flex-col justify-center items-center lg:items-start">
-        {/* RESTAN Text */}
-        <div className="absolute top-9 font-serif text-5xl lg:py-16 lg:text-7xl font-bold opacity-5 z-20">
-        {t('ARABI_ASEEL')}
-        </div>
+        
+        {/* Logo ABOVE the video */}
+        <div className="relative   flex justify-center lg:justify-start w-full">
+  {/* English Logo */}
+  {!isRTL && (
+    <img
+      src={i2}
+      alt="English Logo"
+      className="w-40 lg:w-64 relative top-0 lg:top-24 left-0 lg:left-32 opacity-70"
+      style={{ filter: 'grayscale(100%) brightness(0.7)' }}
+    />
+  )}
+
+  {/* Arabic Logo */}
+  {isRTL && (
+    <img
+      src={a2}
+      alt="Arabic Logo"
+      className="w-40 lg:w-32 relative lg:right-56 right-0 top-0 lg:top-12  opacity-70"
+      style={{ filter: 'grayscale(100%) brightness(0.7)' }}
+    />
+  )}
+</div>
+
+
+
 
         {/* Video - Visible on large screens only */}
         <video
-          className="w-full lg:w-[150%] h-[300px] lg:h-[500px] rounded-md hidden lg:block" // Hidden on mobile, shown on large screens
+          className="w-full lg:w-[150%] h-[300px] lg:h-[500px] rounded-md hidden lg:block"
           src="https://videos.pexels.com/video-files/4253721/4253721-uhd_2732_1440_25fps.mp4"
           loop
           autoPlay
@@ -27,40 +52,31 @@ const OpeningHours = () => {
 
         {/* Image - Visible on mobile screens only */}
         <img
-          className="w-full h-auto rounded-md block lg:hidden" // Shown on mobile, hidden on large screens
-          src="https://img.freepik.com/premium-vector/cartoon-chef-character-holding-silver-platter_1151483-34531.jpg?w=1060" // Replace with your desired image URL
+          className="w-full h-auto rounded-md block lg:hidden"
+          src="https://img.freepik.com/premium-vector/cartoon-chef-character-holding-silver-platter_1151483-34531.jpg?w=1060"
           alt="Chef Character"
         />
       </div>
 
-      {/* Right Column: Card and Image */}
-      <div className="flex flex-col justify-between items-center  lg:-mt-4 lg:mr-24 lg:items-start lg:w-full">
+      {/* Right Column */}
+      <div className="flex flex-col justify-between items-center lg:mt-32 lg:mr-24 lg:items-start lg:w-full">
+        
         {/* Card Section */}
-        <div className="relative z-10 shadow-custom lg:w-3/4 w-full bg-white  rounded-md p-6 mb-8 lg:mb-0">
-          <h2 className="text-3xl font-semibold mb-4 text-center lg:text-left">{t('opening_hours')}</h2> {/* Translated title */}
+        <div className="relative z-10 shadow-custom lg:w-3/4 w-full bg-white rounded-md p-6 mb-8 lg:mb-0">
+          <h2 className="text-3xl font-semibold mb-4 text-center lg:text-left">{t('opening_hours')}</h2>
           <p className="mb-6 text-gray-600 text-center lg:text-left">
-            {t('relaxing_atmosphere')} {/* Translated description */}
+            {t('relaxing_atmosphere')}
           </p>
 
           {/* Opening Hours */}
           <div className="flex flex-col space-y-4">
             <div className="flex justify-between items-center border-b border-gray-300 pb-2">
-              <p className="font-medium">{t('sunday_to_tuesday')}:</p>
-              <p className="text-gray-600">10:00 - 09:00</p>
-            </div>
-
-            <div className="flex justify-between items-center border-b border-gray-300 pb-2">
-              <p className="font-medium">{t('wednesday_to_thursday')}:</p>
-              <p className="text-gray-600">11:30 - 10:30</p>
-            </div>
-
-            <div className="flex justify-between items-center border-b border-gray-300 pb-2">
-              <p className="font-medium">{t('friday_saturday')}:</p>
-              <p className="text-gray-600">10:30 - 12:00</p>
+              <p className="font-medium">{t('all_days')}:</p>
+              <p className="text-gray-600">10:00 - 10:00</p>
             </div>
           </div>
 
-          {/* Contact Information */}
+          {/* Contact Info */}
           <div className="flex items-center mt-6">
             <div className="bg-gray-200 p-3 rounded-full">
               <svg
@@ -75,15 +91,26 @@ const OpeningHours = () => {
             </div>
             <div className="ml-4 mr-4">
               <p className="text-sm text-gray-500">{t('call_anytime')}</p>
-              <p className="text-lg font-serif font-semibold"> <span dir={isRTL ? "ltr" : "ltr"}>+973 17772211</span></p>
+              <p className="text-lg font-serif font-semibold">
+  <span dir={isRTL ? "ltr" : "ltr"}>
+    <a href="tel:+97317772211" className="hover:text-yellow-600 transition-colors duration-200">
+      +973 17772211
+    </a>
+    {' / '}
+    <a href="tel:+97333117441" className="hover:text-yellow-600 transition-colors duration-200">
+      +973 33117441
+    </a>
+  </span>
+</p>
+
             </div>
           </div>
         </div>
 
-        {/* Image Section */}
+        {/* Bottom Decorative Image */}
         <div className="lg:w-5/5">
           <img
-            className="rounded-md w-full opacity-15 h-auto" // Set width to 100% and height auto for responsiveness
+            className="rounded-md w-full opacity-15 h-auto"
             src="https://wp.validthemes.net/restan/wp-content/uploads/2024/01/4-1.png"
             alt="Flower"
           />
