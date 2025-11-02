@@ -19,7 +19,7 @@ const PopularCategories = () => {
     const fetchPopularItems = async () => {
       try {
         setLoading(true);
-        const res = await axios.get('/api/admin/menu');
+        const res = await axios.get('https://arabi-aseel-1.onrender.com/api/admin/menu');
         
         // Filter for available items that have an image URL
         const availableItems = res.data.filter(
