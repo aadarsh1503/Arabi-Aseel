@@ -31,6 +31,7 @@ import ForgotPassword from './components/Login/ForgotPassword';
 import ResetPassword from './components/Login/ResetPassword';
 import MarketingCampaign from './components/spinGame/MarketingCampaign';
 import AdminWheelConfig from './components/spinGame/AdminWheelConfig';
+import AdminSpinLogs from './components/spinGame/AdminSpinLogs';
 
 // MUI Theme (no changes needed here)
 const theme = createTheme({
@@ -87,6 +88,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <AdminWheelConfig />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/logs"
+                  element={
+                    <ProtectedRoute>
+                      <AdminSpinLogs />
                     </ProtectedRoute>
                   }
                 />

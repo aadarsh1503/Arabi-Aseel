@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Trash2, Plus, Save, Settings, Upload, RefreshCw } from 'lucide-react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import PageToggle from '../AdminPanel/PageToggle';
 
 const API_BASE = '/api/marketing'; 
@@ -23,7 +25,7 @@ const AdminWheelConfig = () => {
     // Fetch Data
     const fetchData = async () => {
         try {
-            const token = localStorage.getItem('authToken'); // Assuming you use Bearer token
+            const token = localStorage.getItem('authToken'); 
             const configObj = { headers: { Authorization: `Bearer ${token}` } };
             
             const { data } = await axios.get(`${API_BASE}/admin/config`, configObj);
@@ -35,6 +37,7 @@ const AdminWheelConfig = () => {
             setLoading(false);
         } catch (error) {
             console.error("Error fetching data", error);
+            toast.error("Failed to load configuration data.");
             setLoading(false);
         }
     };
@@ -50,16 +53,16 @@ const AdminWheelConfig = () => {
             await axios.put(`${API_BASE}/admin/config`, config, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            alert("Settings Updated Successfully!");
+            toast.success("Settings Updated Successfully!");
         } catch (error) {
-            alert("Failed to update settings");
+            toast.error("Failed to update settings");
         }
     };
 
     // Add New Item
     const handleAddItem = async (e) => {
         e.preventDefault();
-        if(!newItem.image) return alert("Please upload an icon image");
+        if(!newItem.image) return toast.error("Please upload an icon image");
 
         setIsSubmitting(true);
         const formData = new FormData();
@@ -81,9 +84,10 @@ const AdminWheelConfig = () => {
             // Reset Form & Reload
             setNewItem({ label: '', type: 'lose', color: '#ffffff', text_color: '#000000', image: null });
             document.getElementById('fileInput').value = ""; // Reset file input
+            toast.success("Item added successfully!");
             fetchData();
         } catch (error) {
-            alert(error.response?.data?.message || "Error adding item");
+            toast.error(error.response?.data?.message || "Error adding item");
         } finally {
             setIsSubmitting(false);
         }
@@ -98,8 +102,9 @@ const AdminWheelConfig = () => {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setItems(items.filter(i => i.id !== id));
+            toast.success("Item deleted successfully");
         } catch (error) {
-            alert("Error deleting item");
+            toast.error("Error deleting item");
         }
     };
 
@@ -107,11 +112,26 @@ const AdminWheelConfig = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 p-6 md:p-10 font-sans text-slate-800">
-             <div>
-            <PageToggle activePage="spin_Game" />
-          </div>
-            <header className="mb-8">
+             
+            {/* Toast Container Configured */}
+            <ToastContainer 
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
 
+            <div>
+                <PageToggle activePage="spin_Game" />
+            </div>
+            
+            <header className="mb-8">
                 <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-2">
                     <Settings className="w-8 h-8 text-pink-600" />
                     Campaign Configuration

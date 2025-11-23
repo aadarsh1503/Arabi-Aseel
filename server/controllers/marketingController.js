@@ -9,7 +9,32 @@ const imagekit = new ImageKit({
 });
 
 // ================= ADMIN CONTROLLERS =================
+export const getSpinLogs = async (req, res) => {
+    try {
+        const query = `
+            SELECT 
+                l.id, 
+                l.created_at,
+                l.result_type,
+                p.name as user_name, 
+                p.mobile, 
+                p.place,
+                i.label as prize_label, 
+                i.image_url,
+                i.type as item_type
+            FROM marketing_logs l
+            JOIN marketing_participants p ON l.participant_id = p.id
+            LEFT JOIN marketing_items i ON l.item_won_id = i.id
+            ORDER BY l.created_at DESC
+        `;
 
+        const [logs] = await db.execute(query);
+        res.json(logs);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error fetching logs" });
+    }
+};
 export const addItem = async (req, res) => {
     try {
         const { label, type, color, text_color } = req.body;
