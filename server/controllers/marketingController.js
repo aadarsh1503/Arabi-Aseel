@@ -1,19 +1,15 @@
 import db from '../db.js';
 import ImageKit from 'imagekit';
-import { fileTypeFromBuffer } from 'file-type';
 
-// Initialize ImageKit (Reusing your existing config)
+// Initialize ImageKit
 const imagekit = new ImageKit({
   publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
   privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
   urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT,
 });
 
-// --- HELPER: Send SMS (Mock Function) ---
-
 // ================= ADMIN CONTROLLERS =================
 
-// 1. Add Campaign Item
 export const addItem = async (req, res) => {
     try {
         const { label, type, color, text_color } = req.body;
@@ -40,7 +36,6 @@ export const addItem = async (req, res) => {
     }
 };
 
-// 2. Get Admin Data (Items + Settings)
 export const getAdminData = async (req, res) => {
     try {
         const [items] = await db.execute("SELECT * FROM marketing_items");
@@ -53,7 +48,6 @@ export const getAdminData = async (req, res) => {
     }
 };
 
-// 3. Update Settings
 export const updateSettings = async (req, res) => {
     try {
         const { win_percentage, lose_percentage } = req.body;
@@ -71,7 +65,6 @@ export const updateSettings = async (req, res) => {
     }
 };
 
-// 4. Delete Item
 export const deleteItem = async (req, res) => {
     try {
         const { id } = req.params;
@@ -90,29 +83,27 @@ export const deleteItem = async (req, res) => {
 
 // ================= PUBLIC / GAME CONTROLLERS =================
 
-// 1. Send OTP
+// 1. Start Game (Register User)
 export const startGame = async (req, res) => {
     try {
         const { mobile, name, place } = req.body;
 
         if(!mobile) return res.status(400).json({ message: "Mobile number required" });
 
-        // Check if already played
+        // Check if user exists
         const [userCheck] = await db.execute("SELECT * FROM marketing_participants WHERE mobile = ?", [mobile]);
         
-        if (userCheck.length > 0 && userCheck[0].has_played) {
-            return res.status(403).json({ message: "This mobile number has already participated." });
-        }
+        // REMOVED: The check that returns 403 if userCheck[0].has_played is true.
+        // This allows the user to proceed to the game screen even if they played before.
 
-        // Insert User or Update User (mark as verified immediately since no OTP)
         if (userCheck.length === 0) {
-            // New User - is_verified = TRUE
+            // New User
             await db.execute(
                 "INSERT INTO marketing_participants (mobile, name, place, is_verified) VALUES (?, ?, ?, TRUE)",
                 [mobile, name, place]
             );
         } else {
-            // Update details if they exist but haven't played
+            // Update details for returning user
             await db.execute(
                 "UPDATE marketing_participants SET name = ?, place = ?, is_verified = TRUE WHERE mobile = ?",
                 [name, place, mobile]
@@ -129,16 +120,18 @@ export const startGame = async (req, res) => {
         res.status(500).json({ message: "Error starting game" });
     }
 };
-// 3. SPIN THE WHEEL (Core Logic)
+
+// 2. SPIN THE WHEEL
 export const spinWheel = async (req, res) => {
     try {
         const { mobile } = req.body;
 
-        // 1. Verify User Eligibility
-        // Note: We check is_verified, which startGame sets to TRUE
+        // 1. Verify User Exists
         const [user] = await db.execute("SELECT * FROM marketing_participants WHERE mobile = ? AND is_verified = TRUE", [mobile]);
         if (user.length === 0) return res.status(401).json({ message: "User not registered" });
-        if (user[0].has_played) return res.status(403).json({ message: "Already played" });
+        
+        // REMOVED: The check "if (user[0].has_played) return res.status(403)..."
+        // This allows the user to spin again.
 
         // 2. Get Settings & Items
         const [settingsRows] = await db.execute("SELECT * FROM marketing_settings");
@@ -149,7 +142,6 @@ export const spinWheel = async (req, res) => {
         // Fetch Items
         const [allItems] = await db.execute("SELECT * FROM marketing_items");
         
-        // --- Safety Check for White Screen ---
         if (allItems.length === 0) {
             return res.status(500).json({ message: "No prizes configured in database" });
         }
@@ -178,11 +170,13 @@ export const spinWheel = async (req, res) => {
             }
         }
 
-        // 4. Update DB
+        // 4. Update DB Logs
+        // We still mark has_played as TRUE, but since we don't check it anymore, it doesn't block them.
         if (resultType !== 'retry') {
             await db.execute("UPDATE marketing_participants SET has_played = TRUE WHERE id = ?", [user[0].id]);
         }
 
+        // Log every spin
         await db.execute(
             "INSERT INTO marketing_logs (participant_id, item_won_id, result_type) VALUES (?, ?, ?)",
             [user[0].id, selectedItem.id, resultType]

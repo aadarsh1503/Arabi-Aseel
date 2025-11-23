@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 // Import your logo if it's local, or assume it's in public folder
 // import logo from './i2.png'; 
 
-const API_BASE = '/api/marketing';
+const API_BASE = 'http://localhost:5000/api/marketing'; // Ensure this matches your backend URL
 
 const MarketingCampaign = () => {
   const { t, i18n } = useTranslation();
@@ -27,6 +27,15 @@ const MarketingCampaign = () => {
   useEffect(() => {
     setIsRTL(i18n.language === 'ar');
   }, [i18n.language]);
+
+  // --- RESET GAME LOGIC (Fix for Multiple Plays) ---
+  const resetGame = () => {
+    setPrize(null);
+    setRotation(0); // Optional: keep rotation or reset
+    setFeedbackMessage('');
+    // We keep the items loaded so we can go straight to game
+    setGameState('game'); 
+  };
 
   // --- 1. Register & Start Game ---
   const handleStartGame = async (e) => {
@@ -154,7 +163,6 @@ const MarketingCampaign = () => {
               <div className="space-y-1">
                 <label className="text-xs font-bold text-gray-400 uppercase tracking-wider block text-start">{t('label_mobile')}</label>
                 <div className="w-full" dir="ltr"> 
-                  {/* PhoneInput works best in LTR mode structurally, even in Arabic UI */}
                   <PhoneInput 
                     country={'bh'} 
                     value={formData.mobile} 
@@ -164,14 +172,12 @@ const MarketingCampaign = () => {
                       width: '100%', 
                       height: '50px', 
                       fontSize: '16px', 
-                      // Dynamically flip padding for RTL text alignment if needed, 
-                      // but usually PhoneInput keeps flag on left. 
                       paddingLeft: '48px', 
                       borderRadius: '0.375rem', 
                       border: '1px solid #e5e7eb',
                       backgroundColor: '#f9fafb',
                       color: '#1f2937',
-                      textAlign: 'left' // Phone numbers are usually read LTR
+                      textAlign: 'left'
                     }}
                     buttonStyle={{ 
                       border: '1px solid #e5e7eb', 
@@ -296,6 +302,14 @@ const MarketingCampaign = () => {
                   <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">{t('label_reservation_id')}</p>
                   <span className="font-mono text-lg" dir="ltr">+{formData.mobile}</span>
               </div>
+
+              {/* NEW: Play Again Button */}
+              {/* <button 
+                onClick={resetGame}
+                className="mt-8 w-full border-2 border-[#724F38] text-[#724F38] font-bold py-3 rounded-md transition-all hover:bg-[#724F38] hover:text-white uppercase tracking-widest text-sm"
+              >
+                {t('btn_spin_again') || "Spin Again"}
+              </button> */}
             </div>
           )}
 
