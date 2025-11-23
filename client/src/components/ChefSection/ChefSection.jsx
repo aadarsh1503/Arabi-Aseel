@@ -19,10 +19,11 @@ const ChefsSection = () => {
     const fetchChefs = async () => {
       try {
         setLoading(true);
-      
+    
         const response = await axios.get(API_URL);
-     
-        setChefs(response.data); 
+        console.log("API Response:", response.data);
+    
+        setChefs(Array.isArray(response.data) ? response.data : response.data.data || []);
       } catch (err) {
         console.error("Failed to fetch chefs:", err);
         setError(t('error_fetching_chefs', 'Could not load chef information.'));
@@ -30,6 +31,7 @@ const ChefsSection = () => {
         setLoading(false);
       }
     };
+    
 
     fetchChefs();
   }, [t]); // Added 't' to dependency array

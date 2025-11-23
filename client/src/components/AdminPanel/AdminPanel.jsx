@@ -271,8 +271,10 @@ const AdminPanel = () => {
       />
 
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <PageToggle activePage="menu" darkMode={darkMode} />
+      <PageToggle activePage="menu" darkMode={darkMode} />
+        <div className="flex justify-end items-end mb-8 -mt-4">
+
+         
           
           <div className="flex items-center space-x-4">
             <button onClick={() => setViewMode(v => v === 'grid' ? 'list' : 'grid')} className={`p-2 ml-4 rounded-full shadow transition-all hover:scale-110 ${darkMode ? 'bg-gray-700' : 'bg-white'}`} title={viewMode === 'grid' ? 'List View' : 'Grid View'}>

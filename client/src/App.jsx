@@ -29,6 +29,8 @@ import { AuthProvider } from './components/Authcontext/Authcontext';
 import Chef from './components/Chefs/Chef';
 import ForgotPassword from './components/Login/ForgotPassword';
 import ResetPassword from './components/Login/ResetPassword';
+import MarketingCampaign from './components/spinGame/MarketingCampaign';
+import AdminWheelConfig from './components/spinGame/AdminWheelConfig';
 
 // MUI Theme (no changes needed here)
 const theme = createTheme({
@@ -67,6 +69,10 @@ function App() {
                 <Route path="/sig5436272ertyvv" element={<Signup />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password/:token" element={<ResetPassword />} />
+                <Route path="/spin-the-game" element={<MarketingCampaign />} />
+                {/* <Route path="/spin-admin" element={<AdminWheelConfig />} /> */}
+
+
           
                 <Route
                   path="/admin"
@@ -76,6 +82,15 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
+                 <Route
+                  path="/spin-admin"
+                  element={
+                    <ProtectedRoute>
+                      <AdminWheelConfig />
+                    </ProtectedRoute>
+                  }
+                />
+                
                 
 
                 <Route

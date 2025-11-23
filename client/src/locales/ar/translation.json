@@ -449,7 +449,27 @@
   "resetPasswordToastSuccess": "تمت إعادة تعيين كلمة المرور بنجاح! سيتم تحويلك إلى صفحة تسجيل الدخول...",
   "resetPasswordToastError": "فشل في إعادة تعيين كلمة المرور. قد يكون الرابط غير صالح أو منتهي الصلاحية.",
     "forgotPassword1": "پاس ورڈ بھول گئے؟",
-    "all_days": "كل الأيام"
+    "all_days": "كل الأيام",
+    "header_title": "مكافآت لذيذة",
+    "header_subtitle": "أدر العجلة لتتذوق طعم الفوز",
+    "label_name": "الاسم الكريم",
+    "placeholder_name": "أدخل اسمك الكامل",
+    "label_mobile": "رقم الهاتف",
+    "alert_invalid_mobile": "يرجى إدخال رقم هاتف صحيح.",
+    "label_city": "المدينة / الفرع",
+    "placeholder_city": "من أي فرع تطلب؟",
+    "btn_preparing": "جاري تجهيز الطاولة...",
+    "btn_start": "ابدأ التجربة",
+    "feedback_retry": "الشيف يقول 'حاول مرة أخرى'! أدر العجلة مجدداً!",
+    "btn_spinning": "جاري الخلط...",
+    "btn_spin_again": "أدر العجلة مجدداً",
+    "btn_spin": "جرب حظي",
+    "msg_kitchen_closed": "المطبخ مغلق حالياً.",
+    "msg_no_prizes": "(لا توجد جوائز متاحة)",
+    "result_lose_title": "حظاً أوفر في المرة القادمة!",
+    "result_win_title": "لذيذ!",
+    "result_served": "لقد فزت بـ:",
+    "label_reservation_id": "رقم الحجز"
 
 
 

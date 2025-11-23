@@ -876,10 +876,11 @@ const Chef = () => {
       )}
 
       <div className="container font-noto-serif mx-auto p-4  md:p-8">
-        <header className="flex w-full -ml-12 -mr-12 items-center justify-between gap-6 mb-12 px-4 sm:px-6 lg:px-8">
-          <div>
+      <div>
             <PageToggle activePage="chef" />
           </div>
+        <header className="flex w-full  items-end justify-end gap-6 mb-12 px-4 sm:px-6 lg:px-8">
+         
           <button
             onClick={() => setIsLogoutModalOpen(true)}
             className="flex flex-shrink-0 items-center gap-2 px-4 py-2 rounded-lg text-red-500 bg-red-100 hover:bg-red-200 transition-colors"

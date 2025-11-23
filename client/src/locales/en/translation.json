@@ -458,7 +458,27 @@
   "resetPasswordToastSuccess": "Password reset successfully! Redirecting to login...",
   "resetPasswordToastError": "Failed to reset password. The link may be invalid or expired.",
   "forgotPassword1":"Forgot Password ?",
-    "all_days": "All Days"
+    "all_days": "All Days",
+    "header_title": "Delicious Rewards",
+    "header_subtitle": "Spin for a taste of victory",
+    "label_name": "Your Name",
+    "placeholder_name": "Enter your full name",
+    "label_mobile": "Mobile Number",
+    "alert_invalid_mobile": "Please enter a valid mobile number.",
+    "label_city": "City / Branch",
+    "placeholder_city": "Where are you dining from?",
+    "btn_preparing": "Preparing Table...",
+    "btn_start": "Start Dining",
+    "feedback_retry": "The chef says 'Try Again'! Spin one more time!",
+    "btn_spinning": "Mixing...",
+    "btn_spin_again": "Spin Again",
+    "btn_spin": "Serve My Luck",
+    "msg_kitchen_closed": "The kitchen is closed at the moment.",
+    "msg_no_prizes": "(No prizes loaded)",
+    "result_lose_title": "Better luck next time!",
+    "result_win_title": "Delicious!",
+    "result_served": "You have been served:",
+    "label_reservation_id": "Reservation ID"
 
 
 
