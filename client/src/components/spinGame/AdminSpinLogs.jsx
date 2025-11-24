@@ -8,14 +8,22 @@ import {
     Calendar, 
     MapPin, 
     Smartphone, 
-    FileSpreadsheet, // Icon for Excel/Sheets
-    Download
+    FileSpreadsheet, 
+    Trash2,          
+    AlertTriangle    
 } from 'lucide-react';
-import PageToggle from '../AdminPanel/PageToggle'; 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import PageToggle from '../AdminPanel/PageToggle';
+import { useTranslation } from 'react-i18next';
+
 
 const API_BASE = '/api/marketing';
 
 const AdminSpinLogs = () => {
+    const { t, i18n } = useTranslation();
+    const isRTL = i18n.language === 'ar';
+
     const [logs, setLogs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -23,38 +31,89 @@ const AdminSpinLogs = () => {
 
     // Fetch Logs
     useEffect(() => {
-        const fetchLogs = async () => {
-            try {
-                const token = localStorage.getItem('authToken');
-                const { data } = await axios.get(`${API_BASE}/admin/logs`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                setLogs(data);
-            } catch (error) {
-                console.error("Error fetching logs", error);
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchLogs();
     }, []);
 
-    // --- EXPORT TO CSV (Google Sheets Compatible) ---
+    const fetchLogs = async () => {
+        try {
+            const token = localStorage.getItem('authToken');
+            const { data } = await axios.get(`${API_BASE}/admin/logs`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setLogs(data);
+        } catch (error) {
+            console.error("Error fetching logs", error);
+            toast.error(t('logs_toast_load_fail'));
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // --- FUNCTION 1: DELETE SINGLE PLAYER ---
+    const handleDeleteOne = async (participantId) => {
+        // Confirmation
+        if (!window.confirm(t('logs_confirm_delete_one'))) {
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem('authToken');
+            await axios.delete(`${API_BASE}/participants/${participantId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            // Update UI instantly without reloading
+            setLogs(prevLogs => prevLogs.filter(log => log.participant_id !== participantId));
+            toast.success(t('logs_toast_delete_success'));
+        } catch (error) {
+            console.error(error);
+            toast.error(t('logs_toast_delete_fail'));
+        }
+    };
+
+    // --- FUNCTION 2: CLEAR ALL PLAYERS ---
+    const handleClearAll = async () => {
+        // Double Confirmation for safety
+        const confirm1 = window.confirm(t('logs_confirm_clear_1'));
+        if (!confirm1) return;
+        
+        const confirm2 = window.confirm(t('logs_confirm_clear_2'));
+        if (!confirm2) return;
+
+        try {
+            const token = localStorage.getItem('authToken');
+            await axios.delete(`${API_BASE}/participants`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            // Clear UI
+            setLogs([]);
+            toast.success(t('logs_toast_clear_success'));
+        } catch (error) {
+            console.error(error);
+            toast.error(t('logs_toast_clear_fail'));
+        }
+    };
+
+    // Export to CSV Logic
     const exportToCSV = () => {
-        if (!logs.length) return alert("No data to export");
+        if (!logs.length) return toast.info(t('logs_toast_no_export'));
+        
+        // Translate Headers for CSV
+        const headers = [
+            t('logs_th_player'), 
+            t('logs_th_mobile'), 
+            t('logs_th_location'), 
+            t('logs_th_result'), 
+            t('logs_th_prize'), 
+            t('logs_th_time')
+        ];
 
-        // 1. Define Headers
-        const headers = ["Player Name", "Mobile Number", "Place/City", "Result Type", "Prize Won", "Date & Time"];
-
-        // 2. Format Rows (Handle commas and special chars)
         const csvRows = [
-            headers.join(','), // Header Row
+            headers.join(','), 
             ...logs.map(log => {
                 const date = new Date(log.created_at).toLocaleString();
-                
-                // Helper to escape quotes and wrap text in quotes (prevents broken columns)
                 const escape = (text) => `"${String(text || '').replace(/"/g, '""')}"`;
-
                 return [
                     escape(log.user_name),
                     escape(log.mobile),
@@ -65,10 +124,7 @@ const AdminSpinLogs = () => {
                 ].join(',');
             })
         ];
-
-        // 3. Create File and Download
-        const csvString = csvRows.join('\n');
-        const blob = new Blob([csvString], { type: 'text/csv' });
+        const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -76,32 +132,23 @@ const AdminSpinLogs = () => {
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
     };
-
-    // Calculate Stats
-    const totalSpins = logs.length;
-    const totalWins = logs.filter(l => l.result_type === 'prize').length;
-    const totalLosses = logs.filter(l => l.result_type === 'lose').length;
 
     // Filter Logic
     const filteredLogs = logs.filter(log => {
         const matchesSearch = 
-            log.user_name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-            log.mobile.includes(searchTerm) ||
-            log.prize_label?.toLowerCase().includes(searchTerm.toLowerCase());
+            (log.user_name && log.user_name.toLowerCase().includes(searchTerm.toLowerCase())) || 
+            (log.mobile && log.mobile.includes(searchTerm)) ||
+            (log.prize_label && log.prize_label.toLowerCase().includes(searchTerm.toLowerCase()));
         
         const matchesFilter = filter === 'all' || log.result_type === filter;
-
         return matchesSearch && matchesFilter;
     });
 
-    // Helper: Format Date
     const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return new Intl.DateTimeFormat('en-US', {
+        return new Intl.DateTimeFormat(i18n.language === 'ar' ? 'ar-BH' : 'en-US', {
             month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
-        }).format(date);
+        }).format(new Date(dateString));
     };
 
     if (loading) return (
@@ -111,125 +158,108 @@ const AdminSpinLogs = () => {
     );
 
     return (
-        <div className="min-h-screen bg-gray-50 p-6 md:p-10 font-sans text-slate-800">
-            {/* IMPORTANT: ensure activePage matches 'user_logs' exactly as per PageToggle */}
-            <PageToggle activePage="user_logs" />
+        <div 
+            className="min-h-screen bg-gray-50 p-6 md:p-10 font-sans text-slate-800"
+            dir={isRTL ? 'rtl' : 'ltr'}
+        >
+            <ToastContainer 
+                position={isRTL ? "top-left" : "top-right"} 
+                autoClose={3000} 
+                theme="light" 
+                rtl={isRTL}
+            />
+            
+            <div dir='ltr'>
+                <PageToggle activePage="user_logs" />
+            </div>
 
-            {/* Header & Stats */}
-            <header className="mb-10 mt-6">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-                    <div>
-                        <h1 className="text-3xl font-bold text-slate-900">Player Analytics</h1>
-                        <p className="text-gray-500 mt-1">View participation history and results.</p>
-                    </div>
-                    
-                    {/* EXPORT BUTTON */}
-                    <button 
-                        onClick={exportToCSV}
-                        className="mt-4 md:mt-0 flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-lg shadow-md transition-all font-medium"
-                    >
-                        <FileSpreadsheet className="w-5 h-5" />
-                        Export Data
-                    </button>
+            {/* Header */}
+            <header className="mb-8 mt-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+                <div>
+                    <h1 className="text-3xl font-bold text-slate-900">{t('logs_title')}</h1>
+                    <p className="text-gray-500 mt-1">{t('logs_total_records', { count: logs.length })}</p>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Stat Card 1 */}
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
-                        <div className="p-3 bg-blue-50 rounded-xl text-blue-600">
-                            <RefreshCcw className="w-8 h-8" />
-                        </div>
-                        <div>
-                            <p className="text-gray-500 text-sm font-medium">Total Spins</p>
-                            <h3 className="text-2xl font-bold text-slate-800">{totalSpins}</h3>
-                        </div>
-                    </div>
+                <div className="flex gap-3">
+                    {/* Export Button */}
+                    <button 
+                        onClick={exportToCSV}
+                        className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow-sm transition-all font-medium text-sm"
+                    >
+                        <FileSpreadsheet className={`w-4 h-4 ${isRTL ? 'ml-1' : 'mr-0'}`} />
+                        {t('logs_btn_export')}
+                    </button>
 
-                    {/* Stat Card 2 */}
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
-                        <div className="p-3 bg-green-50 rounded-xl text-green-600">
-                            <Trophy className="w-8 h-8" />
-                        </div>
-                        <div>
-                            <p className="text-gray-500 text-sm font-medium">Prizes Won</p>
-                            <h3 className="text-2xl font-bold text-slate-800">{totalWins}</h3>
-                        </div>
-                    </div>
-
-                    {/* Stat Card 3 */}
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
-                        <div className="p-3 bg-red-50 rounded-xl text-red-600">
-                            <Frown className="w-8 h-8" />
-                        </div>
-                        <div>
-                            <p className="text-gray-500 text-sm font-medium">Lost/Retry</p>
-                            <h3 className="text-2xl font-bold text-slate-800">{totalLosses}</h3>
-                        </div>
-                    </div>
+                    {/* Clear All Button */}
+                    {logs.length > 0 && (
+                        <button 
+                            onClick={handleClearAll}
+                            className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg shadow-sm transition-all font-medium text-sm"
+                        >
+                            <AlertTriangle className={`w-4 h-4 ${isRTL ? 'ml-1' : 'mr-0'}`} />
+                            {t('logs_btn_clear_all')}
+                        </button>
+                    )}
                 </div>
             </header>
 
             {/* Controls */}
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-                {/* Search */}
                 <div className="relative w-full md:w-96">
-                    <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                    <Search className={`absolute ${isRTL ? 'right-3' : 'left-3'} top-3 w-5 h-5 text-gray-400`} />
                     <input 
                         type="text" 
-                        placeholder="Search by name, mobile, or prize..." 
+                        placeholder={t('logs_search_placeholder')}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none transition-all"
+                        className={`w-full ${isRTL ? 'pr-10 pl-4' : 'pl-10 pr-4'} py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none`}
                     />
                 </div>
 
-                {/* Filter Tabs */}
                 <div className="flex bg-gray-100 p-1 rounded-lg">
                     {['all', 'prize', 'lose'].map((type) => (
                         <button
                             key={type}
                             onClick={() => setFilter(type)}
                             className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all capitalize ${
-                                filter === type 
-                                ? 'bg-white text-slate-900 shadow-sm' 
-                                : 'text-gray-500 hover:text-gray-700'
+                                filter === type ? 'bg-white text-slate-900 shadow-sm' : 'text-gray-500'
                             }`}
                         >
-                            {type === 'all' ? 'All Logs' : type}
+                            {type === 'all' ? t('logs_filter_all') : 
+                             type === 'prize' ? t('logs_filter_prize') : 
+                             t('logs_filter_lose')}
                         </button>
                     ))}
                 </div>
             </div>
 
-            {/* Table List */}
+            {/* Table */}
             <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-gray-50 border-b border-gray-200">
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Player</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Location</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Result</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Prize Details</th>
-                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-right">Time</th>
+                                <th className={`px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider ${isRTL ? 'text-right' : 'text-left'}`}>{t('logs_th_player')}</th>
+                                <th className={`px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider ${isRTL ? 'text-right' : 'text-left'}`}>{t('logs_th_location')}</th>
+                                <th className={`px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider ${isRTL ? 'text-right' : 'text-left'}`}>{t('logs_th_result')}</th>
+                                <th className={`px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider ${isRTL ? 'text-right' : 'text-left'}`}>{t('logs_th_prize')}</th>
+                                <th className={`px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider ${isRTL ? 'text-left' : 'text-right'}`}>{t('logs_th_time')}</th>
+                                <th className={`px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider ${isRTL ? 'text-left' : 'text-right'}`}>{t('logs_th_action')}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
                             {filteredLogs.length > 0 ? (
                                 filteredLogs.map((log) => (
-                                    <tr key={log.id} className="hover:bg-blue-50/30 transition-colors group">
-                                        {/* Player Info */}
+                                    <tr key={log.log_id} className="hover:bg-blue-50/30 transition-colors">
+                                        
+                                        {/* Player */}
                                         <td className="px-6 py-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-slate-700 to-slate-900 flex items-center justify-center text-white font-bold text-sm">
-                                                    {log.user_name ? log.user_name.charAt(0).toUpperCase() : 'U'}
-                                                </div>
-                                                <div>
-                                                    <p className="font-bold text-slate-800">{log.user_name || 'Unknown'}</p>
-                                                    <p className="text-xs text-gray-500 flex items-center gap-1">
-                                                        <Smartphone className="w-3 h-3" /> +{log.mobile}
-                                                    </p>
-                                                </div>
+                                            <div>
+                                                <p className="font-bold text-slate-800">{log.user_name || t('logs_unknown_user')}</p>
+                                                <p className="text-xs text-gray-500 flex items-center gap-1" dir="ltr">
+                                                    <Smartphone className="w-3 h-3" /> 
+                                                    <span className={isRTL ? 'mr-1' : ''}>+{log.mobile}</span>
+                                                </p>
                                             </div>
                                         </td>
 
@@ -240,63 +270,65 @@ const AdminSpinLogs = () => {
                                             </span>
                                         </td>
 
-                                        {/* Result Type Badge */}
+                                        {/* Result */}
                                         <td className="px-6 py-4">
                                             {log.result_type === 'prize' ? (
-                                                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold uppercase tracking-wide border border-green-200">
-                                                    <Trophy className="w-3 h-3" /> Winner
+                                                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold uppercase tracking-wide">
+                                                    <Trophy className="w-3 h-3" /> {t('logs_badge_winner')}
                                                 </span>
                                             ) : log.result_type === 'retry' ? (
-                                                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-bold uppercase tracking-wide border border-orange-200">
-                                                    <RefreshCcw className="w-3 h-3" /> Retry
+                                                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-bold uppercase tracking-wide">
+                                                    <RefreshCcw className="w-3 h-3" /> {t('logs_badge_retry')}
                                                 </span>
                                             ) : (
-                                                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-xs font-bold uppercase tracking-wide border border-gray-200">
-                                                    <Frown className="w-3 h-3" /> Lost
+                                                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-xs font-bold uppercase tracking-wide">
+                                                    <Frown className="w-3 h-3" /> {t('logs_badge_lost')}
                                                 </span>
                                             )}
                                         </td>
 
-                                        {/* Prize Details */}
+                                        {/* Prize */}
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">
-                                                {log.image_url ? (
-                                                    <img src={log.image_url} alt="Prize" className="w-8 h-8 object-contain" />
-                                                ) : (
-                                                    <div className="w-8 h-8 bg-gray-100 rounded-full"></div>
-                                                )}
+                                                {log.image_url && <img src={log.image_url} alt="Prize" className="w-8 h-8 object-contain" />}
                                                 <span className={`text-sm font-medium ${log.result_type === 'prize' ? 'text-slate-800' : 'text-gray-400'}`}>
-                                                    {log.prize_label || "No Prize"}
+                                                    {log.prize_label || "-"}
                                                 </span>
                                             </div>
                                         </td>
 
                                         {/* Date */}
-                                        <td className="px-6 py-4 text-right">
-                                            <div className="flex items-center justify-end gap-2 text-xs text-gray-500">
+                                        <td className={`px-6 py-4 ${isRTL ? 'text-left' : 'text-right'}`}>
+                                            <div className={`flex items-center ${isRTL ? 'justify-start' : 'justify-end'} gap-2 text-xs text-gray-500`}>
                                                 <Calendar className="w-3 h-3" />
-                                                {formatDate(log.created_at)}
+                                                <span dir="ltr">{formatDate(log.created_at)}</span>
                                             </div>
+                                        </td>
+
+                                        {/* DELETE ACTION BUTTON */}
+                                        <td className={`px-6 py-4 ${isRTL ? 'text-left' : 'text-right'}`}>
+                                            <button 
+                                                onClick={() => handleDeleteOne(log.participant_id)}
+                                                className="text-gray-400 hover:text-red-600 transition-colors p-2 hover:bg-red-50 rounded-full"
+                                                title={t('logs_btn_delete')}
+                                            >
+                                                <Trash2 className="w-5 h-5" />
+                                            </button>
                                         </td>
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="5" className="px-6 py-12 text-center text-gray-400">
-                                        <div className="flex flex-col items-center justify-center">
-                                            <Search className="w-8 h-8 mb-2 opacity-20" />
-                                            <p>No logs found matching your criteria.</p>
-                                        </div>
+                                    <td colSpan="6" className="px-6 py-12 text-center text-gray-400">
+                                        {t('logs_no_data')}
                                     </td>
                                 </tr>
                             )}
                         </tbody>
                     </table>
                 </div>
-                
-                {/* Footer */}
                 <div className="bg-gray-50 px-6 py-3 border-t border-gray-200 flex justify-between items-center">
-                    <span className="text-xs text-gray-500">Showing {filteredLogs.length} records</span>
+                    <span className="text-xs text-gray-500">{t('logs_showing_records', { count: filteredLogs.length })}</span>
                 </div>
             </div>
         </div>

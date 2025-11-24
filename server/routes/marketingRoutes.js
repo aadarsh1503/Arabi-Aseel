@@ -8,7 +8,9 @@ import {
     deleteItem,
     startGame, // Changed from requestOtp/verifyOtp
     spinWheel,
-    getSpinLogs
+    getSpinLogs,
+    deleteParticipant,
+    deleteAllParticipants
 } from '../controllers/marketingController.js';
 
 const router = express.Router();
@@ -23,6 +25,8 @@ router.get('/admin/logs', protect, getSpinLogs);
 // --- Public Routes (User Facing) ---
 router.post('/start', startGame); // New Route: Registers user and returns items
 router.post('/spin', spinWheel);
+router.delete('/participants/:id', deleteParticipant);
+router.delete('/participants', deleteAllParticipants);
 
 
 export default router;

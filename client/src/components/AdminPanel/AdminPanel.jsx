@@ -14,7 +14,7 @@ import { useAuth } from '../Authcontext/Authcontext';
 import PageToggle from './PageToggle';
 
 import MenuExporter from './MenuExporter';
-import api from '../../api/axiosConfig'; // API instance ko import karna zaroori hai
+import api from '../../api/axiosConfig';
 
 // Toast Notification Configuration
 const notify = {
@@ -271,8 +271,10 @@ const AdminPanel = () => {
       />
 
       <div className="max-w-7xl mx-auto">
+        <div dir='ltr'>
       <PageToggle activePage="menu" darkMode={darkMode} />
-        <div className="flex justify-end items-end mb-8 -mt-4">
+      </div>
+        <div className="flex justify-end items-end mb-8 mt-0 lg:-mt-4">
 
          
           

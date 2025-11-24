@@ -876,7 +876,7 @@ const Chef = () => {
       )}
 
       <div className="container font-noto-serif mx-auto p-4  md:p-8">
-      <div>
+      <div dir='ltr'>
             <PageToggle activePage="chef" />
           </div>
         <header className="flex w-full  items-end justify-end gap-6 mb-12 px-4 sm:px-6 lg:px-8">
