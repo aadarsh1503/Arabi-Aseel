@@ -1,0 +1,3 @@
+.animate-spin-infinite {
+    animation: continuous-spin 9s linear infinite; 
+  }
