@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import api from "../../../api/axiosConfig";
 import i3 from "./i3.png";
 import g1 from "./g1.png";
 import "./f.css";
@@ -11,6 +12,20 @@ const Footer = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [version, setVersion] = useState('1.0.0');
+
+  useEffect(() => {
+    fetchVersion();
+  }, []);
+
+  const fetchVersion = async () => {
+    try {
+      const response = await api.get('/settings/version');
+      setVersion(response.data.version);
+    } catch (error) {
+      console.error('Error fetching version:', error);
+    }
+  };
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
@@ -135,6 +150,13 @@ const Footer = () => {
               </form>
             </div>
           </div>
+        </div>
+        
+        {/* Version Footer */}
+        <div className="bg-black text-center py-4 border-t border-gray-700">
+          <p className="text-white text-sm">
+            {t('restaurant_name')} v{version}
+          </p>
         </div>
       </footer>
     </>

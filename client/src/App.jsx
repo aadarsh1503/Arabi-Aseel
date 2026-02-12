@@ -16,6 +16,9 @@ import OurFirst from './components/OurChef/OurFirst';
 import Reservation from './components/Reservation/Reservation';
 import MenuItem1 from './components/MenuItem1/MenuItem1';
 import AdminPanel from './components/AdminPanel/AdminPanel';
+import RegistrationPanel from './components/AdminPanel/RegistrationPanel';
+import DatabaseManagement from './components/AdminPanel/DatabaseManagement';
+import CustomerRegistration from './components/Registration/CustomerRegistration';
 import Signup from './components/Signup/Signup';
 import Login from './components/Login/Login';
 
@@ -71,6 +74,7 @@ function App() {
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password/:token" element={<ResetPassword />} />
                 <Route path="/spin-the-game" element={<MarketingCampaign />} />
+                <Route path="/register" element={<CustomerRegistration />} />
                 {/* <Route path="/spin-admin" element={<AdminWheelConfig />} /> */}
 
 
@@ -96,6 +100,22 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <AdminSpinLogs />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/registrations"
+                  element={
+                    <ProtectedRoute>
+                      <RegistrationPanel />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/database"
+                  element={
+                    <ProtectedRoute>
+                      <DatabaseManagement />
                     </ProtectedRoute>
                   }
                 />
