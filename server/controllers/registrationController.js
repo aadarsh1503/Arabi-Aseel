@@ -2,12 +2,7 @@ import db from '../db.js';
 import { v4 as uuidv4 } from 'uuid';
 import sendEmail from '../utils/sendEmail.js';
 import geoip from 'geoip-lite';
-
-// North Sehla coordinates (approximate center)
-const NORTH_SEHLA_CENTER = {
-  lat: 26.1547,
-  lng: 50.5089
-};
+import { verifyLocationInEligibleAreas, ELIGIBLE_AREAS } from '../utils/locationBoundaries.js';
 
 // Bahrain boundaries (to verify user is in Bahrain)
 const BAHRAIN_BOUNDS = {
@@ -133,7 +128,7 @@ function generateCouponCode() {
 function generateCouponEmail(name, couponCode, couponType) {
   const companyLogo = process.env.COMPANY_LOGO;
   const companyName = process.env.COMPANY_NAME;
-  const discount = couponType === 'FREE_MEAL' ? 'FREE MEAL' : '50% FLAT DISCOUNT';
+  const discount = couponType === 'BUY_1_GET_1' ? 'BUY 1 GET 1 FREE' : '50% FLAT DISCOUNT';
 
   return `
     <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f4f4f4">
@@ -241,11 +236,16 @@ function generateCouponEmail(name, couponCode, couponType) {
 // Register customer
 export const registerCustomer = async (req, res) => {
   try {
-    const { name, mobile, email, address_title, address_city, address_block } = req.body;
+    const { name, mobile, email, address_title, building_number, address_city, address_block, latitude, longitude } = req.body;
 
     // Validation
-    if (!name || !mobile || !email || !address_title || !address_city || !address_block) {
+    if (!name || !mobile || !email || !address_title || !building_number || !address_city || !address_block) {
       return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    // Validate coordinates
+    if (!latitude || !longitude) {
+      return res.status(400).json({ error: 'Location coordinates are required' });
     }
 
     // Check registration limit (100 customers)
@@ -260,33 +260,52 @@ export const registerCustomer = async (req, res) => {
       return res.status(400).json({ error: 'This email is already registered' });
     }
 
-    // Get client IP and verify location
-    const clientIP = getClientIP(req);
-    console.log(`📍 Registration attempt from IP: ${clientIP}`);
+    // Verify location using polygon-based boundary checking
+    const locationCheck = verifyLocationInEligibleAreas(latitude, longitude);
     
-    const locationCheck = verifyNorthSehlaLocationByIP(clientIP);
-
     if (!locationCheck.valid) {
-      console.log(`❌ Location verification failed: ${locationCheck.message}`);
+      console.log(`❌ Location verification failed: User at (${latitude}, ${longitude}) is outside eligible areas`);
       return res.status(400).json({ 
-        error: locationCheck.message,
-        distance: locationCheck.distance 
+        error: locationCheck.message
       });
     }
 
-    console.log(`✅ Location verified: ${locationCheck.distance}m from North Sehla center`);
+    console.log(`✅ Location verified: User is in ${locationCheck.areaName} (${locationCheck.areaNameAr})`);
 
-    // Generate coupon
+    // Generate coupon with proper 50/50 distribution
     const couponCode = generateCouponCode();
-    const couponType = Math.random() < 0.5 ? 'FREE_MEAL' : 'DISCOUNT_50';
+    
+    // Count existing coupons to maintain balance
+    const [typeCount] = await db.query(`
+      SELECT 
+        SUM(CASE WHEN coupon_type = 'BUY_1_GET_1' THEN 1 ELSE 0 END) as buy1get1_count,
+        SUM(CASE WHEN coupon_type = 'DISCOUNT_50' THEN 1 ELSE 0 END) as discount_count
+      FROM registrations
+    `);
+    
+    const buy1get1Count = typeCount[0].buy1get1_count || 0;
+    const discountCount = typeCount[0].discount_count || 0;
+    
+    // Assign coupon type to maintain 50/50 balance
+    let couponType;
+    if (buy1get1Count < discountCount) {
+      couponType = 'BUY_1_GET_1';
+    } else if (discountCount < buy1get1Count) {
+      couponType = 'DISCOUNT_50';
+    } else {
+      // If equal, randomly assign
+      couponType = Math.random() < 0.5 ? 'BUY_1_GET_1' : 'DISCOUNT_50';
+    }
+    
+    console.log(`📊 Current distribution - B1G1: ${buy1get1Count}, 50%: ${discountCount} → Assigning: ${couponType}`);
 
     // Insert into database
     const [result] = await db.query(
       `INSERT INTO registrations 
-       (name, mobile, email, address_title, address_city, address_block, latitude, longitude, coupon_code, coupon_type) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [name, mobile, email, address_title, address_city, address_block, 
-       locationCheck.latitude, locationCheck.longitude, couponCode, couponType]
+       (name, mobile, email, address_title, building_number, address_city, address_block, latitude, longitude, coupon_code, coupon_type) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [name, mobile, email, address_title, building_number, address_city, address_block, 
+       latitude, longitude, couponCode, couponType]
     );
 
     // Send email with coupon
@@ -369,8 +388,8 @@ export const getCountryFromIP = async (req, res) => {
 export const getAllRegistrations = async (req, res) => {
   try {
     const [registrations] = await db.query(`
-      SELECT id, name, mobile, email, address_title, address_city, address_block,
-             coupon_code, coupon_type, is_used, used_at, created_at
+      SELECT id, name, mobile, email, address_title, building_number, address_city, address_block,
+             latitude, longitude, coupon_code, coupon_type, is_used, used_at, created_at
       FROM registrations
       ORDER BY created_at DESC
     `);
@@ -411,8 +430,8 @@ export const markCouponUsed = async (req, res) => {
 export const exportRegistrationsCSV = async (req, res) => {
   try {
     const [registrations] = await db.query(`
-      SELECT name, mobile, email, address_title, address_city, address_block,
-             coupon_code, coupon_type, is_used, used_at, created_at
+      SELECT name, mobile, email, address_title, building_number, address_city, address_block,
+             latitude, longitude, coupon_code, coupon_type, is_used, used_at, created_at
       FROM registrations
       ORDER BY created_at DESC
     `);
@@ -422,19 +441,25 @@ export const exportRegistrationsCSV = async (req, res) => {
     }
 
     // Convert to CSV format
-    const headers = ['Name', 'Mobile', 'Email', 'Address Title', 'City', 'Block', 
+    const headers = ['Name', 'Mobile', 'Email', 'Address Title', 'Building Number', 'City', 'Postal Code', 
+                     'Latitude', 'Longitude', 'Google Maps Link',
                      'Coupon Code', 'Coupon Type', 'Used', 'Used At', 'Registered At'];
     
     const csvRows = [headers.join(',')];
     
     registrations.forEach(reg => {
+      const mapsLink = `https://www.google.com/maps?q=${reg.latitude},${reg.longitude}`;
       const row = [
         `"${reg.name}"`,
         `"${reg.mobile}"`,
         `"${reg.email}"`,
         `"${reg.address_title}"`,
+        `"${reg.building_number || ''}"`,
         `"${reg.address_city}"`,
         `"${reg.address_block}"`,
+        `"${reg.latitude}"`,
+        `"${reg.longitude}"`,
+        `"${mapsLink}"`,
         `"${reg.coupon_code}"`,
         `"${reg.coupon_type}"`,
         reg.is_used ? 'Yes' : 'No',
@@ -460,8 +485,8 @@ export const exportRegistrationsCSV = async (req, res) => {
 export const exportRegistrationsExcel = async (req, res) => {
   try {
     const [registrations] = await db.query(`
-      SELECT name, mobile, email, address_title, address_city, address_block,
-             coupon_code, coupon_type, is_used, used_at, created_at
+      SELECT name, mobile, email, address_title, building_number, address_city, address_block,
+             latitude, longitude, coupon_code, coupon_type, is_used, used_at, created_at
       FROM registrations
       ORDER BY created_at DESC
     `);
@@ -472,19 +497,26 @@ export const exportRegistrationsExcel = async (req, res) => {
 
     res.json({
       success: true,
-      data: registrations.map(reg => ({
-        Name: reg.name,
-        Mobile: reg.mobile,
-        Email: reg.email,
-        'Address Title': reg.address_title,
-        City: reg.address_city,
-        Block: reg.address_block,
-        'Coupon Code': reg.coupon_code,
-        'Coupon Type': reg.coupon_type,
-        Used: reg.is_used ? 'Yes' : 'No',
-        'Used At': reg.used_at ? new Date(reg.used_at).toLocaleString() : '',
-        'Registered At': new Date(reg.created_at).toLocaleString()
-      }))
+      data: registrations.map(reg => {
+        const mapsLink = `https://www.google.com/maps?q=${reg.latitude},${reg.longitude}`;
+        return {
+          Name: reg.name,
+          Mobile: reg.mobile,
+          Email: reg.email,
+          'Address Title': reg.address_title,
+          'Building Number': reg.building_number || '',
+          City: reg.address_city,
+          'Postal Code': reg.address_block,
+          Latitude: reg.latitude,
+          Longitude: reg.longitude,
+          'Google Maps Link': mapsLink,
+          'Coupon Code': reg.coupon_code,
+          'Coupon Type': reg.coupon_type,
+          Used: reg.is_used ? 'Yes' : 'No',
+          'Used At': reg.used_at ? new Date(reg.used_at).toLocaleString() : '',
+          'Registered At': new Date(reg.created_at).toLocaleString()
+        };
+      })
     });
 
   } catch (error) {
@@ -519,5 +551,45 @@ export const deleteRegistration = async (req, res) => {
   } catch (error) {
     console.error('Error deleting registration:', error);
     res.status(500).json({ error: 'Failed to delete registration' });
+  }
+};
+
+// Verify location is in eligible areas (Public endpoint for frontend)
+export const verifyLocation = async (req, res) => {
+  try {
+    const { latitude, longitude } = req.body;
+
+    if (!latitude || !longitude) {
+      return res.status(400).json({ 
+        valid: false,
+        message: 'Latitude and longitude are required' 
+      });
+    }
+
+    // Use polygon-based verification
+    const locationCheck = verifyLocationInEligibleAreas(latitude, longitude);
+    
+    if (locationCheck.valid) {
+      console.log(`✅ Location verified: (${latitude}, ${longitude}) is in ${locationCheck.areaName}`);
+      return res.json({
+        valid: true,
+        areaName: locationCheck.areaName,
+        areaNameAr: locationCheck.areaNameAr,
+        message: locationCheck.message
+      });
+    } else {
+      console.log(`❌ Location outside eligible areas: (${latitude}, ${longitude})`);
+      return res.json({
+        valid: false,
+        message: locationCheck.message
+      });
+    }
+
+  } catch (error) {
+    console.error('Error verifying location:', error);
+    res.status(500).json({ 
+      valid: false,
+      message: 'Failed to verify location. Please try again.' 
+    });
   }
 };

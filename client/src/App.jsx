@@ -74,7 +74,7 @@ function App() {
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password/:token" element={<ResetPassword />} />
                 <Route path="/spin-the-game" element={<MarketingCampaign />} />
-                <Route path="/register" element={<CustomerRegistration />} />
+                <Route path="/exclusive-offer" element={<CustomerRegistration />} />
                 {/* <Route path="/spin-admin" element={<AdminWheelConfig />} /> */}
 
 

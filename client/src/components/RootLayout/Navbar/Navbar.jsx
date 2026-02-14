@@ -44,7 +44,7 @@ const Navbar = () => {
       "/reset-password", 
       "/spin-the-game",
       "/spin-admin",
-      "/register"
+      "/exclusive-offer"
     ];
 
    

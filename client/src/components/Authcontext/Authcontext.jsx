@@ -11,23 +11,25 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const verifySession = async () => {
-      // No need to pass headers manually, the interceptor does it!
+      // Only verify if there's a token
       if (token) {
         try {
           // The interceptor will add the token header automatically
           const userResponse = await api.get('/auth/me'); 
           setUser(userResponse.data);
         } catch (error) {
-          // The interceptor will handle 401s and redirect.
-          // We can just log out the state here.
+          // Token is invalid, clear it
           console.error("Session verification failed", error);
-          logout();
+          localStorage.removeItem('authToken');
+          setToken(null);
+          setUser(null);
         }
       }
+      // Always set loading to false after verification attempt
       setLoading(false);
     };
     verifySession();
-  }, [token]); // Run this effect when the token changes
+  }, []); // Only run once on mount
 
   const login = (newToken, userData) => {
     // CHANGE 2: Save to 'authToken'
@@ -47,8 +49,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={value}>
-      {/* Render children only when loading is complete */}
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 };

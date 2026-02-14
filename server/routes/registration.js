@@ -7,13 +7,15 @@ import {
   exportRegistrationsCSV,
   exportRegistrationsExcel,
   getCountryFromIP,
-  deleteRegistration
+  deleteRegistration,
+  verifyLocation
 } from '../controllers/registrationController.js';
 
 const router = express.Router();
 
 // Public routes
 router.get('/country', getCountryFromIP); // Get country from IP
+router.post('/verify-location', verifyLocation); // Verify location is in eligible areas
 router.post('/register', registerCustomer);
 
 // Protected routes - Admin only

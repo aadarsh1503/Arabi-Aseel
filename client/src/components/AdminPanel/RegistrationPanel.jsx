@@ -99,8 +99,12 @@ const RegistrationPanel = () => {
       'Mobile': reg.mobile,
       'Email': reg.email,
       'Address Title': reg.address_title,
+      'Building Number': reg.building_number || '',
       'City': reg.address_city,
-      'Block': reg.address_block,
+      'Postal Code': reg.address_block,
+      'Latitude': reg.latitude,
+      'Longitude': reg.longitude,
+      'Google Maps': reg.latitude && reg.longitude ? `https://www.google.com/maps?q=${reg.latitude},${reg.longitude}` : '',
       'Coupon Code': reg.coupon_code,
       'Coupon Type': reg.coupon_type,
       'Used': reg.is_used ? 'Yes' : 'No',
@@ -139,7 +143,7 @@ const RegistrationPanel = () => {
     total: registrations.length,
     used: registrations.filter(r => r.is_used).length,
     unused: registrations.filter(r => !r.is_used).length,
-    freeMeal: registrations.filter(r => r.coupon_type === 'FREE_MEAL').length,
+    buy1Get1: registrations.filter(r => r.coupon_type === 'BUY_1_GET_1').length,
     discount: registrations.filter(r => r.coupon_type === 'DISCOUNT_50').length
   };
 
@@ -215,8 +219,8 @@ const RegistrationPanel = () => {
             <p className="text-2xl font-bold text-orange-600">{stats.unused}</p>
           </div>
           <div className={`p-4 rounded-lg shadow ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-            <p className="text-sm text-gray-500">Free Meals</p>
-            <p className="text-2xl font-bold text-purple-600">{stats.freeMeal}</p>
+            <p className="text-sm text-gray-500">Buy 1 Get 1</p>
+            <p className="text-2xl font-bold text-purple-600">{stats.buy1Get1}</p>
           </div>
           <div className={`p-4 rounded-lg shadow ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
             <p className="text-sm text-gray-500">50% Discounts</p>
@@ -254,92 +258,115 @@ const RegistrationPanel = () => {
         {/* Table */}
         <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow overflow-hidden`}>
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full min-w-max table-auto">
               <thead className={`${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase">Name</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase">Mobile</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase">Email</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase">Address</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase">Coupon</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase">Type</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase">Status</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase">Date</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase">Action</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase whitespace-nowrap">Name</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase whitespace-nowrap">Mobile</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase whitespace-nowrap">Email</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase whitespace-nowrap">Address</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase whitespace-nowrap">Coupon</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase whitespace-nowrap">Type</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase whitespace-nowrap">Status</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase whitespace-nowrap">Date</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase whitespace-nowrap">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {filteredData.length === 0 ? (
                   <tr>
-                    <td colSpan="8" className="px-4 py-8 text-center text-gray-500">
+                    <td colSpan="9" className="px-4 py-8 text-center text-gray-500">
                       No registrations found
                     </td>
                   </tr>
                 ) : (
                   filteredData.map((reg) => (
                     <tr key={reg.id} className={`${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}`}>
-                      <td className="px-4 py-3">
-                        <div className="font-medium">{reg.name}</div>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <div className="font-medium text-sm max-w-[150px] truncate" title={reg.name}>
+                          {reg.name}
+                        </div>
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="px-4 py-3 whitespace-nowrap">
                         <div className="text-sm">📱 {reg.mobile}</div>
                       </td>
                       <td className="px-4 py-3">
-                        <div className="text-sm">{reg.email}</div>
+                        <div className="text-sm max-w-[180px] truncate" title={reg.email}>
+                          {reg.email}
+                        </div>
                       </td>
                       <td className="px-4 py-3">
-                        <div className="text-sm">{reg.address_title}</div>
-                        <div className="text-sm text-gray-500">{reg.address_city}, Block {reg.address_block}</div>
+                        <div className="text-sm max-w-[200px]">
+                          <div className="truncate" title={reg.address_title}>{reg.address_title}</div>
+                          {reg.building_number && (
+                            <div className="text-gray-500 truncate" title={reg.building_number}>
+                              🏢 {reg.building_number}
+                            </div>
+                          )}
+                          <div className="text-gray-500 truncate">
+                            {reg.address_city}, {reg.address_block}
+                          </div>
+                          {reg.latitude && reg.longitude && (
+                            <a 
+                              href={`https://www.google.com/maps?q=${reg.latitude},${reg.longitude}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-xs text-blue-600 hover:text-blue-800 inline-flex items-center gap-1 mt-1"
+                            >
+                              📍 Map
+                            </a>
+                          )}
+                        </div>
                       </td>
-                      <td className="px-4 py-3">
-                        <code className="bg-gray-100  text-white dark:bg-gray-700 px-2 py-1 rounded text-sm font-mono">
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <code className={`${darkMode ? 'bg-gray-700 text-gray-200' : 'bg-gray-100 text-gray-800'} px-2 py-1 rounded text-xs font-mono`}>
                           {reg.coupon_code}
                         </code>
                       </td>
-                      <td className="px-4 py-3">
-                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                          reg.coupon_type === 'FREE_MEAL' 
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <span className={`px-2 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${
+                          reg.coupon_type === 'BUY_1_GET_1' 
                             ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' 
                             : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
                         }`}>
-                          {reg.coupon_type === 'FREE_MEAL' ? '🍽️ Free Meal' : '💰 50% Off'}
+                          {reg.coupon_type === 'BUY_1_GET_1' ? '🎁 B1G1' : '💰 50%'}
                         </span>
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="px-4 py-3 whitespace-nowrap">
                         {reg.is_used ? (
                           <div>
-                            <span className="flex items-center text-green-600 text-sm font-semibold">
+                            <span className="flex items-center text-green-600 text-sm font-semibold whitespace-nowrap">
                               <FiCheck className="mr-1" /> Used
                             </span>
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-gray-500 whitespace-nowrap">
                               {new Date(reg.used_at).toLocaleDateString()}
                             </span>
                           </div>
                         ) : (
-                          <span className="flex items-center text-orange-600 text-sm font-semibold">
+                          <span className="flex items-center text-orange-600 text-sm font-semibold whitespace-nowrap">
                             <FiX className="mr-1" /> Unused
                           </span>
                         )}
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-500">
+                      <td className="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">
                         {new Date(reg.created_at).toLocaleDateString()}
                       </td>
-                      <td className="px-4 py-3">
-                        <div className="flex gap-2">
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <div className="flex gap-2 flex-nowrap">
                           {!reg.is_used && (
                             <button
                               onClick={() => markAsUsed(reg.id)}
-                              className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm font-semibold transition-colors"
+                              className="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-xs font-semibold transition-colors whitespace-nowrap"
                             >
                               Mark Used
                             </button>
                           )}
                           <button
                             onClick={() => deleteRegistration(reg.id, reg.name)}
-                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-semibold transition-colors flex items-center gap-1"
+                            className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs font-semibold transition-colors flex items-center gap-1 whitespace-nowrap"
                             title="Delete Registration"
                           >
-                            <FiTrash2 size={14} /> Delete
+                            <FiTrash2 size={12} /> Delete
                           </button>
                         </div>
                       </td>

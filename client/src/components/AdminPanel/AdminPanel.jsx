@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 
-import { FiSearch, FiPlus, FiFilter, FiMoon, FiSun, FiGrid, FiList, FiLogOut, FiDownload, FiPrinter } from 'react-icons/fi';
+import { FiSearch, FiPlus, FiFilter, FiMoon, FiSun, FiGrid, FiList, FiLogOut, FiDownload, FiPrinter, FiEdit2, FiTrash2, FiFolder } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/ReactToastify.css';
 import { Puff } from 'react-loader-spinner';
@@ -41,6 +41,8 @@ const AdminPanel = () => {
   const [editingItem, setEditingItem] = useState(null);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showMenuExporter, setShowMenuExporter] = useState(false);
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [editingCategory, setEditingCategory] = useState(null);
   
   // Loading states for actions
   const [statusLoading, setStatusLoading] = useState(null);
@@ -238,6 +240,45 @@ const AdminPanel = () => {
     notify.success('Export started', darkMode);
   };
 
+  const handleEditCategory = (category) => {
+    setEditingCategory(category);
+    setShowCategoryModal(true);
+  };
+
+  const handleDeleteCategory = async (categoryNameEn) => {
+    const itemsInCategory = items.filter(item => item.category_name === categoryNameEn);
+    
+    if (itemsInCategory.length > 0) {
+      notify.error(`Cannot delete category "${categoryNameEn}". It contains ${itemsInCategory.length} items. Please delete or move the items first.`, darkMode);
+      return;
+    }
+
+    if (window.confirm(`Are you sure you want to delete the category "${categoryNameEn}"?`)) {
+      try {
+        await api.delete(`/admin/categories/${encodeURIComponent(categoryNameEn)}`);
+        notify.success('Category deleted successfully', darkMode);
+        fetchData();
+      } catch (error) {
+        notify.error(`Failed to delete category: ${error.response?.data?.message || error.message}`, darkMode);
+      }
+    }
+  };
+
+  const handleSaveCategory = async (oldNameEn, newNameEn, newNameAr) => {
+    try {
+      await api.put(`/admin/categories/${encodeURIComponent(oldNameEn)}`, {
+        new_category_name: newNameEn,
+        new_category_name_ar: newNameAr
+      });
+      notify.success('Category updated successfully', darkMode);
+      setShowCategoryModal(false);
+      setEditingCategory(null);
+      fetchData();
+    } catch (error) {
+      notify.error(`Failed to update category: ${error.response?.data?.message || error.message}`, darkMode);
+    }
+  };
+
 
   if (loading && items.length === 0) {
       return <div className="flex justify-center items-center h-screen"><Puff color={darkMode ? "#a78bfa" : "#8b5cf6"} /></div>
@@ -248,11 +289,80 @@ const AdminPanel = () => {
       return null;
   }
 
+  // Category Management Modal Component
+  const CategoryModal = () => {
+    const [categoryNameEn, setCategoryNameEn] = useState(editingCategory?.en || '');
+    const [categoryNameAr, setCategoryNameAr] = useState(editingCategory?.ar || '');
+
+    useEffect(() => {
+      if (editingCategory) {
+        setCategoryNameEn(editingCategory.en);
+        setCategoryNameAr(editingCategory.ar);
+      }
+    }, [editingCategory]);
+
+    if (!showCategoryModal) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow-xl max-w-md w-full p-6`}>
+          <h2 className="text-2xl font-bold mb-4">Edit Category</h2>
+          
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-2">Category Name (English)</label>
+              <input
+                type="text"
+                value={categoryNameEn}
+                onChange={(e) => setCategoryNameEn(e.target.value)}
+                className={`w-full px-4 py-2 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'}`}
+                placeholder="e.g., Main Dishes"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">Category Name (Arabic)</label>
+              <input
+                type="text"
+                value={categoryNameAr}
+                onChange={(e) => setCategoryNameAr(e.target.value)}
+                className={`w-full px-4 py-2 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'}`}
+                placeholder="e.g., الأطباق الرئيسية"
+                dir="rtl"
+              />
+            </div>
+          </div>
+
+          <div className="flex gap-3 mt-6">
+            <button
+              onClick={() => {
+                setShowCategoryModal(false);
+                setEditingCategory(null);
+              }}
+              className={`flex-1 px-4 py-2 rounded-lg ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300'}`}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => handleSaveCategory(editingCategory.en, categoryNameEn, categoryNameAr)}
+              className="flex-1 px-4 py-2 rounded-lg bg-[#724F38] text-white hover:bg-[#5a3d2c]"
+              disabled={!categoryNameEn || !categoryNameAr}
+            >
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className={`min-h-screen p-6 ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-800'}`}>
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
       
       <LogoutModal show={showLogoutConfirm} onClose={() => setShowLogoutConfirm(false)}  onConfirm={logout} darkMode={darkMode}   />
+      
+      <CategoryModal />
       
       <ItemModal
         showModal={showModal}
@@ -343,9 +453,27 @@ const AdminPanel = () => {
 
                 return (
                   <div key={category.en}>
-                    <h2 className={`text-2xl font-bold mb-4 pb-2 border-b ${darkMode ? 'border-amber-200/30' : 'border-amber-200'}`}>
-                      {isRTL ? category.ar : category.en}
-                    </h2>
+                    <div className="flex items-center justify-between mb-4 pb-2 border-b ${darkMode ? 'border-amber-200/30' : 'border-amber-200'}">
+                      <h2 className="text-2xl font-bold">
+                        {isRTL ? category.ar : category.en}
+                      </h2>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleEditCategory(category)}
+                          className={`p-2 rounded-lg ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300'} transition-colors`}
+                          title="Edit Category"
+                        >
+                          <FiEdit2 size={16} />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteCategory(category.en)}
+                          className="p-2 rounded-lg bg-red-100 hover:bg-red-200 dark:bg-red-900 dark:hover:bg-red-800 text-red-600 dark:text-red-300 transition-colors"
+                          title="Delete Category"
+                        >
+                          <FiTrash2 size={16} />
+                        </button>
+                      </div>
+                    </div>
 
                     <div className={viewMode === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6' : 'space-y-5'}>
                       {itemsInCategory.map(item => (

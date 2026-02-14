@@ -29,10 +29,20 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      console.error("Authentication Error: Token is invalid or expired. Redirecting to login.");
+      console.error("Authentication Error: Token is invalid or expired.");
+      
+      // Only redirect to login if we're on a protected route (admin pages)
+      const protectedRoutes = ['/admin', '/chef', '/spin-admin'];
+      const isProtectedRoute = protectedRoutes.some(route => 
+        window.location.pathname.startsWith(route)
+      );
+      
+      // Clear the invalid token
       localStorage.removeItem('authToken');
-      if (window.location.pathname !== '/login') {
-         window.location.href = '/login';
+      
+      // Only redirect if on a protected route and not already on login page
+      if (isProtectedRoute && window.location.pathname !== '/login') {
+        window.location.href = '/login';
       }
     }
     return Promise.reject(error);

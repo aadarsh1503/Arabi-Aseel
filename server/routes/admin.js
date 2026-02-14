@@ -259,4 +259,69 @@ router.put('/menu/:id', protect, upload.single('image'), async (req, res) => {
   }
 });
 
+// PUT: Update category name
+router.put('/categories/:categoryName', protect, async (req, res) => {
+  try {
+    const { categoryName } = req.params;
+    const { new_category_name, new_category_name_ar } = req.body;
+
+    if (!new_category_name || !new_category_name_ar) {
+      return res.status(400).json({ error: 'Both English and Arabic category names are required' });
+    }
+
+    // Check if category exists
+    const [categoryRows] = await db.execute('SELECT id FROM categories WHERE key_name = ?', [categoryName]);
+    
+    if (categoryRows.length === 0) {
+      return res.status(404).json({ error: 'Category not found' });
+    }
+
+    const category_id = categoryRows[0].id;
+
+    // Update category
+    await db.execute(
+      'UPDATE categories SET key_name = ?, ar_name = ? WHERE id = ?',
+      [new_category_name, new_category_name_ar, category_id]
+    );
+
+    res.json({ message: 'Category updated successfully' });
+  } catch (err) {
+    console.error('Error updating category:', err);
+    res.status(500).json({ error: 'Internal server error', details: err.message });
+  }
+});
+
+// DELETE: Delete category (only if empty)
+router.delete('/categories/:categoryName', protect, async (req, res) => {
+  try {
+    const { categoryName } = req.params;
+
+    // Check if category exists
+    const [categoryRows] = await db.execute('SELECT id FROM categories WHERE key_name = ?', [categoryName]);
+    
+    if (categoryRows.length === 0) {
+      return res.status(404).json({ error: 'Category not found' });
+    }
+
+    const category_id = categoryRows[0].id;
+
+    // Check if category has items
+    const [itemCount] = await db.execute('SELECT COUNT(*) AS count FROM menu_items WHERE category_id = ?', [category_id]);
+    
+    if (itemCount[0].count > 0) {
+      return res.status(400).json({ 
+        error: `Cannot delete category. It contains ${itemCount[0].count} items. Please delete or move the items first.` 
+      });
+    }
+
+    // Delete category
+    await db.execute('DELETE FROM categories WHERE id = ?', [category_id]);
+
+    res.json({ message: 'Category deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting category:', err);
+    res.status(500).json({ error: 'Internal server error', details: err.message });
+  }
+});
+
 export default router;
