@@ -2,6 +2,8 @@
 // These polygons define the exact boundaries of eligible areas
 // Using point-in-polygon algorithm for accurate location checking
 
+import logger from './logger.js';
+
 export const ELIGIBLE_AREAS = [
   {
     name: 'North Sehla',
@@ -93,6 +95,11 @@ export const ELIGIBLE_AREAS = [
  * @returns {boolean} - True if point is inside polygon
  */
 export function isPointInPolygon(lat, lng, polygon) {
+  logger.debug('POLYGON_CHECK', 'Checking if point is inside polygon', {
+    point: { lat, lng },
+    polygonPoints: polygon.length
+  });
+  
   let inside = false;
   
   for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
@@ -107,6 +114,8 @@ export function isPointInPolygon(lat, lng, polygon) {
     if (intersect) inside = !inside;
   }
   
+  logger.debug('POLYGON_CHECK', `Point is ${inside ? 'INSIDE' : 'OUTSIDE'} polygon`);
+  
   return inside;
 }
 
@@ -117,9 +126,26 @@ export function isPointInPolygon(lat, lng, polygon) {
  * @returns {Object} - { valid: boolean, areaName: string, areaNameAr: string }
  */
 export function verifyLocationInEligibleAreas(lat, lng) {
+  logger.info('AREA_CHECK', '🔍 Starting area verification', {
+    coordinates: { lat, lng },
+    totalAreas: ELIGIBLE_AREAS.length
+  });
+  
   // Check each eligible area
   for (const area of ELIGIBLE_AREAS) {
+    logger.debug('AREA_CHECK', `Checking area: ${area.name}`, {
+      areaName: area.name,
+      areaNameAr: area.nameAr,
+      polygonPoints: area.polygon.length
+    });
+    
     if (isPointInPolygon(lat, lng, area.polygon)) {
+      logger.success('AREA_CHECK', `✅ Match found in ${area.name}`, {
+        areaName: area.name,
+        areaNameAr: area.nameAr,
+        coordinates: { lat, lng }
+      });
+      
       return {
         valid: true,
         areaName: area.name,
@@ -130,6 +156,11 @@ export function verifyLocationInEligibleAreas(lat, lng) {
   }
   
   // Not in any eligible area
+  logger.warn('AREA_CHECK', '❌ No matching area found', {
+    coordinates: { lat, lng },
+    checkedAreas: ELIGIBLE_AREAS.map(a => a.name)
+  });
+  
   return {
     valid: false,
     message: 'Sorry, this offer is only available for customers in North Sehla, South Sehla, Jidhafs, Buquwah, and Saraiya areas.'

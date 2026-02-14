@@ -10,8 +10,20 @@ import {
   deleteRegistration,
   verifyLocation
 } from '../controllers/registrationController.js';
+import logger from '../utils/logger.js';
 
 const router = express.Router();
+
+// Middleware to log all registration API requests
+router.use((req, res, next) => {
+  logger.info('REGISTRATION_API', `${req.method} ${req.path}`, {
+    method: req.method,
+    path: req.path,
+    ip: req.ip,
+    userAgent: req.get('user-agent')
+  });
+  next();
+});
 
 // Public routes
 router.get('/country', getCountryFromIP); // Get country from IP

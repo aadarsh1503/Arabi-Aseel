@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import sendEmail from '../utils/sendEmail.js';
 import geoip from 'geoip-lite';
 import { verifyLocationInEligibleAreas, ELIGIBLE_AREAS } from '../utils/locationBoundaries.js';
+import logger from '../utils/logger.js';
 
 // Bahrain boundaries (to verify user is in Bahrain)
 const BAHRAIN_BOUNDS = {
@@ -556,21 +557,38 @@ export const deleteRegistration = async (req, res) => {
 
 // Verify location is in eligible areas (Public endpoint for frontend)
 export const verifyLocation = async (req, res) => {
+  logger.info('LOCATION_VERIFY', '🌍 Location verification request received');
+  
   try {
     const { latitude, longitude } = req.body;
+    
+    logger.debug('LOCATION_VERIFY', 'Request body received', { latitude, longitude });
 
     if (!latitude || !longitude) {
+      logger.warn('LOCATION_VERIFY', 'Missing coordinates in request');
       return res.status(400).json({ 
         valid: false,
         message: 'Latitude and longitude are required' 
       });
     }
 
+    logger.debug('LOCATION_VERIFY', 'Starting polygon-based verification', {
+      coordinates: { latitude, longitude },
+      totalEligibleAreas: ELIGIBLE_AREAS.length
+    });
+
     // Use polygon-based verification
     const locationCheck = verifyLocationInEligibleAreas(latitude, longitude);
     
+    logger.debug('LOCATION_VERIFY', 'Verification result received', locationCheck);
+    
     if (locationCheck.valid) {
-      console.log(`✅ Location verified: (${latitude}, ${longitude}) is in ${locationCheck.areaName}`);
+      logger.success('LOCATION_VERIFY', `✅ Location verified in ${locationCheck.areaName}`, {
+        coordinates: { latitude, longitude },
+        areaName: locationCheck.areaName,
+        areaNameAr: locationCheck.areaNameAr
+      });
+      
       return res.json({
         valid: true,
         areaName: locationCheck.areaName,
@@ -578,7 +596,11 @@ export const verifyLocation = async (req, res) => {
         message: locationCheck.message
       });
     } else {
-      console.log(`❌ Location outside eligible areas: (${latitude}, ${longitude})`);
+      logger.warn('LOCATION_VERIFY', '❌ Location outside all eligible areas', {
+        coordinates: { latitude, longitude },
+        message: locationCheck.message
+      });
+      
       return res.json({
         valid: false,
         message: locationCheck.message
@@ -586,7 +608,11 @@ export const verifyLocation = async (req, res) => {
     }
 
   } catch (error) {
-    console.error('Error verifying location:', error);
+    logger.error('LOCATION_VERIFY', 'Error during location verification', {
+      error: error.message,
+      stack: error.stack
+    });
+    
     res.status(500).json({ 
       valid: false,
       message: 'Failed to verify location. Please try again.' 
