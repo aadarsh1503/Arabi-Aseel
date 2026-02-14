@@ -34,7 +34,7 @@ export const ELIGIBLE_AREAS = [
   {
     name: 'Jidhafs',
     nameAr: 'جدحفص',
-    // Approximate boundary polygon for Jidhafs (Jabalt Habshi area)
+    // Approximate boundary polygon for Jidhafs area
     polygon: [
       { lat: 26.1700, lng: 50.5200 },
       { lat: 26.1750, lng: 50.5280 },
@@ -45,16 +45,31 @@ export const ELIGIBLE_AREAS = [
     ]
   },
   {
+    name: 'Jeblat Habshi',
+    nameAr: 'جبلة حبشي',
+    // Updated boundary polygon for Jeblat Habshi area
+    // Center: 26.213229, 50.5277915 (from Google Maps)
+    polygon: [
+      { lat: 26.2200, lng: 50.5200 },
+      { lat: 26.2250, lng: 50.5280 },
+      { lat: 26.2200, lng: 50.5360 },
+      { lat: 26.2100, lng: 50.5340 },
+      { lat: 26.2050, lng: 50.5260 },
+      { lat: 26.2100, lng: 50.5200 }
+    ]
+  },
+  {
     name: 'Buquwah',
     nameAr: 'البقوة',
-    // Approximate boundary polygon for Buquwah area
+    // Updated boundary polygon for Buquwah area
+    // Center: 26.1955056, 50.5140649 (from Google Maps)
     polygon: [
-      { lat: 26.1320, lng: 50.5100 },
-      { lat: 26.1360, lng: 50.5160 },
-      { lat: 26.1330, lng: 50.5220 },
-      { lat: 26.1270, lng: 50.5200 },
-      { lat: 26.1250, lng: 50.5140 },
-      { lat: 26.1290, lng: 50.5100 }
+      { lat: 26.2020, lng: 50.5060 },
+      { lat: 26.2050, lng: 50.5140 },
+      { lat: 26.2000, lng: 50.5220 },
+      { lat: 26.1900, lng: 50.5200 },
+      { lat: 26.1870, lng: 50.5120 },
+      { lat: 26.1920, lng: 50.5060 }
     ]
   },
   {
@@ -163,7 +178,7 @@ export function verifyLocationInEligibleAreas(lat, lng) {
   
   return {
     valid: false,
-    message: 'Sorry, this offer is only available for customers in North Sehla, South Sehla, Jidhafs, Buquwah, and Saraiya areas.'
+    message: 'LOCATION_NOT_ELIGIBLE'
   };
 }
 

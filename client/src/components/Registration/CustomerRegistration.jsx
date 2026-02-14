@@ -6,8 +6,10 @@ import { Puff } from 'react-loader-spinner';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import api from '../../api/axiosConfig';
+import { useTranslation } from 'react-i18next';
 
 const CustomerRegistration = () => {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const locationObtainedRef = useRef(false);
   const [formData, setFormData] = useState({
@@ -172,14 +174,13 @@ const CustomerRegistration = () => {
       } else {
         // Location is outside eligible areas
         setLocationDenied(true);
-        setDeniedMessage(verificationResponse.data.message || 'Sorry, you are outside the eligible service areas.');
+        // Don't set message here, we'll use translation in the component
         setLocationLoading(false);
       }
     } catch (error) {
       console.error('Location verification error:', error);
-      const errorMessage = error.response?.data?.message || 'Failed to verify location';
       setLocationDenied(true);
-      setDeniedMessage(errorMessage);
+      // Don't set message here, we'll use translation in the component
       setLocationLoading(false);
     }
   };
@@ -230,13 +231,16 @@ const CustomerRegistration = () => {
         <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8 text-center">
           <div className="mb-6">
             <img 
-              src="https://res.cloudinary.com/ds1dt3qub/image/upload/v1770891895/Logoen-2PKGAsjj_tyv30d.png" 
+              src={i18n.language === 'ar' 
+                ? "https://res.cloudinary.com/ds1dt3qub/image/upload/v1771073039/Arabi_Aseel_Logo_Transparent-01_1_s1cd5c.png"
+                : "https://res.cloudinary.com/ds1dt3qub/image/upload/v1770891895/Logoen-2PKGAsjj_tyv30d.png"
+              }
               alt="Arabi Aseel" 
               className="h-24 mx-auto mb-4"
             />
             <Puff color="#724F38" height={60} width={60} wrapperClass="justify-center" />
             <h2 className="text-2xl font-bold text-gray-800 mt-6 mb-2">
-              📍 Location Permission Required
+              📍 {t('registration.requesting_location')}
             </h2>
             <p className="text-gray-600 mb-4">
               Please allow location access when prompted by your browser.
@@ -245,7 +249,7 @@ const CustomerRegistration = () => {
               <p className="font-semibold mb-2">Why we need your location:</p>
               <ul className="text-left space-y-1">
                 <li>✓ To verify you're in an eligible service area</li>
-                <li>✓ This offer is exclusive to North Sehla, South Sehla, Jidhafs, Buquwah, and Saraiya</li>
+                <li>✓ This offer is exclusive to {t('registration.north_sehla')}, {t('registration.south_sehla')}, {t('registration.jidhafs')}, {t('registration.bu_quwah')}, and {t('registration.saraiya')}</li>
                 <li>✓ Your location is secure and only used for verification</li>
               </ul>
             </div>
@@ -257,13 +261,13 @@ const CustomerRegistration = () => {
                 onClick={requestLocationPermission}
                 className="flex-1 bg-[#724F38] text-white px-4 py-2 rounded-lg hover:bg-[#5a3d2c] transition-colors"
               >
-                Try Again
+                {t('registration.try_again')}
               </button>
               <button
                 onClick={() => navigate('/')}
                 className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors"
               >
-                Go Back
+                {t('registration.go_back_home')}
               </button>
             </div>
           </div>
@@ -280,42 +284,48 @@ const CustomerRegistration = () => {
         <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8 text-center animate-fade-in">
           <div className="mb-6">
             <img 
-              src="https://res.cloudinary.com/ds1dt3qub/image/upload/v1770891895/Logoen-2PKGAsjj_tyv30d.png" 
+              src={i18n.language === 'ar' 
+                ? "https://res.cloudinary.com/ds1dt3qub/image/upload/v1771073039/Arabi_Aseel_Logo_Transparent-01_1_s1cd5c.png"
+                : "https://res.cloudinary.com/ds1dt3qub/image/upload/v1770891895/Logoen-2PKGAsjj_tyv30d.png"
+              }
               alt="Arabi Aseel" 
               className="h-24 mx-auto mb-4"
             />
             
-            {/* Animated X Icon */}
-            <div className="relative inline-block">
-              <div className="text-8xl mb-4 animate-bounce-slow">❌</div>
+            {/* Animated Sad Emoji */}
+            <div className="relative inline-block mb-4">
+              <div className="text-8xl animate-bounce-slow">😔</div>
+              
+              {/* Pulsing Ring */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-24 h-24 border-4 border-red-500 rounded-full animate-ping opacity-20"></div>
+                <div className="w-24 h-24 border-4 border-red-400 rounded-full animate-ping opacity-20"></div>
               </div>
             </div>
             
             <h2 className="text-3xl font-bold text-red-600 mb-3 animate-slide-up">
-              Not Eligible
+              {t('registration.not_eligible')}
             </h2>
             <p className="text-xl font-semibold text-gray-800 mb-4 animate-slide-up-delay">
-              Sorry, you're outside our service area
+              {t('registration.outside_service_area')}
             </p>
             
             {/* Error Message */}
             <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg mb-6 text-left animate-fade-in-delay">
               <p className="text-sm text-gray-700">
-                {deniedMessage}
+                {t('registration.location_not_eligible_message')}
               </p>
             </div>
             
             {/* Eligible Areas Info */}
             <div className="bg-amber-50 p-4 rounded-lg mb-6 text-left animate-fade-in-delay-2">
-              <p className="font-semibold text-gray-800 mb-2">📍 Eligible Service Areas:</p>
+              <p className="font-semibold text-gray-800 mb-2">📍 {t('registration.eligible_service_areas')}</p>
               <ul className="text-sm text-gray-700 space-y-1">
-                <li>✓ North Sehla (شمال سهلة)</li>
-                <li>✓ South Sehla (جنوب سهلة)</li>
-                <li>✓ Jidhafs (جدحفص)</li>
-                <li>✓ Buquwah (البقوة)</li>
-                <li>✓ Saraiya (السرايا)</li>
+                <li>✓ {t('registration.north_sehla')} </li>
+                <li>✓ {t('registration.south_sehla')} </li>
+                <li>✓ {t('registration.jidhafs')} </li>
+                <li>✓ {t('registration.jeblat_habshi')} </li>
+                <li>✓ {t('registration.bu_quwah')} </li>
+                <li>✓ {t('registration.saraiya')}</li>
               </ul>
             </div>
             
@@ -325,20 +335,20 @@ const CustomerRegistration = () => {
                 onClick={requestLocationPermission}
                 className="flex-1 bg-[#724F38] text-white px-4 py-3 rounded-lg hover:bg-[#5a3d2c] transition-all hover:scale-105 font-semibold"
               >
-                Try Again
+                {t('registration.try_again')}
               </button>
               <a href='/'>
               <button
                 
                 className="flex-1 bg-gray-300 text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-400 transition-all hover:scale-105 font-semibold"
               >
-                Go Back Home
+                {t('registration.go_back_home')}
               </button>
               </a>
             </div>
             
             <p className="text-xs text-gray-500 mt-6">
-              If you believe this is an error, please contact our support team.
+              {t('registration.error_message')}
             </p>
           </div>
         </div>
@@ -376,6 +386,17 @@ const CustomerRegistration = () => {
             }
           }
           
+          @keyframes teardrop {
+            0% {
+              opacity: 1;
+              transform: translateY(0) scale(1);
+            }
+            100% {
+              opacity: 0;
+              transform: translateY(80px) scale(0.5);
+            }
+          }
+          
           .animate-fade-in {
             animation: fade-in 0.5s ease-out;
           }
@@ -403,6 +424,10 @@ const CustomerRegistration = () => {
           .animate-bounce-slow {
             animation: bounce-slow 2s ease-in-out infinite;
           }
+          
+          .animate-teardrop {
+            animation: teardrop 1.5s ease-in infinite;
+          }
         `}</style>
       </div>
     );
@@ -414,50 +439,53 @@ const CustomerRegistration = () => {
         <div className="max-w-2xl w-full bg-white rounded-2xl shadow-2xl p-8 text-center">
           <div className="mb-6">
             <img 
-              src="https://res.cloudinary.com/ds1dt3qub/image/upload/v1770891895/Logoen-2PKGAsjj_tyv30d.png" 
+              src={i18n.language === 'ar' 
+                ? "https://res.cloudinary.com/ds1dt3qub/image/upload/v1771073039/Arabi_Aseel_Logo_Transparent-01_1_s1cd5c.png"
+                : "https://res.cloudinary.com/ds1dt3qub/image/upload/v1770891895/Logoen-2PKGAsjj_tyv30d.png"
+              }
               alt="Arabi Aseel" 
               className="h-24 mx-auto mb-4"
             />
             <div className="text-6xl mb-4">🎉</div>
             <h2 className="text-3xl font-bold text-gray-800 mb-4">
-              Congratulations!
+              {t('registration.congratulations')}
             </h2>
             <p className="text-lg text-gray-600 mb-6">
-              Your registration is complete. We've sent your exclusive coupon to your email.
+              {t('registration.registration_complete')}
             </p>
           </div>
 
           <div className="bg-gradient-to-r from-amber-100 to-orange-100 border-4 border-dashed border-[#724F38] rounded-xl p-8 mb-6">
-            <p className="text-sm text-gray-600 mb-2">YOUR COUPON CODE</p>
+            <p className="text-sm text-gray-600 mb-2">{t('registration.your_coupon_code')}</p>
             <p className="text-4xl font-bold text-[#724F38] mb-4 tracking-wider font-mono">
               {couponData?.coupon_code}
             </p>
             <p className="text-xl font-semibold text-amber-700">
-              {couponData?.coupon_type === 'BUY_1_GET_1' ? '🎁 BUY 1 GET 1 FREE' : '💰 50% FLAT DISCOUNT'}
+              {couponData?.coupon_type === 'BUY_1_GET_1' ? t('registration.buy_1_get_1') : t('registration.discount_50')}
             </p>
           </div>
 
           <div className="text-left bg-gray-50 rounded-lg p-6 mb-6">
-            <h3 className="font-bold text-gray-800 mb-3">How to Use Your Coupon:</h3>
+            <h3 className="font-bold text-gray-800 mb-3">{t('registration.how_to_use')}</h3>
             <ol className="list-decimal list-inside space-y-2 text-gray-600">
-              <li>Visit Arabi Aseel Restaurant</li>
-              <li>Show this coupon code from your email to our staff</li>
-              <li>Enjoy your exclusive offer!</li>
+              <li>{t('registration.step_1')}</li>
+              <li>{t('registration.step_2')}</li>
+              <li>{t('registration.step_3')}</li>
             </ol>
             <p className="text-sm text-gray-500 mt-4">
-              <strong>Note:</strong> This coupon is valid for one-time use only.
+              <strong>Note:</strong> {t('registration.one_time_use')}
             </p>
           </div>
 
           <p className="text-sm text-gray-500 mb-6">
-            * Terms and Conditions apply
+            {t('registration.terms_apply')}
           </p>
 
           <button
             onClick={() => window.location.href = '/'}
             className="bg-[#724F38] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#5a3d2c] transition-colors"
           >
-            Back to Home
+            {t('registration.back_to_home')}
           </button>
         </div>
       </div>
@@ -472,15 +500,23 @@ const CustomerRegistration = () => {
         <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
           {/* Header */}
           <div className="bg-[#724F38] text-white p-8 text-center">
-            <img 
-              src="https://res.cloudinary.com/ds1dt3qub/image/upload/v1770893275/i2_3_uwu1gl.png" 
-              alt="Arabi Aseel" 
-              className="h-48 mx-auto mb-"
-            />
-            <h1 className="text-3xl font-bold mb-2">Exclusive Offer</h1>
-            <p className="text-amber-100">Register now and get a BUY 1 GET 1 FREE or 50% DISCOUNT coupon</p>
+            {i18n.language === 'ar' ? (
+              <img 
+                src="https://res.cloudinary.com/ds1dt3qub/image/upload/v1771074028/a2_1_ue9cc1.png"
+                alt="Arabi Aseel" 
+                className="h-32 mx-auto mb-4"
+              />
+            ) : (
+              <img 
+                src="https://res.cloudinary.com/ds1dt3qub/image/upload/v1770893275/i2_3_uwu1gl.png"
+                alt="Arabi Aseel" 
+                className="h-48 mx-auto mb-"
+              />
+            )}
+            <h1 className="text-3xl font-bold mb-2">{t('registration.exclusive_offer')}</h1>
+            <p className="text-amber-100">{t('registration.register_get_coupon')}</p>
             <div className="mt-4 inline-block bg-amber-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
-              Limited to first 100 customers only!
+              {t('registration.limited_offer')}
             </div>
           </div>
 
@@ -490,7 +526,7 @@ const CustomerRegistration = () => {
               {/* Name */}
               <div className="md:col-span-2">
                 <label className="block text-gray-700 font-semibold mb-2">
-                  Full Name <span className="text-red-500">*</span>
+                  {t('registration.full_name')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -498,15 +534,15 @@ const CustomerRegistration = () => {
                   value={formData.name}
                   onChange={handleChange}
                   required
+                  placeholder={t('registration.placeholder_name')}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#724F38] focus:border-transparent"
-                  placeholder="Enter your full name"
                 />
               </div>
 
               {/* Mobile with Phone Input */}
               <div className="md:col-span-2">
                 <label className="block text-gray-700 font-semibold mb-2">
-                  Mobile Number <span className="text-red-500">*</span>
+                  {t('registration.phone_number')} <span className="text-red-500">*</span>
                 </label>
                 <PhoneInput
                   country={defaultCountry}
@@ -545,7 +581,7 @@ const CustomerRegistration = () => {
               {/* Email */}
               <div className="md:col-span-2">
                 <label className="block text-gray-700 font-semibold mb-2">
-                  Email <span className="text-red-500">*</span>
+                  {t('registration.email_address')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="email"
@@ -554,14 +590,14 @@ const CustomerRegistration = () => {
                   onChange={handleChange}
                   required
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#724F38] focus:border-transparent"
-                  placeholder="your.email@example.com"
+                  placeholder={t('registration.placeholder_email')}
                 />
               </div>
 
               {/* Address Title */}
               <div className="md:col-span-2">
                 <label className="block text-gray-700 font-semibold mb-2">
-                  Address / Title <span className="text-red-500">*</span>
+                  {t('registration.address_title')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -570,14 +606,14 @@ const CustomerRegistration = () => {
                   onChange={handleChange}
                   required
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#724F38] focus:border-transparent"
-                  placeholder="e.g., Home, Office, Villa"
+                  placeholder={t('registration.placeholder_address')}
                 />
               </div>
 
               {/* Building/Apartment Number */}
               <div className="md:col-span-2">
                 <label className="block text-gray-700 font-semibold mb-2">
-                  Apartment / Building Number <span className="text-red-500">*</span>
+                  {t('registration.building_number')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -586,14 +622,14 @@ const CustomerRegistration = () => {
                   onChange={handleChange}
                   required
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#724F38] focus:border-transparent"
-                  placeholder="e.g., Building 500, Apt 105"
+                  placeholder={t('registration.placeholder_building')}
                 />
               </div>
 
               {/* City */}
               <div>
                 <label className="block text-gray-700 font-semibold mb-2">
-                  City <span className="text-red-500">*</span>
+                  {t('registration.city')} <span className="text-red-500">*</span>
                   {formData.address_city && <span className="text-xs text-green-600 ml-2">✓ Auto-filled</span>}
                 </label>
                 <input
@@ -610,7 +646,7 @@ const CustomerRegistration = () => {
               {/* Postal Code */}
               <div>
                 <label className="block text-gray-700 font-semibold mb-2">
-                  Postal Code <span className="text-red-500">*</span>
+                  {t('registration.postal_code')} <span className="text-red-500">*</span>
                   {formData.address_block && <span className="text-xs text-green-600 ml-2">✓ Auto-filled</span>}
                 </label>
                 <input
@@ -648,8 +684,7 @@ const CustomerRegistration = () => {
             {/* Important Note */}
             <div className="mt-6 bg-amber-50 border-l-4 border-amber-500 p-4 rounded">
               <p className="text-sm text-gray-700">
-                <strong>📍 Location Verified:</strong> Your location has been confirmed to be within an eligible service area. 
-                You are eligible for this exclusive offer!
+                <strong>📍 {t('registration.location_verified_title')}</strong> {t('registration.location_verified_message')}
               </p>
             </div>
 
@@ -663,10 +698,10 @@ const CustomerRegistration = () => {
                 {loading ? (
                   <>
                     <Puff color="#ffffff" height={24} width={24} />
-                    <span className="ml-2">Verifying Location...</span>
+                    <span className="ml-2">{t('registration.submitting')}</span>
                   </>
                 ) : (
-                  'Register & Get Your Coupon'
+                  t('registration.register_now')
                 )}
               </button>
             </div>
