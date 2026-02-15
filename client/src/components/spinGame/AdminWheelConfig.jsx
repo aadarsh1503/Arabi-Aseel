@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
+import api from '../../api/axiosConfig';
 import { Trash2, Plus, Save, Settings, Upload, RefreshCw, Power, MapPin, Edit2, GripVertical, X, CheckCircle, AlertTriangle } from 'lucide-react'; 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -10,8 +10,6 @@ import PageToggle from '../AdminPanel/PageToggle';
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable, rectSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-
-const API_BASE = '/api/marketing'; 
 
 // --- Sortable Item Component ---
 const SortableItem = ({ item, onDelete, onEdit, t }) => {
@@ -117,10 +115,7 @@ const AdminWheelConfig = () => {
     // Fetch Data
     const fetchData = async () => {
         try {
-            const token = localStorage.getItem('authToken'); 
-            const configObj = { headers: { Authorization: `Bearer ${token}` } };
-            
-            const { data } = await axios.get(`${API_BASE}/admin/config`, configObj);
+            const { data } = await api.get('/marketing/admin/config');
             setItems(data.items);
             setConfig({
                 win_percentage: data.config.win_percentage || 10,
@@ -143,13 +138,10 @@ const AdminWheelConfig = () => {
     // --- Configuration Logic ---
     const handleConfigUpdate = async () => {
         try {
-            const token = localStorage.getItem('authToken');
-            await axios.put(`${API_BASE}/admin/config`, {
+            await api.put('/marketing/admin/config', {
                 win_percentage: config.win_percentage,
                 lose_percentage: config.lose_percentage,
                 google_maps_api_key: config.google_maps_api_key
-            }, {
-                headers: { Authorization: `Bearer ${token}` }
             });
             toast.success(t('toast_settings_updated'));
         } catch (error) {
@@ -161,10 +153,7 @@ const AdminWheelConfig = () => {
         const newState = !config.game_active;
         setConfig(prev => ({ ...prev, game_active: newState }));
         try {
-            const token = localStorage.getItem('authToken');
-            await axios.put(`${API_BASE}/admin/config`, { game_active: newState }, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            await api.put('/marketing/admin/config', { game_active: newState });
             toast.success(newState ? t('toast_game_live') : t('toast_game_closed'));
         } catch (error) {
             setConfig(prev => ({ ...prev, game_active: !newState }));
@@ -219,10 +208,10 @@ const AdminWheelConfig = () => {
 
         try {
             if (editId) {
-                await axios.put(`${API_BASE}/admin/items/${editId}`, formData, { headers });
+                await api.put(`/marketing/admin/items/${editId}`, formData);
                 toast.success(t('Item Updated Successfully'));
             } else {
-                await axios.post(`${API_BASE}/admin/items`, formData, { headers });
+                await api.post('/marketing/admin/items', formData);
                 toast.success(t('toast_item_added'));
             }
             cancelEdit(); 
@@ -237,10 +226,7 @@ const AdminWheelConfig = () => {
     const handleDelete = async (id) => {
         if(!window.confirm(t('confirm_delete'))) return;
         try {
-            const token = localStorage.getItem('authToken');
-            await axios.delete(`${API_BASE}/admin/items/${id}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            await api.delete(`/marketing/admin/items/${id}`);
             setItems(items.filter(i => i.id !== id));
             toast.success(t('toast_item_deleted'));
         } catch (error) {
@@ -258,11 +244,8 @@ const AdminWheelConfig = () => {
             setItems(newOrder);
 
             try {
-                const token = localStorage.getItem('authToken');
                 const orderedIds = newOrder.map(item => item.id);
-                await axios.put(`${API_BASE}/admin/items/reorder`, { orderedIds }, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                await api.put('/marketing/admin/items/reorder', { orderedIds });
             } catch (error) {
                 toast.error("Failed to save order");
             }

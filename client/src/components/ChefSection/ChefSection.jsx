@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import axios from "axios";
+import api from '../../api/axiosConfig';
 import leaf from "./leaf.png";
-
-const API_URL = '/api/chefs';
 
 const ChefsSection = () => {
   const { t, i18n } = useTranslation();
@@ -20,7 +18,7 @@ const ChefsSection = () => {
       try {
         setLoading(true);
     
-        const response = await axios.get(API_URL);
+        const response = await api.get('/chefs');
         console.log("API Response:", response.data);
     
         setChefs(Array.isArray(response.data) ? response.data : response.data.data || []);

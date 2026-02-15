@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'; // Import i18next hook for trans
 import i1 from "./i1.png"
 import i2 from "./i2.png"
 import i3 from "./i3.png"
+import "./Services.css"
 const ServiceSection = () => {
   const { t, i18n } = useTranslation(); // Use i18next translation hook
   const [isVisible, setIsVisible] = useState(false);

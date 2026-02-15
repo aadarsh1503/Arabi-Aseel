@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
-import axios from "axios"; // Import axios for API calls
+import api from '../../api/axiosConfig';
 import { useTranslation } from 'react-i18next';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import "./popular.css";
+import "./Popular.css";
 
 const PopularCategories = () => {
   const { t, i18n } = useTranslation();
@@ -19,7 +19,7 @@ const PopularCategories = () => {
     const fetchPopularItems = async () => {
       try {
         setLoading(true);
-        const res = await axios.get('/api/admin/menu');
+        const res = await api.get('/admin/menu');
         
         // Filter for available items that have an image URL
         const availableItems = res.data.filter(

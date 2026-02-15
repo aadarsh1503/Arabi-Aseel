@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 
 import { FiSearch, FiPlus, FiFilter, FiMoon, FiSun, FiGrid, FiList, FiLogOut, FiDownload, FiPrinter, FiEdit2, FiTrash2, FiFolder } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.css';
 import { Puff } from 'react-loader-spinner';
 import { useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';

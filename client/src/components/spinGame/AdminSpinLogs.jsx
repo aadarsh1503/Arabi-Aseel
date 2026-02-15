@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../api/axiosConfig';
 import { 
     Search, 
     Trophy, 
@@ -18,8 +18,6 @@ import PageToggle from '../AdminPanel/PageToggle';
 import { useTranslation } from 'react-i18next';
 
 
-const API_BASE = '/api/marketing';
-
 const AdminSpinLogs = () => {
     const { t, i18n } = useTranslation();
     const isRTL = i18n.language === 'ar';
@@ -36,10 +34,7 @@ const AdminSpinLogs = () => {
 
     const fetchLogs = async () => {
         try {
-            const token = localStorage.getItem('authToken');
-            const { data } = await axios.get(`${API_BASE}/admin/logs`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const { data } = await api.get('/marketing/admin/logs');
             setLogs(data);
         } catch (error) {
             console.error("Error fetching logs", error);
@@ -57,10 +52,7 @@ const AdminSpinLogs = () => {
         }
 
         try {
-            const token = localStorage.getItem('authToken');
-            await axios.delete(`${API_BASE}/participants/${participantId}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            await api.delete(`/marketing/participants/${participantId}`);
 
             // Update UI instantly without reloading
             setLogs(prevLogs => prevLogs.filter(log => log.participant_id !== participantId));
@@ -81,10 +73,7 @@ const AdminSpinLogs = () => {
         if (!confirm2) return;
 
         try {
-            const token = localStorage.getItem('authToken');
-            await axios.delete(`${API_BASE}/participants`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            await api.delete('/marketing/participants');
 
             // Clear UI
             setLogs([]);

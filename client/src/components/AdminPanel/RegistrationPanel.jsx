@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FiDownload, FiCheck, FiX, FiSearch, FiMoon, FiSun, FiLogOut, FiTrash2 } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.css';
 import { Puff } from 'react-loader-spinner';
 import * as XLSX from 'xlsx';
 import api from '../../api/axiosConfig';

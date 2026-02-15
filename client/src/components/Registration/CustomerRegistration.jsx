@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.css';
 import { Puff } from 'react-loader-spinner';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';

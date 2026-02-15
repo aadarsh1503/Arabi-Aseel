@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
+import api from '../../api/axiosConfig';
 import "./menu.css"
 
 // A simple Search Icon component
@@ -36,7 +36,7 @@ const MenuSection = () => {
         const fetchMenuData = async () => {
             try {
                 setLoading(true);
-                const res = await axios.get('/api/admin/menu');
+                const res = await api.get('/admin/menu');
                 const rawData = res.data;
         
                 const availableItems = rawData.filter(item => item.status === 'available');
