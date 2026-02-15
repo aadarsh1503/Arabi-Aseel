@@ -43,16 +43,62 @@ const PORT = process.env.PORT || 5000;
 // Replaced deprecated bodyParser with the built-in express.json()
 app.use(express.json());
 
+// Debug middleware - Log all incoming requests
+app.use((req, res, next) => {
+  console.log(`📥 [${new Date().toISOString()}] ${req.method} ${req.url}`);
+  console.log(`   Headers:`, req.headers);
+  next();
+});
+
 // Routes
+console.log('✅ Loading /api/admin routes...');
 app.use('/api/admin', adminRoutes);
+
+console.log('✅ Loading /api/public routes...');
 app.use('/api/public', publicRoutes);
+
+console.log('✅ Loading /api/auth routes...');
 app.use('/api/auth', authRoutes);
+
+console.log('✅ Loading /api/chefs routes...');
 app.use('/api/chefs', chefRoutes);
+
+console.log('✅ Loading /api/marketing routes...');
 app.use('/api/marketing', marketingRoutes);
+
+console.log('✅ Loading /api/registration routes...');
 app.use('/api/registration', registrationRoutes);
+
+console.log('✅ Loading /api/database routes...');
 app.use('/api/database', databaseRoutes);
+
+console.log('✅ Loading /api/settings routes...');
 app.use('/api/settings', settingsRoutes);
+
+// 404 handler - This will catch any unmatched routes
+app.use((req, res) => {
+  console.log(`❌ 404 - Route not found: ${req.method} ${req.url}`);
+  res.status(404).json({ 
+    error: 'Route not found',
+    method: req.method,
+    url: req.url,
+    availableRoutes: [
+      '/api/admin/*',
+      '/api/public/*',
+      '/api/auth/*',
+      '/api/chefs/*',
+      '/api/marketing/*',
+      '/api/registration/*',
+      '/api/database/*',
+      '/api/settings/*'
+    ]
+  });
+});
+
 // Server
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`📋 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🔐 JWT Secret configured: ${process.env.JWT_SECRET ? 'YES' : 'NO'}`);
+  console.log(`📁 All routes loaded successfully!`);
 });
