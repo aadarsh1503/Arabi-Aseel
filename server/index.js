@@ -17,6 +17,10 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Disable strict routing to handle trailing slashes
+app.set('strict routing', false);
+app.set('case sensitive routing', false);
+
 // CORS Configuration
 // const allowedOrigins = [
 //   'https://arabiaseel.vercel.app',
@@ -42,6 +46,19 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 // Replaced deprecated bodyParser with the built-in express.json()
 app.use(express.json());
+
+// Fix trailing slash issues - Normalize URLs
+app.use((req, res, next) => {
+  // Remove trailing slash except for root
+  if (req.path !== '/' && req.path.endsWith('/')) {
+    const query = req.url.slice(req.path.length);
+    const safepath = req.path.slice(0, -1).replace(/\/+/g, '/');
+    console.log(`🔄 Redirecting ${req.path} to ${safepath}`);
+    res.redirect(301, safepath + query);
+  } else {
+    next();
+  }
+});
 
 // Debug middleware - Log all incoming requests
 app.use((req, res, next) => {
