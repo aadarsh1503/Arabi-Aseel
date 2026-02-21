@@ -34,7 +34,7 @@ const AdminSpinLogs = () => {
 
     const fetchLogs = async () => {
         try {
-            const { data } = await api.get('/marketing/admin/logs');
+            const { data } = await api.get('/admin/marketing/admin/logs');
             setLogs(data);
         } catch (error) {
             console.error("Error fetching logs", error);

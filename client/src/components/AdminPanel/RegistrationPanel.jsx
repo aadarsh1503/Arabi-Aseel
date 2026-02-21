@@ -30,7 +30,7 @@ const RegistrationPanel = () => {
   const fetchRegistrations = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/registration/all');
+      const response = await api.get('/admin/registration/all');
       setRegistrations(response.data.data);
       toast.success('Registrations loaded successfully');
     } catch (error) {
@@ -67,7 +67,7 @@ const RegistrationPanel = () => {
 
   const markAsUsed = async (id) => {
     try {
-      await api.patch(`/registration/${id}/use`);
+      await api.patch(`/admin/registration/${id}/use`);
       toast.success('Coupon marked as used');
       fetchRegistrations();
     } catch (error) {
@@ -78,7 +78,7 @@ const RegistrationPanel = () => {
   const deleteRegistration = async (id, name) => {
     if (window.confirm(`Are you sure you want to delete registration for "${name}"? This action cannot be undone.`)) {
       try {
-        await api.delete(`/registration/${id}`);
+        await api.delete(`/admin/registration/${id}`);
         toast.success('Registration deleted successfully');
         fetchRegistrations();
       } catch (error) {
@@ -121,7 +121,7 @@ const RegistrationPanel = () => {
 
   const downloadCSV = async () => {
     try {
-      const response = await api.get('/registration/export/csv', {
+      const response = await api.get('/admin/registration/export/csv', {
         responseType: 'blob'
       });
       

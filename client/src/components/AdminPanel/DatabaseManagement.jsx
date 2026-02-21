@@ -24,7 +24,7 @@ const DatabaseManagement = () => {
 
   const fetchVersion = async () => {
     try {
-      const response = await api.get('/settings/version');
+      const response = await api.get('/admin/settings/version');
       setVersion(response.data.version);
     } catch (error) {
       console.error('Error fetching version:', error);
@@ -33,7 +33,7 @@ const DatabaseManagement = () => {
 
   const updateVersion = async () => {
     try {
-      await api.put('/settings/version', { version });
+      await api.put('/admin/settings/version', { version });
       toast.success(t('version_updated'));
       setShowVersionEdit(false);
     } catch (error) {
@@ -47,7 +47,7 @@ const DatabaseManagement = () => {
       setLoading(true);
       toast.info(t('preparing_export'));
       
-      const response = await api.get('/database/export-all');
+      const response = await api.get('/admin/database/export-all');
       const data = response.data.data;
 
       const workbook = XLSX.utils.book_new();

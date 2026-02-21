@@ -115,7 +115,7 @@ const AdminWheelConfig = () => {
     // Fetch Data
     const fetchData = async () => {
         try {
-            const { data } = await api.get('/marketing/admin/config');
+            const { data } = await api.get('/admin/marketing/admin/config');
             setItems(data.items);
             setConfig({
                 win_percentage: data.config.win_percentage || 10,
@@ -138,7 +138,7 @@ const AdminWheelConfig = () => {
     // --- Configuration Logic ---
     const handleConfigUpdate = async () => {
         try {
-            await api.put('/marketing/admin/config', {
+            await api.put('/admin/marketing/admin/config', {
                 win_percentage: config.win_percentage,
                 lose_percentage: config.lose_percentage,
                 google_maps_api_key: config.google_maps_api_key
@@ -153,7 +153,7 @@ const AdminWheelConfig = () => {
         const newState = !config.game_active;
         setConfig(prev => ({ ...prev, game_active: newState }));
         try {
-            await api.put('/marketing/admin/config', { game_active: newState });
+            await api.put('/admin/marketing/admin/config', { game_active: newState });
             toast.success(newState ? t('toast_game_live') : t('toast_game_closed'));
         } catch (error) {
             setConfig(prev => ({ ...prev, game_active: !newState }));
@@ -208,10 +208,10 @@ const AdminWheelConfig = () => {
 
         try {
             if (editId) {
-                await api.put(`/marketing/admin/items/${editId}`, formData);
+                await api.put(`/admin/marketing/admin/items/${editId}`, formData);
                 toast.success(t('Item Updated Successfully'));
             } else {
-                await api.post('/marketing/admin/items', formData);
+                await api.post('/admin/marketing/admin/items', formData);
                 toast.success(t('toast_item_added'));
             }
             cancelEdit(); 
@@ -226,7 +226,7 @@ const AdminWheelConfig = () => {
     const handleDelete = async (id) => {
         if(!window.confirm(t('confirm_delete'))) return;
         try {
-            await api.delete(`/marketing/admin/items/${id}`);
+            await api.delete(`/admin/marketing/admin/items/${id}`);
             setItems(items.filter(i => i.id !== id));
             toast.success(t('toast_item_deleted'));
         } catch (error) {
@@ -245,7 +245,7 @@ const AdminWheelConfig = () => {
 
             try {
                 const orderedIds = newOrder.map(item => item.id);
-                await api.put('/marketing/admin/items/reorder', { orderedIds });
+                await api.put('/admin/marketing/admin/items/reorder', { orderedIds });
             } catch (error) {
                 toast.error("Failed to save order");
             }

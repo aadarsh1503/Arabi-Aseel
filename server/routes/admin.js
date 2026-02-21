@@ -324,4 +324,22 @@ router.delete('/categories/:categoryName', protect, async (req, res) => {
   }
 });
 
+// ================= PROXY ROUTES FOR OTHER ADMIN ENDPOINTS =================
+// These routes forward requests to other routers to consolidate all admin routes under /api/admin
+// This allows nginx to only proxy /api/admin/* instead of multiple paths
+
+// Import other route modules
+import marketingRoutes from './marketingRoutes.js';
+import settingsRoutes from './settings.js';
+import registrationRoutes from './registration.js';
+import databaseRoutes from './database.js';
+
+// Mount other admin routes under /admin prefix
+router.use('/marketing', marketingRoutes);
+router.use('/settings', settingsRoutes);
+router.use('/registration', registrationRoutes);
+router.use('/database', databaseRoutes);
+
+console.log('✅ [ADMIN ROUTES] Proxy routes mounted: /marketing, /settings, /registration, /database');
+
 export default router;

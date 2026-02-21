@@ -20,7 +20,7 @@ const Footer = () => {
 
   const fetchVersion = async () => {
     try {
-      const response = await api.get('/settings/version');
+      const response = await api.get('/admin/settings/version');
       setVersion(response.data.version);
     } catch (error) {
       console.error('Error fetching version:', error);
