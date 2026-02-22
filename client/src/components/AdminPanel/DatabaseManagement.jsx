@@ -8,7 +8,7 @@ import PageToggle from './PageToggle';
 import LogoutModal from './LogoutModal';
 import { useAuth } from '../Authcontext/Authcontext';
 
-const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+const BASEURL = import.meta.env.VITE_API_BASE_URL || '';
 
 const DatabaseManagement = () => {
   const [loading, setLoading] = useState(false);

@@ -5,7 +5,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./Popular.css";
 
-const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+const BASEURL = import.meta.env.VITE_API_BASE_URL || '';
 
 const PopularCategories = () => {
   const { t, i18n } = useTranslation();

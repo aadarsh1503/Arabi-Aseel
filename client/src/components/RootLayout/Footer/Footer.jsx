@@ -4,7 +4,7 @@ import i3 from "./i3.png";
 import g1 from "./g1.png";
 import "./f.css";
 
-const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+const BASEURL = import.meta.env.VITE_API_BASE_URL || '';
 
 const Footer = () => {
   const { t, i18n } = useTranslation();

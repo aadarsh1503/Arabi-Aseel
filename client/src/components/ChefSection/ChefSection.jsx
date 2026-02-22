@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import leaf from "./leaf.png";
 
-const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+const BASEURL = import.meta.env.VITE_API_BASE_URL || '';
 
 const ChefsSection = () => {
   const { t, i18n } = useTranslation();

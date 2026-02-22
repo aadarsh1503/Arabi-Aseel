@@ -16,7 +16,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import PageToggle from '../AdminPanel/PageToggle';
 import { useTranslation } from 'react-i18next';
 
-const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+const BASEURL = import.meta.env.VITE_API_BASE_URL || '';
 
 
 const AdminSpinLogs = () => {

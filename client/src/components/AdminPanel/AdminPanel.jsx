@@ -15,7 +15,7 @@ import PageToggle from './PageToggle';
 
 import MenuExporter from './MenuExporter';
 
-const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+const BASEURL = import.meta.env.VITE_API_BASE_URL || '';
 
 // Toast Notification Configuration
 const notify = {

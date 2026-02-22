@@ -487,7 +487,7 @@ const Chef = () => {
   const removeNumbers = (value) => String(value).replace(/\d/g, '');
   const navigate = useNavigate();
   const { logout } = useAuth(); // <--- This is correct
-  const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+  const BASEURL = import.meta.env.VITE_API_BASE_URL || '';
 
   // State Management
   const [chefs, setChefs] = useState([]);

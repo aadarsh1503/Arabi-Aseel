@@ -10,7 +10,7 @@ import "./m.css"
 import Logoen from "./Logoen.png";
 import Logoar from "./Logoar.png";
 
-const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+const BASEURL = import.meta.env.VITE_API_BASE_URL || '';
 
 const MarketingCampaign = () => {
   const { t, i18n } = useTranslation();
