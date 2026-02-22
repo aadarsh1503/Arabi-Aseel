@@ -6,10 +6,11 @@ import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Lock, Zap, ChevronRight, Sparkles } from 'lucide-react'; 
 import "./m.css"
-import api from '../../api/axiosConfig';
 // --- IMPORT LOGOS HERE ---
 import Logoen from "./Logoen.png";
 import Logoar from "./Logoar.png";
+
+const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 const MarketingCampaign = () => {
   const { t, i18n } = useTranslation();
@@ -47,9 +48,10 @@ const MarketingCampaign = () => {
   useEffect(() => {
     const fetchConfig = async () => {
         try {
-            const res = await api.get('/marketing/config');
-            if (res.data) {
-                setGameActive(res.data.game_active);
+            const res = await fetch(`${BASEURL}/api/marketing/config`);
+            const data = await res.json();
+            if (data) {
+                setGameActive(data.game_active);
             }
         } catch (error) {
             console.error("Error fetching config", error);
@@ -110,13 +112,20 @@ const MarketingCampaign = () => {
 
     setLoading(true);
     try {
-      const res = await api.post('/marketing/start', {
-        name: formData.name,
-        mobile: formData.mobile, 
-        place: formData.place
+      const res = await fetch(`${BASEURL}/api/marketing/start`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          mobile: formData.mobile, 
+          place: formData.place
+        })
       });
+      const data = await res.json();
       // SAVE ITEMS FROM BACKEND HERE
-      setItems(res.data.items);
+      setItems(data.items);
       setGameState('game');
     } catch (err) {
       if (err.response && err.response.status === 503) {
@@ -139,7 +148,14 @@ const MarketingCampaign = () => {
     setTransitionStyle('none'); 
 
     try {
-      const { data } = await api.post('/marketing/spin', { mobile: formData.mobile });
+      const response = await fetch(`${BASEURL}/api/marketing/spin`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ mobile: formData.mobile })
+      });
+      const data = await response.json();
       setSpinResultData(data);
     } catch (err) {
       setIsSpinning(false);

@@ -1,8 +1,9 @@
 import axios from 'axios';
 
+const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 const api = axios.create({
-  baseURL:"/api",
+  baseURL: BASEURL,
 });
 
 // --- Smart Request Interceptor ---

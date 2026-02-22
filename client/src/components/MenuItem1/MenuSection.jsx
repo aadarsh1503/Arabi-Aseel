@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import api from '../../api/axiosConfig';
 import "./menu.css"
+
+const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 // A simple Search Icon component
 const SearchIcon = (props) => (
@@ -36,8 +37,8 @@ const MenuSection = () => {
         const fetchMenuData = async () => {
             try {
                 setLoading(true);
-                const res = await api.get('/admin/menu');
-                const rawData = res.data;
+                const res = await fetch(`${BASEURL}/api/admin/menu`);
+                const rawData = await res.json();
         
                 const availableItems = rawData.filter(item => item.status === 'available');
                 const categoriesMap = {};

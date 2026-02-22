@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
-import api from '../../api/axiosConfig';
 import { useTranslation } from 'react-i18next';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./Popular.css";
+
+const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 const PopularCategories = () => {
   const { t, i18n } = useTranslation();
@@ -19,10 +20,11 @@ const PopularCategories = () => {
     const fetchPopularItems = async () => {
       try {
         setLoading(true);
-        const res = await api.get('/admin/menu');
+        const res = await fetch(`${BASEURL}/api/admin/menu`);
+        const data = await res.json();
         
         // Filter for available items that have an image URL
-        const availableItems = res.data.filter(
+        const availableItems = data.filter(
           item => item.status === 'available' && item.image_url
         );
         

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import api from '../../api/axiosConfig';
+
+const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 const AuthContext = createContext();
 
@@ -15,8 +16,13 @@ export const AuthProvider = ({ children }) => {
       if (token) {
         try {
           // The interceptor will add the token header automatically
-          const userResponse = await api.get('/auth/me'); 
-          setUser(userResponse.data);
+          const userResponse = await fetch(`${BASEURL}/api/auth/me`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          const data = await userResponse.json();
+          setUser(data);
         } catch (error) {
           // Token is invalid, clear it
           console.error("Session verification failed", error);

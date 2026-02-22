@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import api from '../../api/axiosConfig';
 import leaf from "./leaf.png";
+
+const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 const ChefsSection = () => {
   const { t, i18n } = useTranslation();
@@ -18,10 +19,11 @@ const ChefsSection = () => {
       try {
         setLoading(true);
     
-        const response = await api.get('/chefs');
-        console.log("API Response:", response.data);
+        const response = await fetch(`${BASEURL}/api/chefs`);
+        const data = await response.json();
+        console.log("API Response:", data);
     
-        setChefs(Array.isArray(response.data) ? response.data : response.data.data || []);
+        setChefs(Array.isArray(data) ? data : data.data || []);
       } catch (err) {
         console.error("Failed to fetch chefs:", err);
         setError(t('error_fetching_chefs', 'Could not load chef information.'));

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import api from '../../api/axiosConfig';
 import { 
   Box, 
   Button, 
@@ -19,6 +18,8 @@ import { LockOutlined, Visibility, VisibilityOff } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -48,11 +49,19 @@ const Signup = () => {
     onSubmit: async (values) => {
       setLoading(true);
       try {
-        await api.post('/auth/signup', {
-          name: values.name,
-          email: values.email,
-          password: values.password
+        const response = await fetch(`${BASEURL}/api/auth/signup`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name: values.name,
+            email: values.email,
+            password: values.password
+          })
         });
+        
+        if (!response.ok) throw new Error('Signup failed');
         
         toastId.current = toast.success(`Account created successfully! Redirecting in ${countdown} seconds...`, {
           position: "top-right",

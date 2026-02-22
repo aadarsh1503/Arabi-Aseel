@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import api from '../../api/axiosConfig';
 import { 
     Search, 
     Trophy, 
@@ -16,6 +15,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PageToggle from '../AdminPanel/PageToggle';
 import { useTranslation } from 'react-i18next';
+
+const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 
 const AdminSpinLogs = () => {
@@ -34,7 +35,13 @@ const AdminSpinLogs = () => {
 
     const fetchLogs = async () => {
         try {
-            const { data } = await api.get('/marketing/admin/logs');
+            const token = localStorage.getItem('authToken');
+            const response = await fetch(`${BASEURL}/api/marketing/admin/logs`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const data = await response.json();
             setLogs(data);
         } catch (error) {
             console.error("Error fetching logs", error);
@@ -52,7 +59,13 @@ const AdminSpinLogs = () => {
         }
 
         try {
-            await api.delete(`/marketing/participants/${participantId}`);
+            const token = localStorage.getItem('authToken');
+            await fetch(`${BASEURL}/api/marketing/participants/${participantId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
 
             // Update UI instantly without reloading
             setLogs(prevLogs => prevLogs.filter(log => log.participant_id !== participantId));
@@ -73,7 +86,13 @@ const AdminSpinLogs = () => {
         if (!confirm2) return;
 
         try {
-            await api.delete('/marketing/participants');
+            const token = localStorage.getItem('authToken');
+            await fetch(`${BASEURL}/api/marketing/participants`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
 
             // Clear UI
             setLogs([]);

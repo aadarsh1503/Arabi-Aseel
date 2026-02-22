@@ -19,7 +19,6 @@ export const protect = (req, res, next) => {
       // Proceed to the next middleware or route handler
       next();
     } catch (error) {
-      console.error('Token verification failed:', error.message);
       // Respond with 401 Unauthorized if the token is invalid or expired
       return res.status(401).json({ message: 'Not authorized, token failed' });
     }

@@ -4,10 +4,11 @@ import { ToastContainer, toast } from 'react-toastify';
 import { Puff } from 'react-loader-spinner';
 import * as XLSX from 'xlsx';
 import { useTranslation } from 'react-i18next';
-import api from '../../api/axiosConfig';
 import PageToggle from './PageToggle';
 import LogoutModal from './LogoutModal';
 import { useAuth } from '../Authcontext/Authcontext';
+
+const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 const DatabaseManagement = () => {
   const [loading, setLoading] = useState(false);
@@ -24,8 +25,14 @@ const DatabaseManagement = () => {
 
   const fetchVersion = async () => {
     try {
-      const response = await api.get('/settings/version');
-      setVersion(response.data.version);
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`${BASEURL}/api/settings/version`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = await response.json();
+      setVersion(data.version);
     } catch (error) {
       console.error('Error fetching version:', error);
     }
@@ -33,7 +40,15 @@ const DatabaseManagement = () => {
 
   const updateVersion = async () => {
     try {
-      await api.put('/settings/version', { version });
+      const token = localStorage.getItem('authToken');
+      await fetch(`${BASEURL}/api/settings/version`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ version })
+      });
       toast.success(t('version_updated'));
       setShowVersionEdit(false);
     } catch (error) {
@@ -47,8 +62,14 @@ const DatabaseManagement = () => {
       setLoading(true);
       toast.info(t('preparing_export'));
       
-      const response = await api.get('/database/export-all');
-      const data = response.data.data;
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`${BASEURL}/api/database/export-all`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const responseData = await response.json();
+      const data = responseData.data;
 
       const workbook = XLSX.utils.book_new();
 

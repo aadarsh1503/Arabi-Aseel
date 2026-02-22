@@ -4,10 +4,11 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Puff } from 'react-loader-spinner';
 import * as XLSX from 'xlsx';
-import api from '../../api/axiosConfig';
 import PageToggle from './PageToggle';
 import LogoutModal from './LogoutModal';
 import { useAuth } from '../Authcontext/Authcontext';
+
+const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 const RegistrationPanel = () => {
   const [registrations, setRegistrations] = useState([]);
@@ -30,8 +31,14 @@ const RegistrationPanel = () => {
   const fetchRegistrations = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/registration/all');
-      setRegistrations(response.data.data);
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`${BASEURL}/api/registration/all`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = await response.json();
+      setRegistrations(data.data);
       toast.success('Registrations loaded successfully');
     } catch (error) {
       toast.error('Failed to load registrations');
@@ -67,7 +74,13 @@ const RegistrationPanel = () => {
 
   const markAsUsed = async (id) => {
     try {
-      await api.patch(`/registration/${id}/use`);
+      const token = localStorage.getItem('authToken');
+      await fetch(`${BASEURL}/api/registration/${id}/use`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       toast.success('Coupon marked as used');
       fetchRegistrations();
     } catch (error) {
@@ -78,7 +91,13 @@ const RegistrationPanel = () => {
   const deleteRegistration = async (id, name) => {
     if (window.confirm(`Are you sure you want to delete registration for "${name}"? This action cannot be undone.`)) {
       try {
-        await api.delete(`/registration/${id}`);
+        const token = localStorage.getItem('authToken');
+        await fetch(`${BASEURL}/api/registration/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
         toast.success('Registration deleted successfully');
         fetchRegistrations();
       } catch (error) {
@@ -121,11 +140,15 @@ const RegistrationPanel = () => {
 
   const downloadCSV = async () => {
     try {
-      const response = await api.get('/registration/export/csv', {
-        responseType: 'blob'
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`${BASEURL}/api/registration/export/csv`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
       
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
       link.setAttribute('download', `registrations_${Date.now()}.csv`);

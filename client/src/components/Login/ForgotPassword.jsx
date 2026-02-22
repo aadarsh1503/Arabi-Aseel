@@ -15,8 +15,9 @@ import {
 import { EmailOutlined } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import api from '../../api/axiosConfig';
 import { CheckCircleIcon, TicketCheck } from 'lucide-react';
+
+const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 const ForgotPassword = () => {
   const { t, i18n } = useTranslation();
@@ -41,8 +42,15 @@ const ForgotPassword = () => {
       setLoading(true);
       setMessage('');
       try {
-        const response = await api.post('/auth/forgot-password', { email: values.email });
-        setMessage(response.data.message);
+        const response = await fetch(`${BASEURL}/api/auth/forgot-password`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email: values.email })
+        });
+        const data = await response.json();
+        setMessage(data.message);
       } catch (error) {
         setMessage(error.response?.data?.message || t('forgotPasswordToastError'));
       } finally {

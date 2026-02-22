@@ -138,7 +138,6 @@ router.post('/forgot-password', async (req, res) => {
     const [users] = await db.query('SELECT * FROM admin_users WHERE email = ?', [email]);
     
     if (users.length === 0) {
-      console.log(`Password reset attempt for non-existent email: ${email}`);
       return res.json({ message: 'If an account with that email exists, a password reset link has been sent.' });
     }
 

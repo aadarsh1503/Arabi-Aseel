@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import api from "../../../api/axiosConfig";
 import i3 from "./i3.png";
 import g1 from "./g1.png";
 import "./f.css";
+
+const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 const Footer = () => {
   const { t, i18n } = useTranslation();
@@ -20,8 +21,9 @@ const Footer = () => {
 
   const fetchVersion = async () => {
     try {
-      const response = await api.get('/settings/version');
-      setVersion(response.data.version);
+      const response = await fetch(`${BASEURL}/api/settings/version`);
+      const data = await response.json();
+      setVersion(data.version);
     } catch (error) {
       console.error('Error fetching version:', error);
     }

@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import api from '../../api/axiosConfig';
 import { Trash2, Plus, Save, Settings, Upload, RefreshCw, Power, MapPin, Edit2, GripVertical, X, CheckCircle, AlertTriangle } from 'lucide-react'; 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useTranslation } from 'react-i18next';
 import PageToggle from '../AdminPanel/PageToggle';
+
+const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 // --- DnD Imports ---
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
@@ -115,7 +116,13 @@ const AdminWheelConfig = () => {
     // Fetch Data
     const fetchData = async () => {
         try {
-            const { data } = await api.get('/marketing/admin/config');
+            const token = localStorage.getItem('authToken');
+            const response = await fetch(`${BASEURL}/api/marketing/admin/config`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const data = await response.json();
             setItems(data.items);
             setConfig({
                 win_percentage: data.config.win_percentage || 10,
@@ -138,10 +145,18 @@ const AdminWheelConfig = () => {
     // --- Configuration Logic ---
     const handleConfigUpdate = async () => {
         try {
-            await api.put('/marketing/admin/config', {
-                win_percentage: config.win_percentage,
-                lose_percentage: config.lose_percentage,
-                google_maps_api_key: config.google_maps_api_key
+            const token = localStorage.getItem('authToken');
+            await fetch(`${BASEURL}/api/marketing/admin/config`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    win_percentage: config.win_percentage,
+                    lose_percentage: config.lose_percentage,
+                    google_maps_api_key: config.google_maps_api_key
+                })
             });
             toast.success(t('toast_settings_updated'));
         } catch (error) {
@@ -153,7 +168,15 @@ const AdminWheelConfig = () => {
         const newState = !config.game_active;
         setConfig(prev => ({ ...prev, game_active: newState }));
         try {
-            await api.put('/marketing/admin/config', { game_active: newState });
+            const token = localStorage.getItem('authToken');
+            await fetch(`${BASEURL}/api/marketing/admin/config`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ game_active: newState })
+            });
             toast.success(newState ? t('toast_game_live') : t('toast_game_closed'));
         } catch (error) {
             setConfig(prev => ({ ...prev, game_active: !newState }));
@@ -201,17 +224,25 @@ const AdminWheelConfig = () => {
         if(newItem.image) formData.append('image', newItem.image);
 
         const token = localStorage.getItem('authToken');
-        const headers = { 
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${token}` 
-        };
 
         try {
             if (editId) {
-                await api.put(`/marketing/admin/items/${editId}`, formData);
+                await fetch(`${BASEURL}/api/marketing/admin/items/${editId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: formData
+                });
                 toast.success(t('Item Updated Successfully'));
             } else {
-                await api.post('/marketing/admin/items', formData);
+                await fetch(`${BASEURL}/api/marketing/admin/items`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: formData
+                });
                 toast.success(t('toast_item_added'));
             }
             cancelEdit(); 
@@ -226,7 +257,13 @@ const AdminWheelConfig = () => {
     const handleDelete = async (id) => {
         if(!window.confirm(t('confirm_delete'))) return;
         try {
-            await api.delete(`/marketing/admin/items/${id}`);
+            const token = localStorage.getItem('authToken');
+            await fetch(`${BASEURL}/api/marketing/admin/items/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
             setItems(items.filter(i => i.id !== id));
             toast.success(t('toast_item_deleted'));
         } catch (error) {
@@ -245,7 +282,15 @@ const AdminWheelConfig = () => {
 
             try {
                 const orderedIds = newOrder.map(item => item.id);
-                await api.put('/marketing/admin/items/reorder', { orderedIds });
+                const token = localStorage.getItem('authToken');
+                await fetch(`${BASEURL}/api/marketing/admin/items/reorder`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ orderedIds })
+                });
             } catch (error) {
                 toast.error("Failed to save order");
             }

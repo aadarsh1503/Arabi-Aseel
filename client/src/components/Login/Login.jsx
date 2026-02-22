@@ -26,7 +26,8 @@ import { useTranslation } from 'react-i18next';
 
 import "./login.css";
 import { useAuth } from '../Authcontext/Authcontext';
-import api from '../../api/axiosConfig';
+
+const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 const Login = () => {
   const { t, i18n } = useTranslation();
@@ -64,12 +65,24 @@ const Login = () => {
       setBackendErrors({ email: '', password: '' });
       
       try {
-        const response = await api.post('/auth/login', {
-          email: values.email,
-          password: values.password
+        const response = await fetch(`${BASEURL}/api/auth/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: values.email,
+            password: values.password
+          })
         });
 
-        login(response.data.token, response.data.user); 
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw { response: { data } };
+        }
+
+        login(data.token, data.user); 
         
         toast.success(t('login.toast.success'), {
           position: isRTL ? "top-left" : "top-right",

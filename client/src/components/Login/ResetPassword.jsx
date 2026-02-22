@@ -18,7 +18,8 @@ import { LockResetOutlined, Visibility, VisibilityOff } from '@mui/icons-materia
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import api from '../../api/axiosConfig';
+
+const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 const ResetPassword = () => {
   const { t, i18n } = useTranslation();
@@ -47,8 +48,15 @@ const ResetPassword = () => {
     onSubmit: async (values) => {
       setLoading(true);
       try {
-        const response = await api.post(`/auth/reset-password/${token}`, { password: values.password });
-        toast.success(response.data.message || t('resetPasswordToastSuccess'), {
+        const response = await fetch(`${BASEURL}/api/auth/reset-password/${token}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ password: values.password })
+        });
+        const data = await response.json();
+        toast.success(data.message || t('resetPasswordToastSuccess'), {
           position: isRTL ? "top-left" : "top-right", theme: "colored",
         });
         setTimeout(() => navigate('/login'), 2000);

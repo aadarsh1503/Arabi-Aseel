@@ -14,7 +14,8 @@ import { useAuth } from '../Authcontext/Authcontext';
 import PageToggle from './PageToggle';
 
 import MenuExporter from './MenuExporter';
-import api from '../../api/axiosConfig';
+
+const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 // Toast Notification Configuration
 const notify = {
@@ -68,8 +69,13 @@ const AdminPanel = () => {
     try {
       setLoading(true);
    
-      const res = await api.get('/admin/menu'); 
-      setItems(res.data);
+      const res = await fetch(`${BASEURL}/api/admin/menu`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = await res.json();
+      setItems(data);
       notify.success('Menu loaded successfully', darkMode);
     } catch (err) {
 
@@ -125,7 +131,12 @@ const AdminPanel = () => {
       setButtonLoading(prev => ({ ...prev, delete: id }));
       try {
  
-        await api.delete(`/admin/menu/${id}`);
+        await fetch(`${BASEURL}/api/admin/menu/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
         notify.success('Item deleted successfully', darkMode);
         fetchData();
       } catch (error) {
@@ -142,7 +153,14 @@ const AdminPanel = () => {
     setItems(prev => prev.map(item => item.menu_id === itemId ? { ...item, status: newStatus } : item));
     try {
  
-      await api.patch(`/admin/menu/${itemId}/status`, { status: newStatus });
+      await fetch(`${BASEURL}/api/admin/menu/${itemId}/status`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
       notify.success('Status updated!', darkMode);
     } catch (error) {
       notify.error('Failed to update status. Reverting.', darkMode);
@@ -191,12 +209,26 @@ const AdminPanel = () => {
     try {
       if (editingId) {
         console.log(`✏️ Updating item with ID: ${editingId}`);
-        await api.put(`/admin/menu/${editingId}`, formData);
+        const response = await fetch(`${BASEURL}/api/admin/menu/${editingId}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: formData
+        });
+        if (!response.ok) throw new Error('Failed to update item');
         notify.success('Item updated successfully', darkMode);
         console.log("✅ Item updated successfully");
       } else {
         console.log("➕ Adding new item");
-        await api.post('/admin/menu', formData);
+        const response = await fetch(`${BASEURL}/api/admin/menu`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: formData
+        });
+        if (!response.ok) throw new Error('Failed to add item');
         notify.success('Item added successfully', darkMode);
         console.log("✅ Item added successfully");
       }
@@ -255,7 +287,12 @@ const AdminPanel = () => {
 
     if (window.confirm(`Are you sure you want to delete the category "${categoryNameEn}"?`)) {
       try {
-        await api.delete(`/admin/categories/${encodeURIComponent(categoryNameEn)}`);
+        await fetch(`${BASEURL}/api/admin/categories/${encodeURIComponent(categoryNameEn)}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
         notify.success('Category deleted successfully', darkMode);
         fetchData();
       } catch (error) {
@@ -266,9 +303,16 @@ const AdminPanel = () => {
 
   const handleSaveCategory = async (oldNameEn, newNameEn, newNameAr) => {
     try {
-      await api.put(`/admin/categories/${encodeURIComponent(oldNameEn)}`, {
-        new_category_name: newNameEn,
-        new_category_name_ar: newNameAr
+      await fetch(`${BASEURL}/api/admin/categories/${encodeURIComponent(oldNameEn)}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          new_category_name: newNameEn,
+          new_category_name_ar: newNameAr
+        })
       });
       notify.success('Category updated successfully', darkMode);
       setShowCategoryModal(false);

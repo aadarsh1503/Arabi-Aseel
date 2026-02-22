@@ -43,6 +43,7 @@ router.post('/', protect, upload.single('image'), async (req, res) => {
     }
 
     const fileType = await fileTypeFromBuffer(req.file.buffer);
+
     const allowedActualMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
 
     if (!fileType || !allowedActualMimeTypes.includes(fileType.mime)) {
@@ -78,14 +79,14 @@ router.post('/', protect, upload.single('image'), async (req, res) => {
       designation_ar,
       imageUrl: imageUploadResponse.url,
     });
+
   } catch (error) {
-    console.error('Error creating chef:', error);
+    console.error('❌ Error creating chef:', error);
     res.status(500).json({
       message: error.message || 'Server error while creating chef.',
     });
   }
 });
-
 router.get('/', async (req, res) => {
   try {
     const [chefs] = await db.execute(

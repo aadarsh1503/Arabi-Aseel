@@ -5,8 +5,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Puff } from 'react-loader-spinner';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-import api from '../../api/axiosConfig';
 import { useTranslation } from 'react-i18next';
+
+const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 const CustomerRegistration = () => {
   const { t, i18n } = useTranslation();
@@ -125,12 +126,20 @@ const CustomerRegistration = () => {
   const verifyLocation = async (lat, lng) => {
     try {
       // Send coordinates to backend for polygon-based verification
-      const verificationResponse = await api.post('/registration/verify-location', {
-        latitude: lat,
-        longitude: lng
+      const verificationResponse = await fetch(`${BASEURL}/api/registration/verify-location`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          latitude: lat,
+          longitude: lng
+        })
       });
 
-      if (verificationResponse.data.valid) {
+      const verificationData = await verificationResponse.json();
+
+      if (verificationData.valid) {
         setLocationVerified(true);
         
         // Fetch address from coordinates using reverse geocoding (English only)
@@ -160,11 +169,11 @@ const CustomerRegistration = () => {
               address_block: postalCode
             }));
             
-            toast.success(`Location verified in ${verificationResponse.data.areaName}!`, { autoClose: 3000 });
+            toast.success(`Location verified in ${verificationData.areaName}!`, { autoClose: 3000 });
           }
         } catch (geoError) {
           console.error('Geocoding error:', geoError);
-          toast.success(`Location verified in ${verificationResponse.data.areaName}!`, { autoClose: 3000 });
+          toast.success(`Location verified in ${verificationData.areaName}!`, { autoClose: 3000 });
         }
         
         setLocationLoading(false);
@@ -187,9 +196,10 @@ const CustomerRegistration = () => {
 
   const fetchCountryFromIP = async () => {
     try {
-      const response = await api.get('/registration/country');
-      if (response.data.success && response.data.countryCode) {
-        setDefaultCountry(response.data.countryCode);
+      const response = await fetch(`${BASEURL}/api/registration/country`);
+      const data = await response.json();
+      if (data.success && data.countryCode) {
+        setDefaultCountry(data.countryCode);
       }
     } catch (error) {
       console.log('Could not detect country, using default (Bahrain)');
@@ -208,11 +218,19 @@ const CustomerRegistration = () => {
     setLoading(true);
 
     try {
-      const response = await api.post('/registration/register', formData);
+      const response = await fetch(`${BASEURL}/api/registration/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
       
-      if (response.data.success) {
+      const data = await response.json();
+      
+      if (data.success) {
         setSuccess(true);
-        setCouponData(response.data.data);
+        setCouponData(data.data);
         toast.success('Registration successful! Check your email for your coupon.');
       }
     } catch (error) {

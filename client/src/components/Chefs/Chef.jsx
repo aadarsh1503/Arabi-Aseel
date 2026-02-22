@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
-import api from '../../api/axiosConfig';
 import {
   Plus,
   Edit,
@@ -163,7 +162,6 @@ const ImageCropModal = ({ src, onClose, onCropComplete }) => {
     canvas.toBlob(
       (blob) => {
         if (!blob) {
-          console.error("Canvas is empty");
           return;
         }
         const croppedFile = new File([blob], "cropped_image.jpeg", {
@@ -489,6 +487,7 @@ const Chef = () => {
   const removeNumbers = (value) => String(value).replace(/\d/g, '');
   const navigate = useNavigate();
   const { logout } = useAuth(); // <--- This is correct
+  const BASEURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
   // State Management
   const [chefs, setChefs] = useState([]);
@@ -516,8 +515,14 @@ const Chef = () => {
   const fetchChefs = async () => {
     setIsFetching(true);
     try {
-      const response = await api.get('/chefs');
-      setChefs(response.data);
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`${BASEURL}/api/chefs`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = await response.json();
+      setChefs(data);
     } catch (error) {
       toast.error(
         <ToastContent
@@ -559,17 +564,8 @@ const Chef = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("🚀 handleSubmit triggered");
   
     if (!name || !designation || !nameAr || !designationAr || !image) {
-      console.warn("⚠️ Validation failed: Some fields are missing", {
-        name,
-        designation,
-        nameAr,
-        designationAr,
-        image,
-      });
-  
       toast.warn(
         <ToastContent
           message={t("fillAllFieldsAndImageWarning")}
@@ -598,66 +594,64 @@ const Chef = () => {
       imagePreview,
     });
   
-    console.log("✅ PendingChefData set:", {
-      name,
-      nameAr,
-      designation,
-      designationAr,
-      imagePreview,
-    });
-  
     setIsConfirmModalOpen(true);
-    console.log("🟢 Confirmation modal opened");
   };
   
   const handleConfirmAndSave = async () => {
-    console.log("🚀 handleConfirmAndSave triggered");
   
     if (!pendingChefData) {
-      console.warn("⚠️ No pendingChefData found, aborting save");
       return;
     }
   
     setIsSubmitting(true);
-    console.log("⏳ Submitting started with data:", {
-      name: pendingChefData.name,
-      name_ar: pendingChefData.name_ar,
-      designation: pendingChefData.designation,
-      designation_ar: pendingChefData.designation_ar,
-    });
   
     logFormData(pendingChefData.formData); // ✅ Print exact formData
   
-    const promise = api.post("/chefs/", pendingChefData.formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-  
+    const token = localStorage.getItem('authToken');
+    
     try {
-      const response = await promise;
-      console.log("✅ API success response:", response.data);
+      const response = await fetch(`${BASEURL}/api/chefs`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: pendingChefData.formData
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to add chef');
+      }
   
       resetForm();
-      console.log("🔄 Form reset");
   
       await fetchChefs();
-      console.log("📥 Chefs list re-fetched");
+      
+      toast.success(
+        <ToastContent
+          message={t("chefAddedSuccess")}
+          IconComponent={CheckCircle}
+          iconColor="text-white"
+        />
+      );
     } catch (error) {
-      console.error("❌ API request failed:", {
-        message: error.message,
-        status: error.response?.status,
-        data: error.response?.data,
-      });
+      toast.error(
+        <ToastContent
+          message={error.message || t("chefAddError")}
+          IconComponent={AlertTriangle}
+          iconColor="text-white"
+        />
+      );
     } finally {
       setIsSubmitting(false);
       setIsConfirmModalOpen(false);
       setPendingChefData(null);
-      console.log("⏹️ Submission finished, modal closed, pendingChefData cleared");
     }
   };
   const logFormData = (formData) => {
-    console.log("📦 FormData content:");
     for (let pair of formData.entries()) {
-      console.log(`   ${pair[0]}:`, pair[1]);
+      // Silent iteration
     }
   };  
   const handleUpdate = async (id, data, newImage) => {
@@ -669,9 +663,22 @@ const Chef = () => {
     if (newImage) formData.append("image", newImage);
 
     setIsSubmitting(true);
-    const promise = api.put(`/chefs/${id}`, formData, {
-      headers: { "Content-Type": "multipart/form-data" },
+    const token = localStorage.getItem('authToken');
+    
+    const promise = fetch(`${BASEURL}/api/chefs/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      body: formData
+    }).then(async (res) => {
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message || 'Failed to update chef');
+      }
+      return data;
     });
+    
     toast.promise(promise, {
       pending: {
         render: () => (
@@ -718,7 +725,19 @@ const Chef = () => {
 
   const handleDelete = async (id) => {
     if (window.confirm(t("deleteConfirmation"))) {
-      const promise = api.delete(`/chefs/${id}`);
+      const token = localStorage.getItem('authToken');
+      const promise = fetch(`${BASEURL}/api/chefs/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }).then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.message || 'Failed to delete chef');
+        }
+        return data;
+      });
 
       toast.promise(promise, {
         pending: {
