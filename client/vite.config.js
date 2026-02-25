@@ -9,45 +9,8 @@ export default defineConfig({
   },
   // server: {
   //   proxy: {
-  //     // Proxy for main server routes (port 5000)
-  //     '/api/admin': {
+  //     '/api': {
   //       target: 'http://localhost:5000',
-  //       changeOrigin: true,
-  //       secure: false,
-  //     },
-  //     '/api/public': {
-  //       target: 'http://localhost:5000',
-  //       changeOrigin: true,
-  //       secure: false,
-  //     },
-  //     '/api/auth': {
-  //       target: 'http://localhost:5000',
-  //       changeOrigin: true,
-  //       secure: false,
-  //     },
-  //     '/api/chefs': {
-  //       target: 'http://localhost:5000',
-  //       changeOrigin: true,
-  //       secure: false,
-  //     },
-  //     // Proxy for secondary server routes (port 5001)
-  //     '/api/marketing': {
-  //       target: 'http://localhost:5001',
-  //       changeOrigin: true,
-  //       secure: false,
-  //     },
-  //     '/api/registration': {
-  //       target: 'http://localhost:5001',
-  //       changeOrigin: true,
-  //       secure: false,
-  //     },
-  //     '/api/database': {
-  //       target: 'http://localhost:5001',
-  //       changeOrigin: true,
-  //       secure: false,
-  //     },
-  //     '/api/settings': {
-  //       target: 'http://localhost:5001',
   //       changeOrigin: true,
   //       secure: false,
   //     },

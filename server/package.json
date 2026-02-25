@@ -6,8 +6,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "start:secondary": "node server.js",
-    "start:both": "node index.js & node server.js",
     "setup:registration": "node setup-registration.js",
     "test:location": "node test-ip-location.js"
   },
