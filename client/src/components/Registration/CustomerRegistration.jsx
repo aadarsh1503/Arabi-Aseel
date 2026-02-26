@@ -169,11 +169,11 @@ const CustomerRegistration = () => {
               address_block: postalCode
             }));
             
-            toast.success(`Location verified in ${verificationData.areaName}!`, { autoClose: 3000 });
+            toast.success('Location verified in Bahrain!', { autoClose: 3000 });
           }
         } catch (geoError) {
           console.error('Geocoding error:', geoError);
-          toast.success(`Location verified in ${verificationData.areaName}!`, { autoClose: 3000 });
+          toast.success('Location verified in Bahrain!', { autoClose: 3000 });
         }
         
         setLocationLoading(false);
@@ -181,7 +181,7 @@ const CustomerRegistration = () => {
         // Fetch country for phone input
         fetchCountryFromIP();
       } else {
-        // Location is outside eligible areas
+        // Location is outside Bahrain
         setLocationDenied(true);
         // Don't set message here, we'll use translation in the component
         setLocationLoading(false);
@@ -266,8 +266,8 @@ const CustomerRegistration = () => {
             <div className="mt-6 text-sm text-gray-500 bg-amber-50 p-4 rounded-lg">
               <p className="font-semibold mb-2">Why we need your location:</p>
               <ul className="text-left space-y-1">
-                <li>✓ To verify you're in an eligible service area</li>
-                <li>✓ This offer is exclusive to {t('registration.north_sehla')}, {t('registration.south_sehla')}, {t('registration.jidhafs')}, {t('registration.bu_quwah')}, and {t('registration.saraiya')}</li>
+                <li>✓ To verify you're in Bahrain</li>
+                <li>✓ This offer is exclusive to customers in Bahrain</li>
                 <li>✓ Your location is secure and only used for verification</li>
               </ul>
             </div>
@@ -324,27 +324,22 @@ const CustomerRegistration = () => {
               {t('registration.not_eligible')}
             </h2>
             <p className="text-xl font-semibold text-gray-800 mb-4 animate-slide-up-delay">
-              {t('registration.outside_service_area')}
+              This offer is only available in Bahrain
             </p>
             
             {/* Error Message */}
             <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg mb-6 text-left animate-fade-in-delay">
               <p className="text-sm text-gray-700">
-                {t('registration.location_not_eligible_message')}
+                Sorry, this promotion is only available for customers located in Bahrain. Please ensure your GPS is enabled and you are physically in Bahrain.
               </p>
             </div>
             
-            {/* Eligible Areas Info */}
+            {/* Info Box */}
             <div className="bg-amber-50 p-4 rounded-lg mb-6 text-left animate-fade-in-delay-2">
-              <p className="font-semibold text-gray-800 mb-2">📍 {t('registration.eligible_service_areas')}</p>
-              <ul className="text-sm text-gray-700 space-y-1">
-                <li>✓ {t('registration.north_sehla')} </li>
-                <li>✓ {t('registration.south_sehla')} </li>
-                <li>✓ {t('registration.jidhafs')} </li>
-                <li>✓ {t('registration.jeblat_habshi')} </li>
-                <li>✓ {t('registration.bu_quwah')} </li>
-                <li>✓ {t('registration.saraiya')}</li>
-              </ul>
+              <p className="font-semibold text-gray-800 mb-2">📍 Offer Available Throughout Bahrain</p>
+              <p className="text-sm text-gray-700">
+                This exclusive offer is available to all customers in Bahrain. Make sure you're physically in Bahrain and have location services enabled.
+              </p>
             </div>
             
             {/* Action Buttons */}

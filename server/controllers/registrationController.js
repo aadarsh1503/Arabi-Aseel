@@ -261,17 +261,16 @@ export const registerCustomer = async (req, res) => {
       return res.status(400).json({ error: 'This email is already registered' });
     }
 
-    // Verify location using polygon-based boundary checking
-    const locationCheck = verifyLocationInEligibleAreas(latitude, longitude);
-    
-    if (!locationCheck.valid) {
-      console.log(`❌ Location verification failed: User at (${latitude}, ${longitude}) is outside eligible areas`);
+    // Verify location is within Bahrain boundaries (country-level check)
+    if (latitude < BAHRAIN_BOUNDS.minLat || latitude > BAHRAIN_BOUNDS.maxLat ||
+        longitude < BAHRAIN_BOUNDS.minLng || longitude > BAHRAIN_BOUNDS.maxLng) {
+      console.log(`❌ Location verification failed: User at (${latitude}, ${longitude}) is outside Bahrain`);
       return res.status(400).json({ 
-        error: locationCheck.message
+        error: 'Sorry, this promotion is only available for customers in Bahrain.'
       });
     }
 
-    console.log(`✅ Location verified: User is in ${locationCheck.areaName} (${locationCheck.areaNameAr})`);
+    console.log(`✅ Location verified: User is in Bahrain at (${latitude}, ${longitude})`);
 
     // Generate coupon with proper 50/50 distribution
     const couponCode = generateCouponCode();
@@ -572,40 +571,32 @@ export const verifyLocation = async (req, res) => {
       });
     }
 
-    logger.debug('LOCATION_VERIFY', 'Starting polygon-based verification', {
+    logger.debug('LOCATION_VERIFY', 'Starting Bahrain boundary verification', {
       coordinates: { latitude, longitude },
-      totalEligibleAreas: ELIGIBLE_AREAS.length
+      bounds: BAHRAIN_BOUNDS
     });
 
-    // Use polygon-based verification
-    const locationCheck = verifyLocationInEligibleAreas(latitude, longitude);
-    
-    logger.debug('LOCATION_VERIFY', 'Verification result received', locationCheck);
-    
-    if (locationCheck.valid) {
-      logger.success('LOCATION_VERIFY', `✅ Location verified in ${locationCheck.areaName}`, {
-        coordinates: { latitude, longitude },
-        areaName: locationCheck.areaName,
-        areaNameAr: locationCheck.areaNameAr
-      });
-      
-      return res.json({
-        valid: true,
-        areaName: locationCheck.areaName,
-        areaNameAr: locationCheck.areaNameAr,
-        message: locationCheck.message
-      });
-    } else {
-      logger.warn('LOCATION_VERIFY', '❌ Location outside all eligible areas', {
-        coordinates: { latitude, longitude },
-        message: locationCheck.message
+    // Verify location is within Bahrain boundaries
+    if (latitude < BAHRAIN_BOUNDS.minLat || latitude > BAHRAIN_BOUNDS.maxLat ||
+        longitude < BAHRAIN_BOUNDS.minLng || longitude > BAHRAIN_BOUNDS.maxLng) {
+      logger.warn('LOCATION_VERIFY', '❌ Location outside Bahrain', {
+        coordinates: { latitude, longitude }
       });
       
       return res.json({
         valid: false,
-        message: locationCheck.message
+        message: 'Sorry, this promotion is only available for customers in Bahrain.'
       });
     }
+
+    logger.success('LOCATION_VERIFY', '✅ Location verified in Bahrain', {
+      coordinates: { latitude, longitude }
+    });
+    
+    return res.json({
+      valid: true,
+      message: 'Location verified in Bahrain'
+    });
 
   } catch (error) {
     logger.error('LOCATION_VERIFY', 'Error during location verification', {

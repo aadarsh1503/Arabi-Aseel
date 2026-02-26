@@ -5,10 +5,215 @@
 import logger from './logger.js';
 
 export const ELIGIBLE_AREAS = [
+  // CAPITAL GOVERNORATE
+  {
+    name: 'Manama',
+    nameAr: 'المنامة',
+    polygon: [
+      { lat: 26.2400, lng: 50.5600 },
+      { lat: 26.2450, lng: 50.5900 },
+      { lat: 26.2200, lng: 50.6000 },
+      { lat: 26.2100, lng: 50.5800 },
+      { lat: 26.2150, lng: 50.5600 }
+    ]
+  },
+  {
+    name: 'Juffair',
+    nameAr: 'الجفير',
+    polygon: [
+      { lat: 26.2150, lng: 50.6000 },
+      { lat: 26.2200, lng: 50.6150 },
+      { lat: 26.2050, lng: 50.6200 },
+      { lat: 26.2000, lng: 50.6050 }
+    ]
+  },
+  {
+    name: 'Adliya',
+    nameAr: 'العدلية',
+    polygon: [
+      { lat: 26.2100, lng: 50.5800 },
+      { lat: 26.2150, lng: 50.5900 },
+      { lat: 26.2050, lng: 50.5950 },
+      { lat: 26.2000, lng: 50.5850 }
+    ]
+  },
+  {
+    name: 'Hoora',
+    nameAr: 'الحورة',
+    polygon: [
+      { lat: 26.2200, lng: 50.5700 },
+      { lat: 26.2250, lng: 50.5800 },
+      { lat: 26.2150, lng: 50.5850 },
+      { lat: 26.2100, lng: 50.5750 }
+    ]
+  },
+  {
+    name: 'Gudaibiya',
+    nameAr: 'القضيبية',
+    polygon: [
+      { lat: 26.2050, lng: 50.5700 },
+      { lat: 26.2100, lng: 50.5800 },
+      { lat: 26.2000, lng: 50.5850 },
+      { lat: 26.1950, lng: 50.5750 }
+    ]
+  },
+  {
+    name: 'Zinj',
+    nameAr: 'الزنج',
+    polygon: [
+      { lat: 26.1950, lng: 50.5800 },
+      { lat: 26.2000, lng: 50.5900 },
+      { lat: 26.1900, lng: 50.5950 },
+      { lat: 26.1850, lng: 50.5850 }
+    ]
+  },
+  {
+    name: 'Seef',
+    nameAr: 'السيف',
+    polygon: [
+      { lat: 26.2350, lng: 50.5300 },
+      { lat: 26.2450, lng: 50.5500 },
+      { lat: 26.2350, lng: 50.5600 },
+      { lat: 26.2250, lng: 50.5400 }
+    ]
+  },
+  {
+    name: 'Sanabis',
+    nameAr: 'السنابس',
+    polygon: [
+      { lat: 26.2200, lng: 50.5500 },
+      { lat: 26.2250, lng: 50.5600 },
+      { lat: 26.2150, lng: 50.5650 },
+      { lat: 26.2100, lng: 50.5550 }
+    ]
+  },
+  
+  // MUHARRAQ GOVERNORATE
+  {
+    name: 'Muharraq',
+    nameAr: 'المحرق',
+    polygon: [
+      { lat: 26.2600, lng: 50.6100 },
+      { lat: 26.2700, lng: 50.6300 },
+      { lat: 26.2500, lng: 50.6400 },
+      { lat: 26.2400, lng: 50.6200 }
+    ]
+  },
+  {
+    name: 'Hidd',
+    nameAr: 'الحد',
+    polygon: [
+      { lat: 26.2400, lng: 50.6500 },
+      { lat: 26.2500, lng: 50.6700 },
+      { lat: 26.2300, lng: 50.6800 },
+      { lat: 26.2200, lng: 50.6600 }
+    ]
+  },
+  {
+    name: 'Busaiteen',
+    nameAr: 'البسيتين',
+    polygon: [
+      { lat: 26.2500, lng: 50.5900 },
+      { lat: 26.2600, lng: 50.6100 },
+      { lat: 26.2400, lng: 50.6150 },
+      { lat: 26.2350, lng: 50.5950 }
+    ]
+  },
+  {
+    name: 'Arad',
+    nameAr: 'عراد',
+    polygon: [
+      { lat: 26.2350, lng: 50.6300 },
+      { lat: 26.2450, lng: 50.6450 },
+      { lat: 26.2250, lng: 50.6500 },
+      { lat: 26.2200, lng: 50.6350 }
+    ]
+  },
+  {
+    name: 'Dair',
+    nameAr: 'الدير',
+    polygon: [
+      { lat: 26.2700, lng: 50.6400 },
+      { lat: 26.2800, lng: 50.6600 },
+      { lat: 26.2600, lng: 50.6700 },
+      { lat: 26.2550, lng: 50.6500 }
+    ]
+  },
+  
+  // NORTHERN GOVERNORATE
+  {
+    name: 'Hamad Town',
+    nameAr: 'مدينة حمد',
+    polygon: [
+      { lat: 26.1200, lng: 50.4800 },
+      { lat: 26.1400, lng: 50.5200 },
+      { lat: 26.1100, lng: 50.5300 },
+      { lat: 26.0900, lng: 50.4900 }
+    ]
+  },
+  {
+    name: 'Budaiya',
+    nameAr: 'البديع',
+    polygon: [
+      { lat: 26.1800, lng: 50.4500 },
+      { lat: 26.2000, lng: 50.4800 },
+      { lat: 26.1700, lng: 50.4900 },
+      { lat: 26.1600, lng: 50.4600 }
+    ]
+  },
+  {
+    name: 'Saar',
+    nameAr: 'سار',
+    polygon: [
+      { lat: 26.1900, lng: 50.4700 },
+      { lat: 26.2000, lng: 50.4900 },
+      { lat: 26.1850, lng: 50.5000 },
+      { lat: 26.1800, lng: 50.4800 }
+    ]
+  },
+  {
+    name: 'Janabiyah',
+    nameAr: 'الجنبية',
+    polygon: [
+      { lat: 26.1700, lng: 50.4600 },
+      { lat: 26.1800, lng: 50.4800 },
+      { lat: 26.1650, lng: 50.4900 },
+      { lat: 26.1600, lng: 50.4700 }
+    ]
+  },
+  {
+    name: 'Barbar',
+    nameAr: 'باربار',
+    polygon: [
+      { lat: 26.1950, lng: 50.4500 },
+      { lat: 26.2050, lng: 50.4700 },
+      { lat: 26.1900, lng: 50.4800 },
+      { lat: 26.1850, lng: 50.4600 }
+    ]
+  },
+  {
+    name: 'Diraz',
+    nameAr: 'الدراز',
+    polygon: [
+      { lat: 26.1600, lng: 50.4300 },
+      { lat: 26.1700, lng: 50.4500 },
+      { lat: 26.1550, lng: 50.4600 },
+      { lat: 26.1500, lng: 50.4400 }
+    ]
+  },
+  {
+    name: 'Bani Jamra',
+    nameAr: 'بني جمرة',
+    polygon: [
+      { lat: 26.1500, lng: 50.4500 },
+      { lat: 26.1600, lng: 50.4700 },
+      { lat: 26.1450, lng: 50.4800 },
+      { lat: 26.1400, lng: 50.4600 }
+    ]
+  },
   {
     name: 'North Sehla',
     nameAr: 'شمال سهلة',
-    // Approximate boundary polygon for North Sehla area
     polygon: [
       { lat: 26.1600, lng: 50.5020 },
       { lat: 26.1620, lng: 50.5080 },
@@ -21,7 +226,6 @@ export const ELIGIBLE_AREAS = [
   {
     name: 'South Sehla',
     nameAr: 'جنوب سهلة',
-    // Approximate boundary polygon for South Sehla area
     polygon: [
       { lat: 26.1480, lng: 50.5020 },
       { lat: 26.1500, lng: 50.5080 },
@@ -34,7 +238,6 @@ export const ELIGIBLE_AREAS = [
   {
     name: 'Jidhafs',
     nameAr: 'جدحفص',
-    // Approximate boundary polygon for Jidhafs area
     polygon: [
       { lat: 26.1700, lng: 50.5200 },
       { lat: 26.1750, lng: 50.5280 },
@@ -47,8 +250,6 @@ export const ELIGIBLE_AREAS = [
   {
     name: 'Jeblat Habshi',
     nameAr: 'جبلة حبشي',
-    // Updated boundary polygon for Jeblat Habshi area
-    // Center: 26.213229, 50.5277915 (from Google Maps)
     polygon: [
       { lat: 26.2200, lng: 50.5200 },
       { lat: 26.2250, lng: 50.5280 },
@@ -61,8 +262,6 @@ export const ELIGIBLE_AREAS = [
   {
     name: 'Buquwah',
     nameAr: 'البقوة',
-    // Updated boundary polygon for Buquwah area
-    // Center: 26.1955056, 50.5140649 (from Google Maps)
     polygon: [
       { lat: 26.2020, lng: 50.5060 },
       { lat: 26.2050, lng: 50.5140 },
@@ -73,9 +272,50 @@ export const ELIGIBLE_AREAS = [
     ]
   },
   {
+    name: 'Dumistan',
+    nameAr: 'دمستان',
+    polygon: [
+      { lat: 26.1800, lng: 50.5100 },
+      { lat: 26.1850, lng: 50.5200 },
+      { lat: 26.1750, lng: 50.5250 },
+      { lat: 26.1700, lng: 50.5150 }
+    ]
+  },
+  {
+    name: 'Karzakan',
+    nameAr: 'كرزكان',
+    polygon: [
+      { lat: 26.0600, lng: 50.5200 },
+      { lat: 26.0700, lng: 50.5400 },
+      { lat: 26.0550, lng: 50.5450 },
+      { lat: 26.0500, lng: 50.5250 }
+    ]
+  },
+  
+  // SOUTHERN GOVERNORATE
+  {
+    name: 'Isa Town',
+    nameAr: 'مدينة عيسى',
+    polygon: [
+      { lat: 26.1700, lng: 50.5400 },
+      { lat: 26.1900, lng: 50.5700 },
+      { lat: 26.1600, lng: 50.5800 },
+      { lat: 26.1500, lng: 50.5500 }
+    ]
+  },
+  {
+    name: 'Riffa',
+    nameAr: 'الرفاع',
+    polygon: [
+      { lat: 26.1200, lng: 50.5400 },
+      { lat: 26.1400, lng: 50.5700 },
+      { lat: 26.1100, lng: 50.5800 },
+      { lat: 26.1000, lng: 50.5500 }
+    ]
+  },
+  {
     name: 'Saraiya',
     nameAr: 'السرايا',
-    // Approximate boundary polygon for Saraiya area
     polygon: [
       { lat: 26.1180, lng: 50.5300 },
       { lat: 26.1220, lng: 50.5360 },
@@ -85,11 +325,81 @@ export const ELIGIBLE_AREAS = [
       { lat: 26.1150, lng: 50.5300 }
     ]
   },
+  {
+    name: 'Zallaq',
+    nameAr: 'الزلاق',
+    polygon: [
+      { lat: 25.9800, lng: 50.4500 },
+      { lat: 26.0000, lng: 50.4800 },
+      { lat: 25.9700, lng: 50.4900 },
+      { lat: 25.9600, lng: 50.4600 }
+    ]
+  },
+  {
+    name: 'Awali',
+    nameAr: 'العوالي',
+    polygon: [
+      { lat: 26.0600, lng: 50.5600 },
+      { lat: 26.0750, lng: 50.5850 },
+      { lat: 26.0500, lng: 50.5900 },
+      { lat: 26.0400, lng: 50.5650 }
+    ]
+  },
+  {
+    name: 'Sitra',
+    nameAr: 'سترة',
+    polygon: [
+      { lat: 26.1500, lng: 50.6100 },
+      { lat: 26.1700, lng: 50.6400 },
+      { lat: 26.1400, lng: 50.6500 },
+      { lat: 26.1300, lng: 50.6200 }
+    ]
+  },
+  {
+    name: 'Tubli',
+    nameAr: 'توبلي',
+    polygon: [
+      { lat: 26.1900, lng: 50.6000 },
+      { lat: 26.2000, lng: 50.6200 },
+      { lat: 26.1850, lng: 50.6250 },
+      { lat: 26.1800, lng: 50.6050 }
+    ]
+  },
+  {
+    name: 'Eker',
+    nameAr: 'عكر',
+    polygon: [
+      { lat: 26.0900, lng: 50.5100 },
+      { lat: 26.1000, lng: 50.5300 },
+      { lat: 26.0850, lng: 50.5350 },
+      { lat: 26.0800, lng: 50.5150 }
+    ]
+  },
+  {
+    name: 'Askar',
+    nameAr: 'عسكر',
+    polygon: [
+      { lat: 26.1000, lng: 50.5700 },
+      { lat: 26.1100, lng: 50.5900 },
+      { lat: 26.0950, lng: 50.5950 },
+      { lat: 26.0900, lng: 50.5750 }
+    ]
+  },
+  {
+    name: 'Jurdab',
+    nameAr: 'جرداب',
+    polygon: [
+      { lat: 26.0400, lng: 50.5400 },
+      { lat: 26.0500, lng: 50.5600 },
+      { lat: 26.0350, lng: 50.5650 },
+      { lat: 26.0300, lng: 50.5450 }
+    ]
+  },
+  
   // TESTING AREA - Remove before production
   {
     name: 'Test Area',
     nameAr: 'منطقة الاختبار',
-    // Kashipur, Uttarakhand boundary (FOR TESTING ONLY)
     polygon: [
       { lat: 29.2300, lng: 78.9400 },
       { lat: 29.2350, lng: 78.9700 },
